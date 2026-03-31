@@ -1,0 +1,560 @@
+/* ============================================================
+   ACCESS FLOATING MENU
+   ============================================================ */
+.access-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(16, 24, 40, 0.36);
+  backdrop-filter: blur(10px);
+  overflow-y: auto;
+}
+
+.access-floating-panel {
+  position: relative;
+  width: min(980px, 100%);
+  max-height: calc(100dvh - 48px);
+  margin-top: 70px;
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.94) 0%,
+    rgba(248, 250, 252, 0.96) 100%
+  );
+  box-shadow:
+    0 30px 90px rgba(15, 23, 42, 0.22),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  overflow: hidden;
+}
+
+.access-floating-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top left, rgba(244, 235, 0, 0.14), transparent 28%),
+    radial-gradient(circle at top right, rgba(72, 169, 230, 0.12), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(239, 47, 141, 0.1), transparent 26%);
+}
+
+.access-floating-panel.is-form-mode {
+  width: min(980px, 100%);
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+}
+
+.access-panel-top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 28px 28px 10px;
+}
+
+.access-panel-heading {
+  width: 100%;
+  flex: 1;
+}
+
+.access-panel-title {
+  margin: 16px 0 0;
+  font-size: clamp(1.6rem, 2vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.access-panel-text {
+  margin: 12px 0 0;
+  max-width: 560px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.access-close-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(16, 24, 40, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.82);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.access-close-btn:hover {
+  transform: translateY(-2px);
+  background: white;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
+}
+
+.access-panel-sector {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #667085;
+}
+
+.access-progress-wrap {
+  margin-top: 18px;
+}
+
+.access-progress-bar {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #eef2f6;
+  border: 1px solid rgba(16, 24, 40, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.access-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--yellow), var(--blue), var(--pink), var(--green));
+  box-shadow: 0 8px 20px rgba(72, 169, 230, 0.16);
+  transition: width 0.35s ease;
+}
+
+.access-progress-label {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.access-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.access-back-link:hover {
+  opacity: 0.75;
+  transform: translateX(-2px);
+}
+
+.access-options-grid {
+  position: relative;
+  z-index: 1;
+  padding: 18px 28px 28px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.access-option-card {
+  position: relative;
+  width: 100%;
+  text-align: left;
+  border: 1px solid rgba(16, 24, 40, 0.08);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.84);
+  padding: 20px 18px 18px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border-color 0.28s ease,
+    background 0.28s ease;
+}
+
+.access-option-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 50px rgba(15, 23, 42, 0.12);
+  border-color: rgba(16, 24, 40, 0.12);
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.access-option-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 48%);
+}
+
+.access-option-accent {
+  width: 56px;
+  height: 8px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.access-option-content strong {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.4;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.access-option-content p {
+  margin: 10px 0 0;
+  font-size: 0.94rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.access-option-icon {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  color: var(--text);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.access-option-card:hover .access-option-icon {
+  transform: translateX(4px);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+}
+
+.access-option-card.is-yellow .access-option-accent {
+  background: var(--yellow);
+  box-shadow: 0 8px 20px rgba(244, 235, 0, 0.35);
+}
+
+.access-option-card.is-blue .access-option-accent {
+  background: var(--blue);
+  box-shadow: 0 8px 20px rgba(72, 169, 230, 0.35);
+}
+
+.access-option-card.is-pink .access-option-accent {
+  background: var(--pink);
+  box-shadow: 0 8px 20px rgba(239, 47, 141, 0.28);
+}
+
+.access-option-card.is-green .access-option-accent {
+  background: var(--green);
+  box-shadow: 0 8px 20px rgba(123, 227, 61, 0.3);
+}
+
+.access-form-shell {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 28px 28px;
+}
+
+.access-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.access-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.access-field span {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.access-field small {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.access-field-full {
+  grid-column: 1 / -1;
+}
+
+.access-field input,
+.access-field select {
+  width: 100%;
+  min-height: 54px;
+  border-radius: 18px;
+  border: 1px solid rgba(16, 24, 40, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 0 16px;
+  font: inherit;
+  color: var(--text);
+  outline: none;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+
+.access-field input::placeholder {
+  color: #98a2b3;
+}
+
+.access-field input:focus,
+.access-field select:focus {
+  border-color: rgba(72, 169, 230, 0.42);
+  box-shadow:
+    0 0 0 4px rgba(72, 169, 230, 0.12),
+    0 10px 24px rgba(15, 23, 42, 0.06);
+  background: white;
+}
+
+.access-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.access-checkbox-grid-compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.access-check-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(16, 24, 40, 0.07);
+  background: rgba(255, 255, 255, 0.88);
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+
+.access-check-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.07);
+  border-color: rgba(16, 24, 40, 0.11);
+  background: white;
+}
+
+.access-check-card input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--blue);
+  flex-shrink: 0;
+}
+
+.access-check-card span {
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.access-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.access-choice-card {
+  min-height: 54px;
+  padding: 0 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(16, 24, 40, 0.08);
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--text);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.access-choice-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.07);
+  border-color: rgba(16, 24, 40, 0.12);
+  background: white;
+}
+
+.access-choice-card.is-selected {
+  background: rgba(72, 169, 230, 0.12);
+  color: #1d6fa5;
+  border-color: rgba(72, 169, 230, 0.24);
+  box-shadow: 0 14px 28px rgba(72, 169, 230, 0.1);
+}
+
+.access-consent-card {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px;
+  border-radius: 22px;
+  border: 1px solid rgba(16, 24, 40, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 14px 26px rgba(15, 23, 42, 0.05);
+}
+
+.access-consent-copy strong {
+  display: block;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.access-consent-copy small {
+  display: block;
+  margin-top: 8px;
+  color: #b42318;
+  font-weight: 700;
+}
+
+.access-consent-card input {
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  accent-color: var(--blue);
+  flex-shrink: 0;
+}
+
+.access-step-error {
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.16);
+  color: #b42318;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.access-form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.access-action-btn {
+  min-height: 54px;
+  padding: 0 22px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.access-action-btn:hover {
+  transform: translateY(-2px);
+}
+
+.access-action-btn.is-primary {
+  background: linear-gradient(180deg, #1d2939 0%, #101828 100%);
+  color: white;
+  box-shadow: 0 14px 34px rgba(16, 24, 40, 0.18);
+}
+
+.access-action-btn.is-secondary {
+  background: white;
+  color: var(--text);
+  border-color: rgba(16, 24, 40, 0.09);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+@media (max-width: 860px) {
+  .access-floating-panel.is-form-mode {
+    width: min(100%, 980px);
+  }
+
+  .access-form-grid,
+  .access-checkbox-grid,
+  .access-checkbox-grid-compact,
+  .access-choice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .access-consent-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .access-overlay {
+    padding: 16px;
+    align-items: flex-start;
+  }
+
+  .access-floating-panel {
+    border-radius: 26px;
+  }
+
+  .access-panel-top {
+    padding: 22px 20px 8px;
+  }
+
+  .access-panel-title {
+    font-size: 1.45rem;
+  }
+
+  .access-options-grid {
+    padding: 16px 20px 20px;
+    grid-template-columns: 1fr;
+  }
+
+  .access-form-shell {
+    padding: 8px 20px 20px;
+  }
+
+  .access-form-actions {
+    flex-direction: column;
+  }
+
+  .access-action-btn {
+    width: 100%;
+  }
+}

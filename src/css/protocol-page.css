@@ -1,0 +1,138 @@
+.btn {
+  max-width: 480px;
+  min-width: 190px;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.protocol-page-main {
+  padding-bottom: 4rem;
+}
+
+.protocol-page-header {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.protocol-page-section {
+  padding-top: 0;
+}
+
+.protocol-page-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.protocol-card,
+.protocol-result-card {
+  padding: 1.5rem;
+  border-radius: 28px;
+}
+
+.protocol-card-heading,
+.protocol-result-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 3rem;
+  margin-bottom: 1rem;
+}
+
+.protocol-card-heading h3,
+.protocol-result-header h3 {
+  margin: 0;
+}
+
+.protocol-card-heading p,
+.protocol-result-header p {
+  margin: 0.35rem 0 0;
+}
+
+.protocol-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.protocol-feedback {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  background: rgba(72, 169, 230, 0.08);
+  border: 1px solid rgba(72, 169, 230, 0.18);
+}
+
+.protocol-feedback--error {
+  background: rgba(239, 47, 141, 0.08);
+  border-color: rgba(239, 47, 141, 0.22);
+}
+
+.protocol-status-pill {
+  min-width: 220px;
+  padding: 0.9rem 1rem;
+  border-radius: 20px;
+  background: rgba(123, 227, 61, 0.09);
+  border: 1px solid rgba(123, 227, 61, 0.18);
+}
+
+.protocol-status-pill strong,
+.protocol-status-pill small {
+  display: block;
+}
+
+.protocol-status-pill small {
+  margin-top: 0.35rem;
+}
+
+.protocol-result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.protocol-result-item {
+  padding: 1rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(18, 29, 61, 0.08);
+}
+
+.protocol-result-item span,
+.protocol-result-item strong {
+  display: block;
+}
+
+.protocol-result-item span {
+  margin-bottom: 0.35rem;
+  font-size: 0.92rem;
+  color: rgba(18, 29, 61, 0.74);
+}
+
+.spin-icon {
+  animation: protocol-spin 0.9s linear infinite;
+}
+
+@keyframes protocol-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 960px) {
+  .protocol-page-grid,
+  .protocol-result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .protocol-result-header,
+  .protocol-card-heading {
+    flex-direction: column;
+  }
+
+  .protocol-status-pill {
+    min-width: 100%;
+  }
+}
