@@ -473,7 +473,7 @@ function buildExportRows(
       categoria: "Visão geral",
       indicador: item.label,
       valor: item.value,
-      detalhe: "Dados reais consolidados no backend.",
+      detalhe: "Dados consolidados na base do sistema.",
     })),
     ...sectorDistributionData.map((item) => ({
       categoria: "Distribuição por setor",
@@ -1014,7 +1014,7 @@ export default function StatisticsPage() {
                 className="card"
                 style={{ marginTop: "1rem", padding: "1rem 1.25rem" }}
               >
-                Carregando resumo estatístico do backend...
+                Carregando resumo estatístico...
               </div>
             ) : null}
 
