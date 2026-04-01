@@ -34,6 +34,7 @@ Thumbs.db
 # vite
 vite.config.ts.timestamp-*
 vite.config.js.timestamp-*
+*.tsbuildinfo
 
 # test coverage
 coverage/
