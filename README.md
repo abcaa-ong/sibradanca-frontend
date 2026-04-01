@@ -115,6 +115,18 @@ Use o arquivo `.env.local` e ajuste a URL conforme a porta do backend local:
 VITE_API_BASE_URL=http://localhost:8080
 ```
 
+Para produção, use o `.env.example` apenas como referência com placeholder público:
+
+```env
+VITE_API_BASE_URL=https://SEU_BACKEND_PUBLICO.exemplo.com
+```
+
+Importante:
+
+- não publicar `.env.local` no repositório
+- não versionar URLs privadas ou segredos
+- o frontend deve apontar sempre para a URL pública oficial do backend
+
 ### Instalação e execução
 
 ```bash
@@ -127,6 +139,15 @@ npm run dev
 ```bash
 npm run build
 ```
+
+### Publicação na Vercel
+
+Configuração recomendada:
+
+- Framework: `Vite`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Variável obrigatória: `VITE_API_BASE_URL=https://SEU_BACKEND_PUBLICO.exemplo.com`
 
 ### Testes
 
