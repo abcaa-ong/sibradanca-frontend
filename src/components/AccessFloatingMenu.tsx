@@ -3127,8 +3127,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                   <div className="access-form-grid">
                     <div className="access-field access-field-full">
                       <span>Cadastro enviado com sucesso</span>
-                      <strong>Protocolo: {minorSubmission?.protocol ?? adultSubmission?.protocol ?? institutionSubmission?.protocol}</strong>
-                      <small>Guarde esse protocolo para acompanhar ou atualizar seus dados futuramente.</small>
+                      <strong>Os dados foram recebidos com sucesso.</strong>
+                      <small>Obrigado por contribuir com o mapeamento nacional da dança.</small>
                     </div>
                     <div className="access-form-actions">
                       <button type="button" className="access-action-btn is-primary" onClick={handleClose}>

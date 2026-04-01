@@ -9,13 +9,14 @@ import { MetricCard } from "../components/MetricCard";
 import { SectionTitle } from "../components/SectionTitle";
 import { listStates } from "../services/geo.services";
 import {
-  getStatisticsDetails,
-  getStatisticsOverview,
-  getStatisticsProfile,
+  exportStatisticsCsv,
+  exportStatisticsPdf,
+  getStatisticsDashboard,
 } from "../services/statistics.service";
 import type { StateResponse } from "../types/geo";
 import type {
   ChartItem,
+  StatisticsDashboardResponse,
   StatisticsDetailsResponse,
   StatisticsOverviewResponse,
   StatisticsProfileResponse,
@@ -222,6 +223,12 @@ const emptyDetails: StatisticsDetailsResponse = {
   ]),
 };
 
+const emptyDashboard: StatisticsDashboardResponse = {
+  overview: emptyOverview,
+  profile: emptyProfile,
+  details: emptyDetails,
+};
+
 const numberFormatter = new Intl.NumberFormat("pt-BR");
 
 function formatNumber(value: number) {
@@ -401,11 +408,61 @@ function buildPublicPolicyCards(
 }
 
 function buildExportRows(
+  selectedSectorLabel: string,
+  selectedRegionLabel: string,
   overviewCards: OverviewCardItem[],
+  economyCards: MetricCardItem[],
+  educationCards: MetricCardItem[],
+  publicPolicyCards: MetricCardItem[],
   sectorDistributionData: ChartItem[],
+  ageData: ChartItem[],
+  genderData: ChartItem[],
+  modalitiesData: ChartItem[],
+  incomeData: ChartItem[],
+  financingData: ChartItem[],
+  costCoursesData: ChartItem[],
+  monthlyFeeData: ChartItem[],
+  institutionIndicatorsData: ChartItem[],
+  monthlyRevenueData: ChartItem[],
+  danceEducationLevelData: ChartItem[],
+  costumesCostData: ChartItem[],
+  publicCallsParticipationData: ChartItem[],
+  mainEditalDifficultiesData: ChartItem[],
   selectedStateLabel: string,
 ): ExportRow[] {
+  const buildChartRows = (
+    categoria: string,
+    detalhe: string,
+    data: ChartItem[],
+  ) =>
+    data.map((item) => ({
+      categoria,
+      indicador: item.name,
+      valor: item.value,
+      detalhe,
+    }));
+
+  const buildMetricRows = (categoria: string, items: MetricCardItem[]) =>
+    items.map((item) => ({
+      categoria,
+      indicador: item.label,
+      valor: item.percent,
+      detalhe: item.detail,
+    }));
+
   return [
+    {
+      categoria: "Filtros",
+      indicador: "Setor selecionado",
+      valor: selectedSectorLabel,
+      detalhe: "Recorte aplicado no painel estatístico.",
+    },
+    {
+      categoria: "Filtros",
+      indicador: "Região selecionada",
+      valor: selectedRegionLabel,
+      detalhe: "Recorte aplicado no painel estatístico.",
+    },
     {
       categoria: "Filtros",
       indicador: "Estado selecionado",
@@ -424,6 +481,74 @@ function buildExportRows(
       valor: item.value,
       detalhe: "Participação por setor com base nas respostas registradas.",
     })),
+    ...buildChartRows(
+      "Perfil da dança",
+      "Distribuição por faixa etária.",
+      ageData,
+    ),
+    ...buildChartRows(
+      "Perfil da dança",
+      "Distribuição por gênero.",
+      genderData,
+    ),
+    ...buildChartRows(
+      "Perfil da dança",
+      "Modalidades mais praticadas.",
+      modalitiesData,
+    ),
+    ...buildMetricRows("Economia da dança", economyCards),
+    ...buildChartRows(
+      "Economia da dança",
+      "Faixa de renda dos profissionais.",
+      incomeData,
+    ),
+    ...buildChartRows(
+      "Economia da dança",
+      "Quem financia a dança.",
+      financingData,
+    ),
+    ...buildChartRows(
+      "Economia da dança",
+      "Gasto com cursos e formações.",
+      costCoursesData,
+    ),
+    ...buildChartRows(
+      "Economia da dança",
+      "Gasto com mensalidade.",
+      monthlyFeeData,
+    ),
+    ...buildChartRows(
+      "Economia da dança",
+      "Estrutura institucional.",
+      institutionIndicatorsData,
+    ),
+    ...buildChartRows(
+      "Economia da dança",
+      "Faturamento mensal das instituições.",
+      monthlyRevenueData,
+    ),
+    ...buildMetricRows("Formação em dança", educationCards),
+    ...buildChartRows(
+      "Formação em dança",
+      "Nível de formação em dança.",
+      danceEducationLevelData,
+    ),
+    ...buildChartRows(
+      "Formação em dança",
+      "Gasto com figurinos.",
+      costumesCostData,
+    ),
+    ...buildMetricRows("Políticas públicas", publicPolicyCards),
+    ...buildChartRows(
+      "Políticas públicas",
+      "Participação em editais.",
+      publicCallsParticipationData,
+    ),
+    ...buildChartRows(
+      "Políticas públicas",
+      "Principais dificuldades com editais.",
+      mainEditalDifficultiesData,
+    ),
   ];
 }
 
@@ -444,6 +569,15 @@ function buildCsv(rows: ExportRow[]) {
   ];
 
   return `\uFEFF${lines.join("\r\n")}`;
+}
+void buildCsv;
+
+function downloadBlob(blob: Blob, filename: string) {
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(link.href);
 }
 
 export default function StatisticsPage() {
@@ -483,16 +617,9 @@ export default function StatisticsPage() {
           ...(sector ? { sector } : {}),
         };
 
-        const [
-          statesResponse,
-          overviewResponse,
-          profileResponse,
-          detailsResponse,
-        ] = await Promise.all([
+        const [statesResponse, dashboardResponse] = await Promise.all([
           listStates(),
-          getStatisticsOverview(statisticsFilters),
-          getStatisticsProfile(statisticsFilters),
-          getStatisticsDetails(statisticsFilters),
+          getStatisticsDashboard(statisticsFilters),
         ]);
 
         if (!isMounted) {
@@ -503,9 +630,9 @@ export default function StatisticsPage() {
           allStatesOption,
           ...normalizeStateList(statesResponse),
         ]);
-        setOverview(overviewResponse);
-        setProfile(profileResponse);
-        setDetails(detailsResponse);
+        setOverview(dashboardResponse.overview ?? emptyDashboard.overview);
+        setProfile(dashboardResponse.profile ?? emptyDashboard.profile);
+        setDetails(dashboardResponse.details ?? emptyDashboard.details);
       } catch (err) {
         if (!isMounted) {
           return;
@@ -569,6 +696,12 @@ export default function StatisticsPage() {
   const selectedStateLabel =
     stateOptions.find((item) => item.code === state)?.name ??
     allStatesOption.name;
+  const selectedSectorLabel =
+    sectorOptions.find((item) => item.value === sector)?.label ??
+    sectorOptions[0].label;
+  const selectedRegionLabel =
+    regionOptions.find((item) => item.value === region)?.label ??
+    regionOptions[0].label;
 
   const overviewCards = useMemo(() => buildOverviewCards(overview), [overview]);
   const sectorDistributionData = useMemo(
@@ -629,40 +762,104 @@ export default function StatisticsPage() {
   const exportRows = useMemo(
     () =>
       buildExportRows(
+        selectedSectorLabel,
+        selectedRegionLabel,
         overviewCards,
+        economyCards,
+        educationCards,
+        publicPolicyCards,
         sectorDistributionData,
+        ageData,
+        genderData,
+        modalitiesData,
+        incomeData,
+        financingData,
+        costCoursesData,
+        monthlyFeeData,
+        institutionIndicatorsData,
+        monthlyRevenueData,
+        danceEducationLevelData,
+        costumesCostData,
+        publicCallsParticipationData,
+        mainEditalDifficultiesData,
         selectedStateLabel,
       ),
-    [overviewCards, sectorDistributionData, selectedStateLabel],
+    [
+      selectedSectorLabel,
+      selectedRegionLabel,
+      overviewCards,
+      economyCards,
+      educationCards,
+      publicPolicyCards,
+      sectorDistributionData,
+      ageData,
+      genderData,
+      modalitiesData,
+      incomeData,
+      financingData,
+      costCoursesData,
+      monthlyFeeData,
+      institutionIndicatorsData,
+      monthlyRevenueData,
+      danceEducationLevelData,
+      costumesCostData,
+      publicCallsParticipationData,
+      mainEditalDifficultiesData,
+      selectedStateLabel,
+    ],
   );
+  void exportRows;
 
   const hasOverviewData = overview.totalResponses > 0;
 
-  const handleExportCsv = () => {
-    const csv = buildCsv(exportRows);
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "sibradanca-estatisticas.csv";
-    link.click();
-    URL.revokeObjectURL(link.href);
+  const handleExportCsv = async () => {
+    try {
+      const response = await exportStatisticsCsv({
+        ...(state ? { stateCode: state } : {}),
+        ...(region ? { region } : {}),
+        ...(sector ? { sector } : {}),
+      });
+      downloadBlob(response.blob, response.filename ?? "sibradanca-estatisticas.csv");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Não foi possível gerar o arquivo solicitado.");
+    }
   };
 
   const handleExportPdf = async () => {
+    try {
+      const response = await exportStatisticsPdf({
+        ...(state ? { stateCode: state } : {}),
+        ...(region ? { region } : {}),
+        ...(sector ? { sector } : {}),
+      });
+      downloadBlob(response.blob, response.filename ?? "sibradanca-estatisticas.pdf");
+      return;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Não foi possível gerar o arquivo solicitado.");
+      return;
+    }
+    /*
     const [{ jsPDF }, { autoTable }] = await Promise.all([
       import("jspdf"),
       import("jspdf-autotable"),
     ]);
 
     const doc = new jsPDF();
+    const generatedAt = new Intl.DateTimeFormat("pt-BR", {
+      dateStyle: "short",
+      timeStyle: "short",
+    }).format(new Date());
 
     doc.setFontSize(14);
     doc.text("Relatório Estatístico - SIBRADANÇA", 14, 16);
     doc.setFontSize(10);
-    doc.text(`Estado selecionado: ${selectedStateLabel}`, 14, 24);
+    doc.text(`Setor: ${selectedSectorLabel}`, 14, 24);
+    doc.text(`Região: ${selectedRegionLabel}`, 14, 30);
+    doc.text(`Estado: ${selectedStateLabel}`, 14, 36);
+    doc.text(`Gerado em: ${generatedAt}`, 14, 42);
 
     autoTable(doc, {
-      startY: 30,
+      startY: 48,
       head: [["Categoria", "Indicador", "Valor", "Detalhe"]],
       body: exportRows.map((row) => [
         row.categoria,
@@ -675,6 +872,7 @@ export default function StatisticsPage() {
     });
 
     doc.save("sibradanca-estatisticas.pdf");
+    */
   };
 
   return (
@@ -861,12 +1059,14 @@ export default function StatisticsPage() {
               <ChartPanel
                 title="Cadastros por setor"
                 data={sectorDistributionData}
+                isLoading={isLoading}
                 emptyMessage="Carregando dados..."
               />
               <ChartPanel
                 title="Participação por setor"
                 data={sectorDistributionData}
                 type="pie"
+                isLoading={isLoading}
                 emptyMessage="Carregando dados..."
               />
             </div>
@@ -886,15 +1086,18 @@ export default function StatisticsPage() {
                 title="Distribuição por faixa etária"
                 data={ageData}
                 type="pie"
+                isLoading={isLoading}
               />
               <ChartPanel
                 title="Distribuição por gênero"
                 data={genderData}
                 type="pie"
+                isLoading={isLoading}
               />
               <ChartPanel
                 title="Modalidades mais praticadas"
                 data={modalitiesData}
+                isLoading={isLoading}
               />
             </div>
           </div>
@@ -923,20 +1126,24 @@ export default function StatisticsPage() {
               <ChartPanel
                 title="Faixa de renda (profissionais)"
                 data={incomeData}
+                isLoading={isLoading}
               />
-              <ChartPanel title="Quem financia a dança" data={financingData} />
+              <ChartPanel title="Quem financia a dança" data={financingData} isLoading={isLoading} />
               <ChartPanel
                 title="Gasto com cursos e formações"
                 data={costCoursesData}
+                isLoading={isLoading}
               />
-              <ChartPanel title="Gasto com mensalidade" data={monthlyFeeData} />
+              <ChartPanel title="Gasto com mensalidade" data={monthlyFeeData} isLoading={isLoading} />
               <ChartPanel
                 title="Estrutura institucional"
                 data={institutionIndicatorsData}
+                isLoading={isLoading}
               />
               <ChartPanel
                 title="Faturamento mensal (instituições)"
                 data={monthlyRevenueData}
+                isLoading={isLoading}
               />
             </div>
           </div>
@@ -965,8 +1172,9 @@ export default function StatisticsPage() {
               <ChartPanel
                 title="Nível de formação em dança"
                 data={danceEducationLevelData}
+                isLoading={isLoading}
               />
-              <ChartPanel title="Gasto com figurinos" data={costumesCostData} />
+              <ChartPanel title="Gasto com figurinos" data={costumesCostData} isLoading={isLoading} />
             </div>
           </div>
         </section>
@@ -994,10 +1202,12 @@ export default function StatisticsPage() {
               <ChartPanel
                 title="Participação em editais"
                 data={publicCallsParticipationData}
+                isLoading={isLoading}
               />
               <ChartPanel
                 title="Principais dificuldades com editais"
                 data={mainEditalDifficultiesData}
+                isLoading={isLoading}
               />
             </div>
 

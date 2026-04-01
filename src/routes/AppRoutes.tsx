@@ -4,7 +4,6 @@ import { Route, Routes } from 'react-router-dom'
 const HomePage = lazy(() => import('../pages/HomePage'))
 const StatisticsPage = lazy(() => import('../pages/StatisticsPage'))
 const SectorFormPage = lazy(() => import('../pages/SectorFormPage'))
-const ProtocolCenterPage = lazy(() => import('../pages/ProtocolCenterPage'))
 
 export default function AppRoutes() {
   return (
@@ -13,7 +12,6 @@ export default function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/estatisticas-nacionais" element={<StatisticsPage />} />
         <Route path="/formulario/:sector" element={<SectorFormPage />} />
-        <Route path="/acompanhar-protocolo" element={<ProtocolCenterPage />} />
       </Routes>
     </Suspense>
   )

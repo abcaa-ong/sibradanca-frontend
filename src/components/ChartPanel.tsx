@@ -21,6 +21,7 @@ type ChartPanelProps = {
   data: ChartItem[]
   type?: 'bar' | 'pie'
   className?: string
+  isLoading?: boolean
   emptyMessage?: string
 }
 
@@ -38,6 +39,7 @@ export function ChartPanel({
   data,
   type = 'bar',
   className = '',
+  isLoading = false,
   emptyMessage = 'Carregando...',
 }: ChartPanelProps) {
   const palette = [
@@ -50,6 +52,7 @@ export function ChartPanel({
   ]
 
   const hasData = data.some((item) => item.value > 0)
+  const placeholderPieData = [{ name: 'Sem dados', value: 1 }]
 
   return (
     <div className={`card chart-panel statistics-chart-panel ${className}`.trim()}>
@@ -61,7 +64,7 @@ export function ChartPanel({
       </div>
 
       <div className="bar-area">
-        {!hasData ? (
+        {!hasData && isLoading ? (
           <div
             style={{
               height: '100%',
@@ -80,9 +83,16 @@ export function ChartPanel({
           <ResponsiveContainer width="100%" height="100%">
             {type === 'pie' ? (
               <PieChart>
-                <Tooltip />
-                <Pie data={data} dataKey="value" nameKey="name" outerRadius={90} innerRadius={45}>
-                  {data.map((entry, index) => (
+                {hasData ? <Tooltip /> : null}
+                <Pie
+                  data={hasData ? data : placeholderPieData}
+                  dataKey="value"
+                  nameKey="name"
+                  outerRadius={90}
+                  innerRadius={45}
+                  isAnimationActive={false}
+                >
+                  {(hasData ? data : placeholderPieData).map((entry, index) => (
                     <Cell key={`${entry.name}-${index}`} fill={palette[index % palette.length]} />
                   ))}
                 </Pie>
@@ -92,7 +102,7 @@ export function ChartPanel({
                 <CartesianGrid strokeDasharray="4 4" stroke="#e5e7eb" />
                 <XAxis dataKey="name" tickLine={false} axisLine={false} />
                 <YAxis tickLine={false} axisLine={false} />
-                <Tooltip />
+                {hasData ? <Tooltip /> : null}
                 <Bar dataKey="value" radius={[14, 14, 0, 0]}>
                   {data.map((entry, index) => (
                     <Cell key={`${entry.name}-${index}`} fill={palette[index % palette.length]} />

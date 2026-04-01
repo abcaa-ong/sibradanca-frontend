@@ -6,9 +6,8 @@ O projeto foi estruturado para:
 
 - apresentar o sistema de forma institucional
 - direcionar cada perfil para o formulário correto
-- permitir consulta e acompanhamento por protocolo
 - exibir o painel público de estatísticas
-- exportar indicadores em CSV e PDF a partir dos dados agregados do backend
+- exportar indicadores em CSV e PDF a partir dos arquivos oficiais gerados pelo backend
 
 ## Papel do frontend
 
@@ -18,7 +17,7 @@ No MVP atual, o frontend:
 - não consulta o IBGE em tempo real
 - não persiste dados críticos fora do backend
 
-O frontend consome a API oficial e atua como camada de navegação, cadastro, visualização e exportação.
+O frontend consome a API oficial e atua como camada de navegação, cadastro e visualização.
 
 ## Tecnologias
 
@@ -39,7 +38,6 @@ O frontend consome a API oficial e atua como camada de navegação, cadastro, vi
 | `/formulario/jovens` | Formulário de jovens da dança |
 | `/formulario/profissionais` | Formulário de profissionais da dança |
 | `/formulario/instituicoes` | Formulário de instituições da dança |
-| `/acompanhar-protocolo` | Consulta e recuperação por protocolo |
 
 ## Integração com o backend
 
@@ -54,10 +52,9 @@ Serviços principais consumidos pelo frontend:
 - `POST /api/forms/youth`
 - `POST /api/forms/professional`
 - `POST /api/forms/institution`
-- `GET /api/statistics/overview`
-- `GET /api/statistics/profile`
-- `GET /api/statistics/details`
-- `POST /api/protocol-recovery`
+- `GET /api/statistics/dashboard`
+- `GET /api/statistics/export.csv`
+- `GET /api/statistics/export.pdf`
 
 ## Exportação de dados
 
@@ -68,9 +65,9 @@ O painel estatístico permite exportação em:
 
 Observações importantes:
 
-- os dados exportados vêm do backend
-- o frontend apenas formata os agregados recebidos da API
-- o CSV foi ajustado para compatibilidade com Excel/Windows usando UTF-8 BOM, `;` e quebra de linha `CRLF`
+- os arquivos são gerados pelo backend
+- o frontend apenas aciona o download dos relatórios oficiais
+- o CSV sai com compatibilidade para Excel/Windows usando UTF-8 BOM, `;` e quebra de linha `CRLF`
 
 ## Estrutura principal
 
@@ -87,7 +84,6 @@ src/
     SectionTitle.tsx
   pages/
     HomePage.tsx
-    ProtocolCenterPage.tsx
     SectorFormPage.tsx
     StatisticsPage.tsx
   routes/
@@ -96,7 +92,6 @@ src/
     api.ts
     forms.service.ts
     geo.services.ts
-    protocol-recovery.service.ts
     statistics.service.ts
   types/
     api.ts
@@ -114,7 +109,7 @@ src/
 
 ### Variável de ambiente
 
-Use o arquivo `.env.local`:
+Use o arquivo `.env.local` e ajuste a URL conforme a porta do backend local:
 
 ```env
 VITE_API_BASE_URL=http://localhost:8080
@@ -145,7 +140,8 @@ npm test -- --run
 - integração principal com backend validada
 - painel estatístico funcionando com dados reais da API
 - exportação CSV/PDF validada
-- navegação de protocolo disponível
+- protocolo removido da interface pública
+- exportação oficial ligada ao backend
 
 ## Observações importantes
 
