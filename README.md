@@ -1,101 +1,78 @@
 # SIBRADANÇA Web App
 
-Frontend do projeto **SIBRADANÇA**, desenvolvido para oferecer uma experiência institucional moderna, responsiva e organizada, com foco em dois grandes fluxos:
+Frontend oficial do SIBRADANÇA, responsável pela experiência pública da plataforma.
 
-- **acesso aos formulários por setor**
-- **visualização pública de estatísticas e indicadores**
+O projeto foi estruturado para:
 
-A aplicação foi estruturada para separar claramente a navegação institucional da camada analítica, facilitando manutenção, evolução e integração incremental com o backend.
+- apresentar o sistema de forma institucional
+- direcionar cada perfil para o formulário correto
+- permitir consulta e acompanhamento por protocolo
+- exibir o painel público de estatísticas
+- exportar indicadores em CSV e PDF a partir dos dados agregados do backend
 
----
+## Papel do frontend
 
-## Objetivo do projeto
+No MVP atual, o frontend:
 
-O SIBRADANÇA Web App foi pensado para:
+- não calcula estatísticas por conta própria
+- não consulta o IBGE em tempo real
+- não persiste dados críticos fora do backend
 
-- apresentar o projeto de forma institucional e acessível
-- direcionar usuários para o formulário correto de acordo com o setor
-- centralizar indicadores e dados públicos em uma página analítica específica
-- permitir evolução gradual da integração com o backend sem comprometer a experiência do usuário
+O frontend consome a API oficial e atua como camada de navegação, cadastro, visualização e exportação.
 
----
+## Tecnologias
 
-## Estrutura atual da aplicação
+- React
+- TypeScript
+- Vite
+- React Router DOM
+- Lucide React
+- jsPDF
+- jspdf-autotable
 
-Atualmente, o frontend está dividido em duas áreas principais:
-
-### 1. HomePage
-Responsável por:
-- apresentação institucional do projeto
-- navegação principal
-- acesso aos formulários por setor
-- redirecionamento para a página de estatísticas
-
-### 2. StatisticsPage
-Responsável por:
-- exibição dos indicadores principais
-- leitura analítica dos dados disponíveis no backend
-- exportação de relatórios
-- preparação da interface para futuros endpoints estatísticos
-
----
-
-## Tecnologias utilizadas
-
-- **React**
-- **TypeScript**
-- **Vite**
-- **React Router DOM**
-- **Framer Motion**
-- **Recharts**
-- **jsPDF**
-- **XLSX**
-- **Lucide React**
-
----
-
-## Funcionalidades implementadas
-
-### Home
-- layout institucional com identidade visual do projeto
-- navegação por setores
-- cards de acesso para:
-  - Jovens da Dança
-  - Profissionais da Dança
-  - Escolas, grupos e companhias
-- botão para acesso ao painel de estatísticas
-- estrutura preparada para menu responsivo/mobile
-
-### Formulários por setor
-Cada setor possui uma rota própria de entrada, permitindo abrir diretamente o fluxo correspondente:
-
-- `/formulario/jovens`
-- `/formulario/profissionais`
-- `/formulario/instituicoes`
-
-### Estatísticas Nacionais
-- página dedicada exclusivamente para dados e indicadores
-- consumo do endpoint real de resumo estatístico
-- renderização dos cards principais de visão geral
-- gráficos baseados no overview disponível
-- exportação em:
-  - CSV
-  - Excel
-  - PDF
-
----
-
-## Rotas da aplicação
+## Rotas principais
 
 | Rota | Descrição |
 |------|-----------|
 | `/` | Página inicial |
-| `/estatisticas-nacionais` | Painel estatístico |
-| `/formulario/:sector` | Formulário por setor |
+| `/estatisticas-nacionais` | Painel estatístico público |
+| `/formulario/jovens` | Formulário de jovens da dança |
+| `/formulario/profissionais` | Formulário de profissionais da dança |
+| `/formulario/instituicoes` | Formulário de instituições da dança |
+| `/acompanhar-protocolo` | Consulta e recuperação por protocolo |
 
----
+## Integração com o backend
 
-## Estrutura principal do projeto
+Serviços principais consumidos pelo frontend:
+
+- `GET /api/geo/states`
+- `GET /api/geo/cities?stateCode=UF`
+- `GET /api/reference/modalities`
+- `GET /api/reference/contents`
+- `GET /api/reference/consent-term`
+- `GET /api/forms`
+- `POST /api/forms/youth`
+- `POST /api/forms/professional`
+- `POST /api/forms/institution`
+- `GET /api/statistics/overview`
+- `GET /api/statistics/profile`
+- `GET /api/statistics/details`
+- `POST /api/protocol-recovery`
+
+## Exportação de dados
+
+O painel estatístico permite exportação em:
+
+- CSV
+- PDF
+
+Observações importantes:
+
+- os dados exportados vêm do backend
+- o frontend apenas formata os agregados recebidos da API
+- o CSV foi ajustado para compatibilidade com Excel/Windows usando UTF-8 BOM, `;` e quebra de linha `CRLF`
+
+## Estrutura principal
 
 ```txt
 src/
@@ -108,38 +85,71 @@ src/
     ChartPanel.tsx
     MetricCard.tsx
     SectionTitle.tsx
-
   pages/
     HomePage.tsx
+    ProtocolCenterPage.tsx
     SectorFormPage.tsx
     StatisticsPage.tsx
-
   routes/
     AppRoutes.tsx
-
   services/
     api.ts
-    statistics.service.ts
     forms.service.ts
     geo.services.ts
-    submission.service.ts
-
+    protocol-recovery.service.ts
+    statistics.service.ts
   types/
     api.ts
-    statistics.ts
     forms.ts
     geo.ts
-    submission.ts
+    statistics.ts
+```
 
-  styles/
-    app.css
-    home-page.css
-    statistics-page.css
-    access-floating-menu.css
+## Como rodar localmente
 
-## Status técnico atual
+### Pré-requisitos
 
-- Build de produção validado com `npm run build`
-- Frontend apontando para `VITE_API_BASE_URL`
-- Fluxos principais integrados com backend por serviços separados
-- Página de protocolo disponível como rota dedicada
+- Node.js 20+
+- npm
+
+### Variável de ambiente
+
+Use o arquivo `.env.local`:
+
+```env
+VITE_API_BASE_URL=http://localhost:8080
+```
+
+### Instalação e execução
+
+```bash
+npm install
+npm run dev
+```
+
+### Build de produção
+
+```bash
+npm run build
+```
+
+### Testes
+
+```bash
+npm test -- --run
+```
+
+## Status atual
+
+- interface preservada conforme o frontend atualizado
+- integração principal com backend validada
+- painel estatístico funcionando com dados reais da API
+- exportação CSV/PDF validada
+- navegação de protocolo disponível
+
+## Observações importantes
+
+- o frontend deve continuar usando o backend como fonte única de verdade
+- dados pessoais não devem ser expostos no painel público
+- qualquer ajuste de contrato deve ser feito em conjunto com o backend
+- arquivos locais gerados pelo TypeScript (`*.tsbuildinfo`) não devem ser commitados
