@@ -433,16 +433,17 @@ function escapeCsvCell(value: string | number) {
 
 function buildCsv(rows: ExportRow[]) {
   const header = ["categoria", "indicador", "valor", "detalhe"];
+  const separator = ";";
   const lines = [
-    header.map(escapeCsvCell).join(","),
+    header.map(escapeCsvCell).join(separator),
     ...rows.map((row) =>
       [row.categoria, row.indicador, row.valor, row.detalhe]
         .map(escapeCsvCell)
-        .join(","),
+        .join(separator),
     ),
   ];
 
-  return lines.join("\n");
+  return `\uFEFF${lines.join("\r\n")}`;
 }
 
 export default function StatisticsPage() {
