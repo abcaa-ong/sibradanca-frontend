@@ -7,21 +7,22 @@ export default defineConfig({
             output: {
                 manualChunks: function (id) {
                     var normalizedId = id.replace(/\\/g, '/');
-                    if (!normalizedId.includes('node_modules')) {
+                    var has = function (value) { return normalizedId.indexOf(value) >= 0; };
+                    if (!has('node_modules')) {
                         return;
                     }
-                    if (normalizedId.includes('react-router-dom') ||
-                        normalizedId.includes('node_modules/react/') ||
-                        normalizedId.includes('node_modules/react-dom/')) {
+                    if (has('react-router-dom') ||
+                        has('node_modules/react/') ||
+                        has('node_modules/react-dom/')) {
                         return 'react-vendor';
                     }
-                    if (normalizedId.includes('recharts')) {
+                    if (has('recharts')) {
                         return 'charts-vendor';
                     }
-                    if (normalizedId.includes('framer-motion')) {
+                    if (has('framer-motion')) {
                         return 'motion-vendor';
                     }
-                    if (normalizedId.includes('lucide-react')) {
+                    if (has('lucide-react')) {
                         return 'icons-vendor';
                     }
                 },

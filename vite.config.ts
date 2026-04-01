@@ -8,28 +8,29 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           const normalizedId = id.replace(/\\/g, '/')
+          const has = (value: string) => normalizedId.indexOf(value) >= 0
 
-          if (!normalizedId.includes('node_modules')) {
+          if (!has('node_modules')) {
             return
           }
 
           if (
-            normalizedId.includes('react-router-dom') ||
-            normalizedId.includes('node_modules/react/') ||
-            normalizedId.includes('node_modules/react-dom/')
+            has('react-router-dom') ||
+            has('node_modules/react/') ||
+            has('node_modules/react-dom/')
           ) {
             return 'react-vendor'
           }
 
-          if (normalizedId.includes('recharts')) {
+          if (has('recharts')) {
             return 'charts-vendor'
           }
 
-          if (normalizedId.includes('framer-motion')) {
+          if (has('framer-motion')) {
             return 'motion-vendor'
           }
 
-          if (normalizedId.includes('lucide-react')) {
+          if (has('lucide-react')) {
             return 'icons-vendor'
           }
         },
