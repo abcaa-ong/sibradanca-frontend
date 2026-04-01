@@ -29,3 +29,9 @@ export interface StatisticsDetailsResponse {
   educationIndicators: ChartItem[]
   institutionIndicators: ChartItem[]
 }
+
+export interface StatisticsDashboardResponse {
+  overview: StatisticsOverviewResponse
+  profile: StatisticsProfileResponse
+  details: StatisticsDetailsResponse
+}

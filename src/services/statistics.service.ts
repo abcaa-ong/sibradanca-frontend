@@ -1,5 +1,6 @@
-import { apiGet } from './api'
+import { apiDownload, apiGet } from './api'
 import type {
+  StatisticsDashboardResponse,
   StatisticsDetailsResponse,
   StatisticsOverviewResponse,
   StatisticsProfileResponse,
@@ -40,4 +41,16 @@ export function getStatisticsProfile(filters?: StatisticsFilters) {
 
 export function getStatisticsDetails(filters?: StatisticsFilters) {
   return apiGet<StatisticsDetailsResponse>(`/api/statistics/details${buildQuery(filters)}`)
+}
+
+export function getStatisticsDashboard(filters?: StatisticsFilters) {
+  return apiGet<StatisticsDashboardResponse>(`/api/statistics/dashboard${buildQuery(filters)}`)
+}
+
+export function exportStatisticsCsv(filters?: StatisticsFilters) {
+  return apiDownload(`/api/statistics/export.csv${buildQuery(filters)}`)
+}
+
+export function exportStatisticsPdf(filters?: StatisticsFilters) {
+  return apiDownload(`/api/statistics/export.pdf${buildQuery(filters)}`)
 }

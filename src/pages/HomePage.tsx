@@ -276,18 +276,6 @@ export default function HomePage() {
               <span>Estatísticas</span>
             </button>
 
-            {/* <button 
-              type="button"
-              className="mobile-menu-link mobile-menu-action"
-              onClick={() => {
-                setMobileMenuOpen(false)
-                navigate('/acompanhar-protocolo')
-              }}
-            >
-              <KeyRound size={18} />
-              <span>Consultar protocolo</span>
-            </button> */}
-
             <a
               href="https://www.instagram.com/sibradanca"
               target="_blank"
@@ -325,9 +313,6 @@ export default function HomePage() {
                   Ver estatísticas <BarChart3 size={18} />
                 </Button>
 
-                {/* <Button large variant="outline" onClick={() => navigate('/acompanhar-protocolo')}>
-                  Consultar protocolo <KeyRound size={18} />
-                </Button> */}
               </motion.div>
             </motion.div>
 
@@ -414,21 +399,6 @@ export default function HomePage() {
                 </Button>
               </Card>
 
-              {/* <Card className="access-card" hover>
-                <div className="access-card-header">
-                  <Badge>Suporte</Badge>
-                  <div className="icon-wrap access-icon" style={{ backgroundColor: colors.yellow }}>
-                    <KeyRound size={22} />
-                  </div>
-                </div>
-                <h3>Consultar ou recuperar protocolo</h3>
-                <p className="card-text">
-                  Consulte um cadastro já enviado pelo protocolo e solicite a recuperação por e-mail usando o fluxo alinhado ao backend oficial.
-                </p>
-                <Button variant="outline" onClick={() => navigate('/acompanhar-protocolo')}>
-                  Abrir central de protocolo <ArrowRight size={16} />
-                </Button>
-              </Card> */}
             </div>
           </div>
         </section>

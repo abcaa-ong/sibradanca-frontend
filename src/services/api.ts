@@ -2,6 +2,19 @@ import type { ApiErrorResponse, ApiResponse } from '../types/api'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
 
+export type ApiDownloadResponse = {
+  blob: Blob
+  filename: string | null
+}
+
+async function performRequest(input: RequestInfo | URL, init?: RequestInit) {
+  try {
+    return await fetch(input, init)
+  } catch {
+    throw new Error('Não foi possível conectar ao sistema no momento. Tente novamente em instantes.')
+  }
+}
+
 async function parseApiResponse<T>(response: Response, fallbackMessage: string): Promise<T> {
   let json: ApiResponse<T> | ApiErrorResponse | null = null
 
@@ -27,13 +40,27 @@ function buildUrl(path: string) {
   return `${API_BASE_URL}${path}`
 }
 
+function getFilenameFromDisposition(headerValue: string | null) {
+  if (!headerValue) {
+    return null
+  }
+
+  const utf8Match = headerValue.match(/filename\*=UTF-8''([^;]+)/i)
+  if (utf8Match?.[1]) {
+    return decodeURIComponent(utf8Match[1])
+  }
+
+  const fallbackMatch = headerValue.match(/filename="?([^\";]+)"?/i)
+  return fallbackMatch?.[1] ?? null
+}
+
 export async function apiGet<T>(path: string): Promise<T> {
-  const response = await fetch(buildUrl(path))
+  const response = await performRequest(buildUrl(path))
   return parseApiResponse<T>(response, 'Erro ao buscar dados.')
 }
 
 export async function apiPost<TResponse, TBody>(path: string, body: TBody): Promise<TResponse> {
-  const response = await fetch(buildUrl(path), {
+  const response = await performRequest(buildUrl(path), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -45,7 +72,7 @@ export async function apiPost<TResponse, TBody>(path: string, body: TBody): Prom
 }
 
 export async function apiPut<TResponse, TBody>(path: string, body: TBody): Promise<TResponse> {
-  const response = await fetch(buildUrl(path), {
+  const response = await performRequest(buildUrl(path), {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -54,4 +81,17 @@ export async function apiPut<TResponse, TBody>(path: string, body: TBody): Promi
   })
 
   return parseApiResponse<TResponse>(response, 'Erro ao atualizar dados.')
+}
+
+export async function apiDownload(path: string): Promise<ApiDownloadResponse> {
+  const response = await performRequest(buildUrl(path))
+
+  if (!response.ok) {
+    throw new Error('Não foi possível gerar o arquivo solicitado.')
+  }
+
+  return {
+    blob: await response.blob(),
+    filename: getFilenameFromDisposition(response.headers.get('content-disposition')),
+  }
 }
