@@ -8,7 +8,7 @@ import { getAdminOverview } from '../services/admin.service'
 
 export default function AdminLoginPage() {
   const navigate = useNavigate()
-  const [username, setUsername] = useState('ong.local')
+  const [username, setUsername] = useState('ong.hml')
   const [password, setPassword] = useState('PainelOng2026!')
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
