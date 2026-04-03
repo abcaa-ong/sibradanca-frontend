@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import { Badge } from './Badge'
@@ -25,12 +25,14 @@ type ActiveFlow = Exclude<FlowMode, 'menu'>
 
 type MinorFormData = {
   fullName: string
+  cpf: string
   email: string
   whatsapp: string
   region: string
+  ageRange: string
   state: string
   city: string
-  ageRange: string
+  age: string
   birthDate: string
   gender: string
   practiceTime: string
@@ -53,23 +55,29 @@ type MinorFormData = {
 
 type AdultFormData = {
   fullName: string
+  cpf: string
   email: string
   whatsapp: string
   region: string
+  ageRange: string
   state: string
   city: string
-  ageRange: string
+  age: string
   birthDate: string
   gender: string
   practiceTime: string
   danceModalities: string[]
   consumedContents: string[]
+  searchesContent: string
+  familyIncome: string
+  careerInterest: string
   worksProfessionally: string
   hasDrt: string
   currentlyWorks: string
   danceMainIncomeChoice: string
   hasOtherIncomeChoice: string
   danceRoles: string[]
+  workTypeChoice: string
   monthlyIncomeTotal: string
   danceIncome: string
   danceMonthlySpending: string
@@ -89,6 +97,7 @@ type AdultFormData = {
   participatedPublicCalls: string
   wasSelected: string
   appliedNotSelected: string
+  editalDifficulty: string
   consentStats: boolean
   consentContact: boolean
 }
@@ -100,6 +109,7 @@ type InstitutionFormData = {
   institutionName: string
   tradeName: string
   institutionType: string
+  legalNature: string
   institutionNature: string
   foundationPeriod: string
   foundationYearExact: string
@@ -134,12 +144,22 @@ type InstitutionFormData = {
   mainChallenges: string
   servesVulnerablePopulation: string
   mainIncomeSources: string[]
+  infrastructureItems: string[]
+  scholarshipCount: string
+  studentsPayMonthlyFee: string
+  eventCostResponsibility: string
+  staffRoles: string[]
   receivedPublicFundingLast2Years: string
+  registeredInPublicCalls: string
+  approvedInPublicCalls: string
   editalDifficulties: string[]
   annualBudgetRange: string
   knowsMunicipalCulturePlan: string
   participatesInCultureCouncil: string
   interestedInPublicPartnerships: string
+  knowsPublicPolicyAccessMechanisms: string
+  promotionChannels: string[]
+  wouldUseFreePromotionPlatform: string
   consentStats: boolean
   consentContact: boolean
 }
@@ -149,41 +169,36 @@ type OptionItem = { value: string; label: string }
 const accessOptions = [
   {
     label: 'Sou menor de 18 anos',
-    description: 'Acesso para público jovem e participação orientada.',
+    description: 'Cadastro para participantes menores de 18 anos.',
     accentClass: 'is-yellow',
   },
   {
     label: 'Sou maior de 18 anos',
-    description: 'Acesso individual para pessoas adultas.',
+    description: 'Cadastro para pessoas adultas ligadas à dança.',
     accentClass: 'is-blue',
   },
   {
     label: 'Escola / Grupo / Companhia',
-    description: 'Cadastro institucional e participação coletiva.',
+    description: 'Cadastro para escolas, grupos, companhias e projetos.',
     accentClass: 'is-pink',
-  },
-  {
-    label: 'Estatísticas Nacionais',
-    description: 'Visualização de dados e evidências do setor.',
-    accentClass: 'is-green',
   },
 ] as const
 
 const FLOW_META: Record<ActiveFlow, { sector: string; title: string; totalSteps: number; selectLabel: string }> = {
   'minor-flow': {
-    sector: 'Setor 01 – Jovens da Dança',
+    sector: 'Cadastro para Jovens da Dança',
     title: 'Menor de 18 anos • Tempo estimado: 4 minutos',
     totalSteps: 6,
     selectLabel: 'Sou menor de 18 anos',
   },
   'adult-flow': {
-    sector: 'Setor 02 – Profissionais da Dança',
+    sector: 'Cadastro para Profissionais da Dança',
     title: 'Maior de 18 anos • Tempo estimado: 5–6 minutos',
     totalSteps: 9,
     selectLabel: 'Sou maior de 18 anos',
   },
   'institution-flow': {
-    sector: 'Setor 03 – Instituições da Dança',
+    sector: 'Cadastro para Instituições da Dança',
     title: 'Escolas, Grupos, Companhias e Projetos • Tempo estimado: 5–6 minutos',
     totalSteps: 8,
     selectLabel: 'Escola / Grupo / Companhia',
@@ -228,48 +243,53 @@ const stateOptions: OptionItem[] = [
   { value: 'TO', label: 'Tocantins' },
 ]
 
-const danceModalitiesOptions = [
-  'Ballet Clássico',
-  'Dança Contemporânea',
-  'Jazz',
-  'Hip Hop / Street Dance',
-  'Dança de Salão',
-  'Danças Populares / Folclóricas',
-  'Sapateado',
-  'Flamenco',
-  'Dança do Ventre',
-  'Dança Afro',
-  'Dança Urbana',
-  'Improvisação',
-  'Outra',
+const youthWhoPaysOptions = ['Família', 'Escola', 'Patrocínios', 'Outros']
+
+const adultWhoPaysOptions = ['Você', 'Família', 'Escola', 'Edital', 'Outros']
+
+const genderIdentityOptions: OptionItem[] = [
+  { value: 'Mulher cis', label: 'Mulher cis' },
+  { value: 'Mulher trans', label: 'Mulher trans' },
+  { value: 'Homem cis', label: 'Homem cis' },
+  { value: 'Homem trans', label: 'Homem trans' },
+  { value: 'Não-binário', label: 'Não-binário' },
+  { value: 'Outros', label: 'Outros' },
 ]
 
-const whoPaysOptions = ['Você', 'Família', 'Escola', 'Edital', 'Patrocínio', 'Outros']
+const householdIncomeOptions: OptionItem[] = [
+  { value: '1 salário mínimo', label: '1 salário mínimo' },
+  { value: '2 salários mínimos', label: '2 salários mínimos' },
+  { value: '3 salários mínimos', label: '3 salários mínimos' },
+  { value: '4 salários mínimos', label: '4 salários mínimos' },
+  { value: '5 ou mais salários mínimos', label: '5 ou mais salários mínimos' },
+]
 
 const adultRolesOptions = [
   'Bailarino(a)',
   'Professor(a)',
   'Coreógrafo(a)',
+  'Ensaiador(a)',
   'Diretor(a) artístico(a)',
-  'Produtor(a)',
-  'Pesquisador(a)',
-  'Figurinista',
-  'Iluminador(a)',
-  'Sonoplasta / DJ',
-  'Gestor(a) cultural',
-  'Crítico(a) de dança',
-  'Terapeuta corporal',
+  'Coordenador(a)',
+  'Produtor(a) cultural',
+  'Gestor(a)',
+  'Preparador(a) corporal',
   'Outra',
 ]
 
 const institutionTypeOptions: OptionItem[] = [
   { value: 'escola', label: 'Escola' },
-  { value: 'companhia', label: 'Companhia' },
   { value: 'grupo', label: 'Grupo' },
+  { value: 'companhia', label: 'Companhia' },
   { value: 'projeto_social', label: 'Projeto social' },
-  { value: 'coletivo', label: 'Coletivo' },
-  { value: 'espaco_cultural', label: 'Espaço cultural' },
-  { value: 'outro', label: 'Outro' },
+]
+
+const institutionLegalNatureOptions: OptionItem[] = [
+  { value: 'MEI', label: 'MEI' },
+  { value: 'ME', label: 'ME' },
+  { value: 'EPP', label: 'EPP' },
+  { value: 'Associação', label: 'Associação' },
+  { value: 'Coletivo informal', label: 'Coletivo informal' },
 ]
 
 const institutionNatureOptions: OptionItem[] = [
@@ -280,17 +300,16 @@ const institutionNatureOptions: OptionItem[] = [
 ]
 
 const institutionLocationTypeOptions: OptionItem[] = [
-  { value: 'urbana', label: 'Urbana' },
-  { value: 'periferia', label: 'Periferia urbana' },
-  { value: 'rural', label: 'Zona rural' },
-  { value: 'mista', label: 'Mista' },
+  { value: 'central', label: 'Central' },
+  { value: 'periférica', label: 'Periférica' },
+  { value: 'rural', label: 'Rural' },
 ]
 
 const institutionSpaceTypeOptions: OptionItem[] = [
-  { value: 'proprio', label: 'Espaço próprio' },
-  { value: 'alugado', label: 'Espaço alugado' },
+  { value: 'alugado', label: 'Alugado' },
+  { value: 'proprio', label: 'Próprio' },
+  { value: 'cedido', label: 'Cedido' },
   { value: 'publico', label: 'Espaço público' },
-  { value: 'compartilhado', label: 'Espaço compartilhado' },
 ]
 
 const institutionIncomeSourcesOptions = [
@@ -305,52 +324,75 @@ const institutionIncomeSourcesOptions = [
 ]
 
 const institutionEditalDifficultiesOptions = [
-  'Falta de informação sobre editais',
-  'Dificuldade na escrita do projeto',
-  'Documentação exigida',
-  'Prazos curtos',
-  'Falta de CNPJ / formalização',
-  'Critérios excludentes',
-  'Burocracia na prestação de contas',
-  'Falta de apoio técnico',
-  'Falta de contrapartida financeira',
-  'Outra',
+  'Não sei fazer projetos',
+  'Não tem informações',
+  'Muito burocrático',
+  'Falta de divulgação',
+  'Falta conhecimento técnico',
+  'Muitas regras',
 ]
 
-const totalIncomeOptions: OptionItem[] = [
-  { value: 'ate_1sm', label: 'Até 1 salário mínimo' },
-  { value: '1_2sm', label: 'De 1 a 2 salários mínimos' },
-  { value: '2_3sm', label: 'De 2 a 3 salários mínimos' },
-  { value: '3_5sm', label: 'De 3 a 5 salários mínimos' },
-  { value: '5_10sm', label: 'De 5 a 10 salários mínimos' },
-  { value: 'mais_10sm', label: 'Mais de 10 salários mínimos' },
+const adultWorkTypeOptions: OptionItem[] = [
+  { value: 'Autônoma', label: 'Autônoma' },
+  { value: 'CLT', label: 'CLT' },
+  { value: 'PJ', label: 'PJ' },
+  { value: 'Voluntária', label: 'Voluntária' },
+  { value: 'Outra', label: 'Outra' },
 ]
 
-const danceIncomeOptions: OptionItem[] = [
-  { value: 'sem_renda', label: 'Não obtenho renda com dança' },
-  { value: 'ate_1sm', label: 'Até 1 salário mínimo' },
-  { value: '1_2sm', label: 'De 1 a 2 salários mínimos' },
-  { value: '2_3sm', label: 'De 2 a 3 salários mínimos' },
-  { value: '3_5sm', label: 'De 3 a 5 salários mínimos' },
-  { value: 'mais_5sm', label: 'Mais de 5 salários mínimos' },
+const institutionInfrastructureOptions = [
+  'Espelhos',
+  'Linóleo',
+  'Piso de madeira',
+  'Piso frio',
+  'Tatame',
+  'Ventiladores',
+  'Ar-condicionado',
+  'Bebedouro',
+  'Recepção',
 ]
 
-const danceSpendingOptions: OptionItem[] = [
-  { value: 'ate_100', label: 'Até R$ 100' },
-  { value: '101_300', label: 'De R$ 101 a R$ 300' },
-  { value: '301_600', label: 'De R$ 301 a R$ 600' },
-  { value: '601_1000', label: 'De R$ 601 a R$ 1.000' },
-  { value: 'mais_1000', label: 'Mais de R$ 1.000' },
+const institutionStaffRoleOptions = [
+  'Direção',
+  'Coordenação',
+  'Professores',
+  'Produção cultural',
+  'Administrativo/financeiro',
+  'Comunicação/marketing',
+  'Técnico de som/luz',
+  'Eu faço tudo sozinho(a)',
+]
+
+const institutionPromotionChannelOptions = [
+  'Redes sociais',
+  'Tráfego pago',
+  'Rádio',
+  'TV',
+  'Jornal impresso',
+  'Blog e portais',
+  'Influenciadores',
+  'Grupos de WhatsApp',
+]
+
+const institutionEventCostOptions: OptionItem[] = [
+  { value: 'Instituição', label: 'Instituição' },
+  { value: 'Estudantes', label: 'Estudantes' },
+  { value: 'Famílias', label: 'Famílias' },
+  { value: 'Edital', label: 'Edital' },
+  { value: 'Patrocínio', label: 'Patrocínio' },
+  { value: 'Compartilhado', label: 'Compartilhado' },
 ]
 
 const initialMinorForm: MinorFormData = {
   fullName: '',
+  cpf: '',
   email: '',
   whatsapp: '',
   region: '',
+  ageRange: '',
   state: '',
   city: '',
-  ageRange: '',
+  age: '',
   birthDate: '',
   gender: '',
   practiceTime: '',
@@ -373,23 +415,29 @@ const initialMinorForm: MinorFormData = {
 
 const initialAdultForm: AdultFormData = {
   fullName: '',
+  cpf: '',
   email: '',
   whatsapp: '',
   region: '',
+  ageRange: '',
   state: '',
   city: '',
-  ageRange: '',
+  age: '',
   birthDate: '',
   gender: '',
   practiceTime: '',
   danceModalities: [],
   consumedContents: [],
+  searchesContent: '',
+  familyIncome: '',
+  careerInterest: '',
   worksProfessionally: '',
   hasDrt: '',
   currentlyWorks: '',
   danceMainIncomeChoice: '',
   hasOtherIncomeChoice: '',
   danceRoles: [],
+  workTypeChoice: '',
   monthlyIncomeTotal: '',
   danceIncome: '',
   danceMonthlySpending: '',
@@ -409,6 +457,7 @@ const initialAdultForm: AdultFormData = {
   participatedPublicCalls: '',
   wasSelected: 'nao',
   appliedNotSelected: 'sim',
+  editalDifficulty: '',
   consentStats: false,
   consentContact: false,
 }
@@ -420,6 +469,7 @@ const initialInstitutionForm: InstitutionFormData = {
   institutionName: '',
   tradeName: '',
   institutionType: '',
+  legalNature: '',
   institutionNature: '',
   foundationPeriod: '',
   foundationYearExact: '',
@@ -454,12 +504,22 @@ const initialInstitutionForm: InstitutionFormData = {
   mainChallenges: '',
   servesVulnerablePopulation: '',
   mainIncomeSources: [],
+  infrastructureItems: [],
+  scholarshipCount: '',
+  studentsPayMonthlyFee: '',
+  eventCostResponsibility: '',
+  staffRoles: [],
   receivedPublicFundingLast2Years: '',
+  registeredInPublicCalls: '',
+  approvedInPublicCalls: '',
   editalDifficulties: [],
   annualBudgetRange: '',
   knowsMunicipalCulturePlan: '',
   participatesInCultureCouncil: '',
   interestedInPublicPartnerships: '',
+  knowsPublicPolicyAccessMechanisms: '',
+  promotionChannels: [],
+  wouldUseFreePromotionPlatform: '',
   consentStats: false,
   consentContact: false,
 }
@@ -488,67 +548,11 @@ function formatMinorSubmissionError(message: string) {
     return 'Nao foi possivel validar o termo de consentimento ativo. Tente novamente.'
   }
 
+  if (message.includes('Tempo de pratica')) {
+    return 'Informe os anos de pratica da danca com um numero valido.'
+  }
+
   return message
-}
-
-function estimateBirthDateFromAdultRange(ageRange: string) {
-  const now = new Date()
-  const year = now.getFullYear()
-
-  switch (ageRange) {
-    case '18 a 24 anos':
-      return `${year - 21}-01-01`
-    case '25 a 34 anos':
-      return `${year - 29}-01-01`
-    case '35 a 44 anos':
-      return `${year - 39}-01-01`
-    case '45 a 59 anos':
-      return `${year - 52}-01-01`
-    case '60+':
-      return `${year - 65}-01-01`
-    default:
-      return ''
-  }
-}
-
-function mapIncomeRangeToAmount(value: string) {
-  switch (value) {
-    case 'sem_renda':
-      return 0
-    case 'ate_1sm':
-      return 1200
-    case '1_2sm':
-      return 2400
-    case '2_3sm':
-      return 3600
-    case '3_5sm':
-      return 6000
-    case '5_10sm':
-      return 12000
-    case 'mais_10sm':
-      return 18000
-    case 'mais_5sm':
-      return 9000
-    default:
-      return 0
-  }
-}
-
-function mapSpendingRangeToAmount(value: string) {
-  switch (value) {
-    case 'ate_100':
-      return 100
-    case '101_300':
-      return 300
-    case '301_600':
-      return 600
-    case '601_1000':
-      return 1000
-    case 'mais_1000':
-      return 1500
-    default:
-      return 0
-  }
 }
 
 function parseNumericSelection(value: string, fallback = 0) {
@@ -558,7 +562,24 @@ function parseNumericSelection(value: string, fallback = 0) {
     return fallback
   }
 
-  const directNumber = Number(normalizedValue.replace(',', '.'))
+  const cleanedValue = normalizedValue.replace(/[^\d,.-]/g, '')
+
+  if (!cleanedValue) {
+    return fallback
+  }
+
+  let normalizedNumber = cleanedValue
+
+  if (cleanedValue.includes(',') && cleanedValue.includes('.')) {
+    normalizedNumber =
+      cleanedValue.lastIndexOf(',') > cleanedValue.lastIndexOf('.')
+        ? cleanedValue.replace(/\./g, '').replace(',', '.')
+        : cleanedValue.replace(/,/g, '')
+  } else if (cleanedValue.includes(',')) {
+    normalizedNumber = cleanedValue.replace(/\./g, '').replace(',', '.')
+  }
+
+  const directNumber = Number(normalizedNumber)
 
   if (!Number.isNaN(directNumber)) {
     return directNumber
@@ -628,6 +649,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const [adultSubmission, setAdultSubmission] = useState<ProfessionalFormResponse | null>(null)
   const [isInstitutionSubmitting, setIsInstitutionSubmitting] = useState(false)
   const [institutionSubmission, setInstitutionSubmission] = useState<InstitutionFormResponse | null>(null)
+  const previousOpenRef = useRef(open)
+  const previousInitialViewRef = useRef(initialView)
 
   const currentMeta = useMemo(() => {
     if (view === 'menu') return null
@@ -648,7 +671,19 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   }
 
   useEffect(() => {
-    if (!open) return
+    const reopened = open && !previousOpenRef.current
+    const initialViewChanged = previousInitialViewRef.current !== initialView
+
+    previousOpenRef.current = open
+    previousInitialViewRef.current = initialView
+
+    if (!open) {
+      return
+    }
+
+    if (!reopened && !initialViewChanged) {
+      return
+    }
 
     setView(initialView)
     setCurrentStep(0)
@@ -864,6 +899,14 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     onClose()
   }
 
+  const handleOverlayClick = () => {
+    if (view !== 'menu') {
+      return
+    }
+
+    handleClose()
+  }
+
   const updateMinorField = <K extends keyof MinorFormData>(field: K, value: MinorFormData[K]) => {
     setMinorForm((prev) => ({ ...prev, [field]: value }))
   }
@@ -906,7 +949,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   }
 
   const toggleInstitutionArrayValue = (
-    field: 'danceModalities' | 'mainIncomeSources' | 'editalDifficulties',
+    field:
+      | 'danceModalities'
+      | 'mainIncomeSources'
+      | 'editalDifficulties'
+      | 'infrastructureItems'
+      | 'staffRoles'
+      | 'promotionChannels',
     value: string
   ) => {
     setInstitutionForm((prev) => {
@@ -970,12 +1019,12 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     if (
       currentStep === 2 &&
       (!minorForm.birthDate ||
-        !minorForm.gender ||
+        !minorForm.age ||
         !minorForm.practiceTime ||
         minorForm.danceModalities.length === 0)
     ) {
       setStepError(
-        'Preencha data de nascimento, gênero, tempo de prática e ao menos uma modalidade.'
+        'Preencha data de nascimento, idade, tempo de prática e ao menos uma modalidade.'
       )
       return false
     }
@@ -1017,20 +1066,20 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
     if (
       currentStep === 2 &&
-      (!adultForm.ageRange ||
-        !adultForm.gender ||
+      (!adultForm.birthDate ||
+        !adultForm.age ||
         !adultForm.practiceTime ||
         adultForm.danceModalities.length === 0)
     ) {
       setStepError(
-        'Preencha faixa etária, gênero, tempo de prática e ao menos uma modalidade.'
+        'Preencha data de nascimento, idade, tempo de prática e ao menos uma modalidade.'
       )
       return false
     }
 
-    if (currentStep === 3 && (!adultForm.worksProfessionally || adultForm.danceRoles.length === 0)) {
+    if (currentStep === 3 && (!adultForm.worksProfessionally || !adultForm.careerInterest || adultForm.danceRoles.length === 0 || !adultForm.workTypeChoice)) {
       setStepError(
-        'Informe se atua profissionalmente com dança e selecione ao menos uma função.'
+        'Informe se atua profissionalmente com dança, se pretende seguir carreira, o tipo de atuação e selecione ao menos uma função.'
       )
       return false
     }
@@ -1043,15 +1092,15 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     if (
       currentStep === 4 &&
       (
+        !adultForm.familyIncome ||
         !adultForm.monthlyIncomeTotal ||
         !adultForm.danceIncome ||
-        !adultForm.danceMonthlySpending ||
         !adultForm.danceMainIncomeChoice ||
         !adultForm.hasOtherIncomeChoice
       )
     ) {
       setStepError(
-        'Selecione renda total, renda com dança, gasto com dança, renda principal e outra renda.'
+        'Preencha renda da casa, renda total, renda com dança, renda principal e outra renda.'
       )
       return false
     }
@@ -1068,11 +1117,6 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
     if (currentStep === 8 && !adultForm.consentStats) {
       setStepError('É necessário autorizar o uso estatístico.')
-      return false
-    }
-
-    if (currentStep === 8 && !adultForm.consentContact) {
-      setStepError('É necessário autorizar o contato.')
       return false
     }
 
@@ -1203,11 +1247,12 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       (!institutionForm.institutionName ||
         !institutionForm.tradeName ||
         !institutionForm.institutionType ||
+        !institutionForm.legalNature ||
         !institutionForm.institutionNature ||
         !institutionForm.foundationYearExact ||
         !institutionForm.hasCnpj)
     ) {
-      setStepError('Preencha nome, nome fantasia, tipo, natureza, ano de fundação e informe se possui CNPJ.')
+      setStepError('Preencha razão social, nome fantasia, tipo de atuação, natureza jurídica, perfil da instituição, ano de fundação e informe se possui CNPJ.')
       return false
     }
 
@@ -1237,9 +1282,12 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       (!institutionForm.averageStudents ||
         !institutionForm.numberOfTeachers ||
         !institutionForm.monthlyFee ||
-        !institutionForm.hasScholarShip)
+        !institutionForm.hasScholarShip ||
+        !institutionForm.activeStudents ||
+        !institutionForm.servesVulnerablePopulation ||
+        !institutionForm.studentsPayMonthlyFee)
     ) {
-      setStepError('Preencha média de alunos, número de professores, mensalidade média e política de bolsas.')
+      setStepError('Preencha alunos, professores, mensalidade, bolsas, pagamento de mensalidade e público atendido.')
       return false
     }
 
@@ -1248,14 +1296,32 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       (!institutionForm.cltEmployees ||
         !institutionForm.pjContracts ||
         !institutionForm.monthlyRevenue ||
-        !institutionForm.usesManagementSystem)
+        !institutionForm.usesManagementSystem ||
+        institutionForm.mainIncomeSources.length === 0 ||
+        !institutionForm.receivedPublicFundingLast2Years ||
+        !institutionForm.annualBudgetRange)
     ) {
-      setStepError('Preencha equipe CLT, contratos PJ, faturamento mensal e uso de sistema de gestão.')
+      setStepError('Preencha equipe, faturamento, sistema de gestão, fontes de renda, recurso público e orçamento anual.')
       return false
     }
 
-    if (currentStep === 6 && !institutionForm.mainChallenges.trim()) {
-      setStepError('Descreva o principal desafio institucional.')
+    if (
+      currentStep === 6 &&
+      (
+        !institutionForm.mainChallenges.trim() ||
+        !institutionForm.eventCostResponsibility ||
+        institutionForm.staffRoles.length === 0 ||
+        !institutionForm.registeredInPublicCalls ||
+        !institutionForm.approvedInPublicCalls ||
+        !institutionForm.knowsPublicPolicyAccessMechanisms ||
+        !institutionForm.knowsMunicipalCulturePlan ||
+        !institutionForm.participatesInCultureCouncil ||
+        !institutionForm.interestedInPublicPartnerships ||
+        institutionForm.promotionChannels.length === 0 ||
+        !institutionForm.wouldUseFreePromotionPlatform
+      )
+    ) {
+      setStepError('Preencha custos de eventos, equipe, editais, políticas públicas, divulgação e o principal desafio.')
       return false
     }
 
@@ -1300,20 +1366,31 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     try {
       const response = await submitYouthForm({
         fullName: minorForm.fullName.trim(),
+        cpf: minorForm.cpf.trim() || null,
         email: minorForm.email.trim(),
         whatsapp: minorForm.whatsapp.trim(),
+        region: minorForm.region || null,
+        age: Number(minorForm.age || 0) || null,
         birthDate: minorForm.birthDate,
-        gender: minorForm.gender,
+        gender: minorForm.gender || null,
         cityId: selectedCity.id,
         modalityIds,
         practiceTime: minorForm.practiceTime,
         careerInterest: parseBooleanChoice(minorForm.careerInterest),
         whoPaysExpenses: minorForm.whoPays.join(', '),
         familyIncomeRange: minorForm.familyIncome,
+        monthlyFee: minorForm.monthlyFee.trim() || null,
+        monthlyCostSchool: minorForm.schoolFee.trim() || null,
+        monthlyCostCourses: minorForm.courses.trim() || null,
+        monthlyCostCostumes: minorForm.costumes.trim() || null,
+        monthlyCostFestivals: minorForm.festivals.trim() || null,
+        monthlyCostTravel: minorForm.travel.trim() || null,
+        monthlyCostOthers: minorForm.otherCosts.trim() || null,
         searchesContent: parseBooleanChoice(minorForm.searchesContent),
         contentIds,
         consentCode: activeConsentTerm.code,
         consentAccepted: minorForm.consentStats,
+        consentContact: minorForm.consentContact,
       })
 
       setMinorSubmission(response)
@@ -1354,11 +1431,14 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       const worksWithDance = parseBooleanChoice(adultForm.worksProfessionally)
       const response = await submitProfessionalForm({
         fullName: adultForm.fullName.trim(),
-        cpf: null,
+        cpf: adultForm.cpf.trim() || null,
         email: adultForm.email.trim(),
         whatsapp: adultForm.whatsapp.trim(),
-        birthDate: adultForm.birthDate || estimateBirthDateFromAdultRange(adultForm.ageRange),
-        gender: adultForm.gender,
+        region: adultForm.region || null,
+        age: Number(adultForm.age || 0) || null,
+        ageRange: adultForm.age ? `${adultForm.age} anos` : null,
+        birthDate: adultForm.birthDate,
+        gender: adultForm.gender || null,
         cityId: selectedCity.id,
         modalityIds,
         contentIds,
@@ -1368,30 +1448,36 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         currentlyWorks: parseBooleanChoice(adultForm.currentlyWorks),
         danceMainIncome: parseBooleanChoice(adultForm.danceMainIncomeChoice),
         hasOtherIncome: parseBooleanChoice(adultForm.hasOtherIncomeChoice),
-        totalIncome: mapIncomeRangeToAmount(adultForm.monthlyIncomeTotal),
-        danceIncome: mapIncomeRangeToAmount(adultForm.danceIncome),
-        careerInterest: worksWithDance || parseOptionalChoice(adultForm.wantsFormalDanceStudy),
-        householdIncomeRange: adultForm.monthlyIncomeTotal || null,
+        totalIncome: parseNumericSelection(adultForm.monthlyIncomeTotal),
+        danceIncome: parseNumericSelection(adultForm.danceIncome),
+        careerInterest: parseOptionalChoice(adultForm.careerInterest),
+        householdIncomeRange: adultForm.familyIncome || null,
         rolesPerformed: adultForm.danceRoles.join(', ') || null,
-        workType: worksWithDance ? 'Profissional' : 'Nao profissional',
+        workType: adultForm.workTypeChoice || (worksWithDance ? 'Autônoma' : 'Não informado'),
         coursesPerYear: Number(adultForm.presentialCoursesPerYear || 0),
         onlineCoursesPerYear: Number(adultForm.onlineCoursesPerYear || 0),
         currentlyStudies: parseOptionalChoice(adultForm.studiesDanceNow),
-        formalStudyType: adultForm.danceEducationLevel || adultForm.academicEducation || null,
+        academicEducation: adultForm.academicEducation || null,
+        formalStudyType: adultForm.danceEducationLevel || null,
         wantsFormalStudy: parseOptionalChoice(adultForm.wantsFormalDanceStudy),
-        monthlyCostCourses: mapSpendingRangeToAmount(adultForm.courses),
-        monthlyCostCostumes: mapSpendingRangeToAmount(adultForm.costumes),
-        monthlyCostEvents: mapSpendingRangeToAmount(adultForm.festivals),
-        monthlyCostTravel: mapSpendingRangeToAmount(adultForm.travel),
-        monthlyCostSchool: mapSpendingRangeToAmount(adultForm.schoolFee),
-        monthlyCostOthers: mapSpendingRangeToAmount(adultForm.otherCosts),
+        monthlyCostCourses: parseNumericSelection(adultForm.courses),
+        monthlyCostCostumes: parseNumericSelection(adultForm.costumes),
+        monthlyCostEvents: parseNumericSelection(adultForm.festivals),
+        monthlyCostTravel: parseNumericSelection(adultForm.travel),
+        monthlyCostSchool: parseNumericSelection(adultForm.schoolFee),
+        monthlyCostOthers: parseNumericSelection(adultForm.otherCosts),
         costResponsibility: adultForm.whoPays.join(', ') || 'Nao informado',
         participatedInEdital: parseBooleanChoice(adultForm.participatedPublicCalls),
         approvedInEdital: parseOptionalChoice(adultForm.wasSelected),
         appliedNotApproved: parseOptionalChoice(adultForm.appliedNotSelected),
-        editalDifficulty: null,
+        participatedInEditalStatus: adultForm.participatedPublicCalls || null,
+        approvedInEditalStatus: adultForm.wasSelected || null,
+        appliedNotApprovedStatus: adultForm.appliedNotSelected || null,
+        editalDifficulty: adultForm.editalDifficulty.trim() || null,
+        searchesContent: parseOptionalChoice(adultForm.searchesContent),
         consentCode: activeConsentTerm.code,
         consentAccepted: adultForm.consentStats,
+        consentContact: adultForm.consentContact,
       })
 
       setAdultSubmission(response)
@@ -1451,7 +1537,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       const usesPublicSpace =
         institutionForm.spaceType === 'publico' || parseOptionalChoice(institutionForm.usesPublicSpace)
       const actsInPeriphery =
-        institutionForm.locationType === 'periferia' || parseOptionalChoice(institutionForm.actsInPeriphery)
+        institutionForm.locationType === 'periférica' || parseOptionalChoice(institutionForm.actsInPeriphery)
       const actsInRuralArea =
         institutionForm.locationType === 'rural' || parseOptionalChoice(institutionForm.actsInRuralArea)
 
@@ -1460,11 +1546,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         legalName: institutionForm.institutionName.trim(),
         tradeName: institutionForm.tradeName.trim(),
         cnpj: institutionForm.hasCnpj === 'sim' ? institutionForm.cnpj.trim() : null,
+        region: institutionForm.region || null,
         cityId: selectedCity.id,
         email: institutionForm.email.trim(),
         phone: institutionForm.whatsapp.trim(),
         socialMedia: institutionForm.socialMedia.trim() || null,
         type: institutionForm.institutionType,
+        legalNature: institutionForm.legalNature || null,
         nature: institutionForm.institutionNature,
         locationType: institutionForm.locationType,
         foundationYear: Number(institutionForm.foundationYearExact),
@@ -1475,21 +1563,18 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         classesPerWeek,
         numberOfRooms,
         spaceType: institutionForm.spaceType,
-        infrastructureItems: institutionForm.spaceType ? `Espaço ${institutionForm.spaceType}` : null,
+        infrastructureItems: institutionForm.infrastructureItems.join(', ') || null,
         hasCnpj: parseBooleanChoice(institutionForm.hasCnpj),
         hasScholarShip: parseBooleanChoice(institutionForm.hasScholarShip),
-        scholarshipCount: parseNumericSelection(
-          institutionForm.hasScholarShip === 'sim' ? '1' : '0',
-          0,
-        ),
-        studentsPayMonthlyFee: monthlyFee > 0,
+        scholarshipCount: parseNumericSelection(institutionForm.scholarshipCount, 0),
+        studentsPayMonthlyFee: parseOptionalChoice(institutionForm.studentsPayMonthlyFee, monthlyFee > 0),
         cltEmployees,
         pjContracts,
         monthlyRevenue,
         usesManagementSystem: parseBooleanChoice(institutionForm.usesManagementSystem),
         mainChallenges: institutionForm.mainChallenges.trim(),
-        eventCostResponsibility: monthlyFee > 0 ? 'Instituicao e estudantes' : 'Instituicao',
-        staffRoles: `CLT: ${cltEmployees}; PJ: ${pjContracts}`,
+        eventCostResponsibility: institutionForm.eventCostResponsibility || null,
+        staffRoles: institutionForm.staffRoles.join(', ') || null,
         actsInPeriphery,
         actsInRuralArea,
         hasOwnHeadquarters,
@@ -1506,8 +1591,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         receivedPublicFundingLast2Years: parseOptionalChoice(
           institutionForm.receivedPublicFundingLast2Years,
         ),
-        registeredInPublicCalls: parseOptionalChoice(institutionForm.receivedPublicFundingLast2Years),
-        approvedInPublicCalls: false,
+        registeredInPublicCalls: parseOptionalChoice(institutionForm.registeredInPublicCalls),
+        approvedInPublicCalls: parseOptionalChoice(institutionForm.approvedInPublicCalls),
         editalDifficulties: institutionForm.editalDifficulties.join(', ') || null,
         annualBudgetRange:
           institutionForm.annualBudgetRange || inferAnnualBudgetRange(monthlyRevenue),
@@ -1518,12 +1603,16 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
           true,
         ),
         knowsPublicPolicyAccessMechanisms: parseOptionalChoice(
-          institutionForm.knowsMunicipalCulturePlan,
+          institutionForm.knowsPublicPolicyAccessMechanisms,
         ),
-        promotionChannels: institutionForm.socialMedia.trim() || null,
-        wouldUseFreePromotionPlatform: true,
+        promotionChannels: institutionForm.promotionChannels.join(', ') || null,
+        wouldUseFreePromotionPlatform: parseOptionalChoice(
+          institutionForm.wouldUseFreePromotionPlatform,
+          true,
+        ),
         consentCode: activeConsentTerm.code,
         consentAccepted: institutionForm.consentStats,
+        consentContact: institutionForm.consentContact,
       })
 
       setInstitutionSubmission(response)
@@ -1581,7 +1670,15 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         className={`access-choice-card ${selected ? 'is-selected' : ''}`}
         onClick={() => onClick(value)}
       >
-        {value === 'sim' ? 'Sim' : value === 'nao' ? 'Não' : value}
+        {value === 'sim'
+          ? 'Sim'
+          : value === 'nao'
+            ? 'Não'
+            : value === 'nao_sei_como_faz'
+              ? 'Não sei como faz'
+              : value === 'nao_sei_o_que_e'
+                ? 'Não sei o que é'
+                : value}
       </button>
     )
   }
@@ -1598,6 +1695,16 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 placeholder="Nome completo do(a) jovem"
                 value={minorForm.fullName}
                 onChange={(e) => updateMinorField('fullName', e.target.value)}
+              />
+            </label>
+
+            <label className="access-field">
+              <span>CPF (opcional)</span>
+              <input
+                type="text"
+                placeholder="000.000.000-00"
+                value={minorForm.cpf}
+                onChange={(e) => updateMinorField('cpf', e.target.value)}
               />
             </label>
 
@@ -1671,23 +1778,27 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
 
             <label className="access-field">
-              <span>Genero *</span>
+              <span>Idade *</span>
+              <input
+                type="number"
+                min="10"
+                max="99"
+                value={minorForm.age}
+                onChange={(e) => updateMinorField('age', e.target.value)}
+              />
+            </label>
+
+            <label className="access-field">
+              <span>Gênero (opcional)</span>
               <select value={minorForm.gender} onChange={(e) => updateMinorField('gender', e.target.value)}>
                 <option value="">Selecione</option>
-                <option value="Feminino">Feminino</option>
-                <option value="Masculino">Masculino</option>
-                <option value="Nao binario">Nao binario</option>
-                <option value="Prefiro nao informar">Prefiro nao informar</option>
-                <option value="Outro">Outro</option>
+                {renderSelectOptions(genderIdentityOptions)}
               </select>
             </label>
 
             <label className="access-field">
-              <span>Tempo de pratica de danca *</span>
-              <select
-                value={minorForm.practiceTime}
-                onChange={(e) => updateMinorField('practiceTime', e.target.value)}
-              >
+              <span>Tempo de prática na dança *</span>
+              <select value={minorForm.practiceTime} onChange={(e) => updateMinorField('practiceTime', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(minorPracticeTimeOptions)}
               </select>
@@ -1721,11 +1832,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 onChange={(e) => updateMinorField('familyIncome', e.target.value)}
               >
                 <option value="">Selecione</option>
-                <option value="Ate 1 salario minimo">Ate 1 salario minimo</option>
-                <option value="De 1 a 2 salarios minimos">De 1 a 2 salarios minimos</option>
-                <option value="De 2 a 5 salarios minimos">De 2 a 5 salarios minimos</option>
-                <option value="Acima de 5 salarios minimos">Acima de 5 salarios minimos</option>
-                <option value="Prefiro nao informar">Prefiro nao informar</option>
+                {renderSelectOptions(householdIncomeOptions)}
               </select>
             </label>
           </div>
@@ -1733,6 +1840,46 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       case 4:
         return (
           <div className="access-form-grid">
+            <div className="access-field access-field-full">
+              <span>Economia da dança</span>
+              <small>Preencha os custos que ajudam a entender a prática da dança.</small>
+            </div>
+
+            <label className="access-field">
+              <span>Mensalidade</span>
+              <input type="text" inputMode="decimal" placeholder="Ex: R$ 180,00" value={minorForm.monthlyFee} onChange={(e) => updateMinorField('monthlyFee', e.target.value)} />
+            </label>
+
+            <label className="access-field">
+              <span>Gasto com escola ou academia</span>
+              <input type="text" inputMode="decimal" placeholder="Ex: R$ 120,00" value={minorForm.schoolFee} onChange={(e) => updateMinorField('schoolFee', e.target.value)} />
+            </label>
+
+            <label className="access-field">
+              <span>Gasto com cursos e formações</span>
+              <input type="text" inputMode="decimal" placeholder="Ex: R$ 80,00" value={minorForm.courses} onChange={(e) => updateMinorField('courses', e.target.value)} />
+            </label>
+
+            <label className="access-field">
+              <span>Gasto com figurinos e acessórios</span>
+              <input type="text" inputMode="decimal" placeholder="Ex: R$ 60,00" value={minorForm.costumes} onChange={(e) => updateMinorField('costumes', e.target.value)} />
+            </label>
+
+            <label className="access-field">
+              <span>Gasto com festivais e competições</span>
+              <input type="text" inputMode="decimal" placeholder="Ex: R$ 90,00" value={minorForm.festivals} onChange={(e) => updateMinorField('festivals', e.target.value)} />
+            </label>
+
+            <label className="access-field">
+              <span>Gasto com viagens e deslocamentos</span>
+              <input type="text" inputMode="decimal" placeholder="Ex: R$ 70,00" value={minorForm.travel} onChange={(e) => updateMinorField('travel', e.target.value)} />
+            </label>
+
+            <label className="access-field">
+              <span>Outros gastos com dança</span>
+              <input type="text" placeholder="Ex: R$ 50" value={minorForm.otherCosts} onChange={(e) => updateMinorField('otherCosts', e.target.value)} />
+            </label>
+
             <div className="access-field">
               <span>Tem interesse em seguir carreira na danca? *</span>
               <div className="access-choice-grid">
@@ -1753,7 +1900,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <span>Quem banca os custos da danca? *</span>
               <small>Selecione todas que se aplicam</small>
               <div className="access-checkbox-grid access-checkbox-grid-compact">
-                {whoPaysOptions.map((item) => (
+                {youthWhoPaysOptions.map((item) => (
                   <label key={item} className="access-check-card">
                     <input
                       type="checkbox"
@@ -1791,9 +1938,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
           <div className="access-form-grid">
             <div className="access-field access-field-full">
               <span>Consentimento LGPD</span>
-              {activeConsentTerm ? (
-                <small>{activeConsentTerm.title} ({activeConsentTerm.version})</small>
-              ) : null}
+              {activeConsentTerm ? <small>{activeConsentTerm.title}</small> : null}
             </div>
 
             <label className="access-consent-card">
@@ -1830,233 +1975,6 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
   }
 
-  const renderMinorStep = () => {
-    switch (currentStep) {
-      case 0:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field">
-              <span>Nome completo *</span>
-              <input
-                type="text"
-                placeholder="Nome completo do(a) jovem"
-                value={minorForm.fullName}
-                onChange={(e) => updateMinorField('fullName', e.target.value)}
-              />
-            </label>
-
-            <label className="access-field">
-              <span>Email *</span>
-              <input
-                type="email"
-                placeholder="email@exemplo.com"
-                value={minorForm.email}
-                onChange={(e) => updateMinorField('email', e.target.value)}
-              />
-            </label>
-
-            <label className="access-field">
-              <span>WhatsApp *</span>
-              <input
-                type="text"
-                placeholder="(11) 99999-9999"
-                value={minorForm.whatsapp}
-                onChange={(e) => updateMinorField('whatsapp', e.target.value)}
-              />
-            </label>
-          </div>
-        )
-      case 1:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field">
-              <span>Região *</span>
-              <select value={minorForm.region} onChange={(e) => updateMinorField('region', e.target.value)}>
-                <option value="">Selecione a região</option>
-                {renderRegionOptions()}
-              </select>
-            </label>
-
-            <label className="access-field">
-              <span>Estado *</span>
-              <select value={minorForm.state} onChange={(e) => updateMinorField('state', e.target.value)}>
-                <option value="">Selecione o estado</option>
-                {renderBrazilStateOptions()}
-              </select>
-            </label>
-
-            <label className="access-field">
-              <span>Cidade *</span>
-              <input
-                type="text"
-                placeholder="Nome da cidade"
-                value={minorForm.city}
-                onChange={(e) => updateMinorField('city', e.target.value)}
-              />
-            </label>
-          </div>
-        )
-      case 2:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field">
-              <span>Faixa etária *</span>
-              <select value={minorForm.ageRange} onChange={(e) => updateMinorField('ageRange', e.target.value)}>
-                <option value="">Selecione</option>
-                <option value="Até 10 anos">Até 10 anos</option>
-                <option value="11 a 13 anos">11 a 13 anos</option>
-                <option value="14 a 15 anos">14 a 15 anos</option>
-                <option value="16 a 17 anos">16 a 17 anos</option>
-              </select>
-            </label>
-
-            <label className="access-field">
-              <span>Gênero *</span>
-              <select value={minorForm.gender} onChange={(e) => updateMinorField('gender', e.target.value)}>
-                <option value="">Selecione</option>
-                <option value="Feminino">Feminino</option>
-                <option value="Masculino">Masculino</option>
-                <option value="Não binário">Não binário</option>
-                <option value="Prefiro não informar">Prefiro não informar</option>
-                <option value="Outro">Outro</option>
-              </select>
-            </label>
-
-            <label className="access-field">
-              <span>Tempo de prática de dança *</span>
-              <select
-                value={minorForm.practiceTime}
-                onChange={(e) => updateMinorField('practiceTime', e.target.value)}
-              >
-                <option value="">Selecione</option>
-                <option value="Menos de 1 ano">Menos de 1 ano</option>
-                <option value="1 a 2 anos">1 a 2 anos</option>
-                <option value="3 a 5 anos">3 a 5 anos</option>
-                <option value="Mais de 5 anos">Mais de 5 anos</option>
-              </select>
-            </label>
-
-            <div className="access-field access-field-full">
-              <span>Modalidades de dança *</span>
-              <small>Selecione todas que se aplicam</small>
-              <div className="access-checkbox-grid">
-                {danceModalitiesOptions.map((item) => (
-                  <label key={item} className="access-check-card">
-                    <input
-                      type="checkbox"
-                      checked={minorForm.danceModalities.includes(item)}
-                      onChange={() => toggleMinorArrayValue('danceModalities', item)}
-                    />
-                    <span>{item}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-        )
-      case 3:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field">
-              <span>Faixa de renda familiar *</span>
-              <select
-                value={minorForm.familyIncome}
-                onChange={(e) => updateMinorField('familyIncome', e.target.value)}
-              >
-                <option value="">Selecione</option>
-                <option value="Até 1 salário mínimo">Até 1 salário mínimo</option>
-                <option value="De 1 a 2 salários mínimos">De 1 a 2 salários mínimos</option>
-                <option value="De 2 a 5 salários mínimos">De 2 a 5 salários mínimos</option>
-                <option value="Acima de 5 salários mínimos">Acima de 5 salários mínimos</option>
-                <option value="Prefiro não informar">Prefiro não informar</option>
-              </select>
-            </label>
-          </div>
-        )
-      case 4:
-        return (
-          <div className="access-form-grid">
-            <div className="access-field access-field-full">
-              <span>Custos com dança</span>
-              <small>Informe quanto você gasta mensalmente em cada categoria (opcional)</small>
-            </div>
-
-            <label className="access-field">
-              <span>Mensalidade da escola/academia</span>
-              <input type="text" placeholder="Não se aplica" value={minorForm.schoolFee} onChange={(e) => updateMinorField('schoolFee', e.target.value)} />
-            </label>
-            <label className="access-field">
-              <span>Cursos e formações</span>
-              <input type="text" placeholder="Não se aplica" value={minorForm.courses} onChange={(e) => updateMinorField('courses', e.target.value)} />
-            </label>
-            <label className="access-field">
-              <span>Figurinos e roupas de dança</span>
-              <input type="text" placeholder="Não se aplica" value={minorForm.costumes} onChange={(e) => updateMinorField('costumes', e.target.value)} />
-            </label>
-            <label className="access-field">
-              <span>Festivais e competições</span>
-              <input type="text" placeholder="Não se aplica" value={minorForm.festivals} onChange={(e) => updateMinorField('festivals', e.target.value)} />
-            </label>
-            <label className="access-field">
-              <span>Viagens para dança</span>
-              <input type="text" placeholder="Não se aplica" value={minorForm.travel} onChange={(e) => updateMinorField('travel', e.target.value)} />
-            </label>
-            <label className="access-field">
-              <span>Outros gastos com dança</span>
-              <input type="text" placeholder="Não se aplica" value={minorForm.otherCosts} onChange={(e) => updateMinorField('otherCosts', e.target.value)} />
-            </label>
-            <label className="access-field">
-              <span>Valor da mensalidade</span>
-              <input type="text" placeholder="Não se aplica" value={minorForm.monthlyFee} onChange={(e) => updateMinorField('monthlyFee', e.target.value)} />
-            </label>
-
-            <div className="access-field access-field-full">
-              <span>Quem banca os custos da dança?</span>
-              <small>Selecione todas que se aplicam</small>
-              <div className="access-checkbox-grid access-checkbox-grid-compact">
-                {whoPaysOptions.map((item) => (
-                  <label key={item} className="access-check-card">
-                    <input type="checkbox" checked={minorForm.whoPays.includes(item)} onChange={() => toggleMinorArrayValue('whoPays', item)} />
-                    <span>{item}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-        )
-      case 5:
-        return (
-          <div className="access-form-grid">
-            <div className="access-field access-field-full">
-              <span>Consentimento LGPD</span>
-            </div>
-
-            <label className="access-consent-card">
-              <div className="access-consent-copy">
-                <strong>
-                  Autorizo o uso estatístico e anonimizado dos dados fornecidos para fins de pesquisa, políticas públicas e desenvolvimento do setor da dança.
-                </strong>
-                <small>É necessário autorizar o uso estatístico</small>
-              </div>
-              <input type="checkbox" checked={minorForm.consentStats} onChange={(e) => updateMinorField('consentStats', e.target.checked)} />
-            </label>
-
-            <label className="access-consent-card">
-              <div className="access-consent-copy">
-                <strong>
-                  Autorizo o contato por email e WhatsApp para informações sobre o SIBRADANÇA e oportunidades no setor da dança.
-                </strong>
-                <small>É necessário autorizar o contato</small>
-              </div>
-              <input type="checkbox" checked={minorForm.consentContact} onChange={(e) => updateMinorField('consentContact', e.target.checked)} />
-            </label>
-          </div>
-        )
-      default:
-        return null
-    }
-  }
-
   const renderAdultRealStep = () => {
     switch (currentStep) {
       case 0:
@@ -2065,6 +1983,10 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             <label className="access-field">
               <span>Nome completo *</span>
               <input type="text" placeholder="Seu nome completo" value={adultForm.fullName} onChange={(e) => updateAdultField('fullName', e.target.value)} />
+            </label>
+            <label className="access-field">
+              <span>CPF (opcional)</span>
+              <input type="text" placeholder="000.000.000-00" value={adultForm.cpf} onChange={(e) => updateAdultField('cpf', e.target.value)} />
             </label>
             <label className="access-field">
               <span>Email *</span>
@@ -2114,29 +2036,22 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <label className="access-field">
-              <span>Faixa etaria *</span>
-              <select value={adultForm.ageRange} onChange={(e) => updateAdultField('ageRange', e.target.value)}>
-                <option value="">Selecione</option>
-                <option value="18 a 24 anos">18 a 24 anos</option>
-                <option value="25 a 34 anos">25 a 34 anos</option>
-                <option value="35 a 44 anos">35 a 44 anos</option>
-                <option value="45 a 59 anos">45 a 59 anos</option>
-                <option value="60+">60+</option>
-              </select>
+              <span>Data de nascimento *</span>
+              <input type="date" value={adultForm.birthDate} onChange={(e) => updateAdultField('birthDate', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>Genero *</span>
+              <span>Idade *</span>
+              <input type="number" min="10" max="99" value={adultForm.age} onChange={(e) => updateAdultField('age', e.target.value)} />
+            </label>
+            <label className="access-field">
+              <span>Gênero (opcional)</span>
               <select value={adultForm.gender} onChange={(e) => updateAdultField('gender', e.target.value)}>
                 <option value="">Selecione</option>
-                <option value="Feminino">Feminino</option>
-                <option value="Masculino">Masculino</option>
-                <option value="Nao binario">Nao binario</option>
-                <option value="Prefiro nao informar">Prefiro nao informar</option>
-                <option value="Outro">Outro</option>
+                {renderSelectOptions(genderIdentityOptions)}
               </select>
             </label>
             <label className="access-field">
-              <span>Tempo de pratica de danca *</span>
+              <span>Tempo de prática na dança *</span>
               <select value={adultForm.practiceTime} onChange={(e) => updateAdultField('practiceTime', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(minorPracticeTimeOptions)}
@@ -2180,6 +2095,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 {renderChoiceCard('nao', adultForm.currentlyWorks, (value) => updateAdultField('currentlyWorks', value))}
               </div>
             </div>
+            <div className="access-field">
+              <span>Pretende seguir carreira na dança? *</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', adultForm.careerInterest, (value) => updateAdultField('careerInterest', value))}
+                {renderChoiceCard('nao', adultForm.careerInterest, (value) => updateAdultField('careerInterest', value))}
+              </div>
+            </div>
             <div className="access-field access-field-full">
               <span>Funcoes na danca *</span>
               <small>Selecione todas que se aplicam</small>
@@ -2192,31 +2114,33 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 ))}
               </div>
             </div>
+
+            <label className="access-field">
+              <span>Tipo de atuação *</span>
+              <select value={adultForm.workTypeChoice} onChange={(e) => updateAdultField('workTypeChoice', e.target.value)}>
+                <option value="">Selecione</option>
+                {renderSelectOptions(adultWorkTypeOptions)}
+              </select>
+            </label>
           </div>
         )
       case 4:
         return (
           <div className="access-form-grid">
             <label className="access-field">
-              <span>Faixa de renda mensal total *</span>
-              <select value={adultForm.monthlyIncomeTotal} onChange={(e) => updateAdultField('monthlyIncomeTotal', e.target.value)}>
+              <span>Renda média salarial da sua casa *</span>
+              <select value={adultForm.familyIncome} onChange={(e) => updateAdultField('familyIncome', e.target.value)}>
                 <option value="">Selecione</option>
-                {renderSelectOptions(totalIncomeOptions)}
+                {renderSelectOptions(householdIncomeOptions)}
               </select>
             </label>
             <label className="access-field">
-              <span>Renda obtida com danca *</span>
-              <select value={adultForm.danceIncome} onChange={(e) => updateAdultField('danceIncome', e.target.value)}>
-                <option value="">Selecione</option>
-                {renderSelectOptions(danceIncomeOptions)}
-              </select>
+              <span>Renda média mensal total (R$) *</span>
+              <input type="text" inputMode="decimal" placeholder="Ex: 2500,00" value={adultForm.monthlyIncomeTotal} onChange={(e) => updateAdultField('monthlyIncomeTotal', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>Gasto mensal total com danca *</span>
-              <select value={adultForm.danceMonthlySpending} onChange={(e) => updateAdultField('danceMonthlySpending', e.target.value)}>
-                <option value="">Selecione</option>
-                {renderSelectOptions(danceSpendingOptions)}
-              </select>
+              <span>Renda mensal média exclusivamente com a dança (R$) *</span>
+              <input type="text" inputMode="decimal" placeholder="Ex: 1200,00" value={adultForm.danceIncome} onChange={(e) => updateAdultField('danceIncome', e.target.value)} />
             </label>
             <div className="access-field">
               <span>A danca e sua renda principal? *</span>
@@ -2238,25 +2162,32 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <div className="access-field access-field-full">
-              <span>Custos detalhados com danca</span>
-              <small>Campos vazios serao enviados como zero.</small>
+              <span>Gastos médios mensais com dança (estimativa em R$)</span>
+              <small>Preencha os valores mensais de cada categoria.</small>
             </div>
-            <label className="access-field"><span>Mensalidade da escola/academia</span><select value={adultForm.schoolFee} onChange={(e) => updateAdultField('schoolFee', e.target.value)}><option value="">Selecione</option>{renderSelectOptions(danceSpendingOptions)}</select></label>
-            <label className="access-field"><span>Cursos e formacoes</span><select value={adultForm.courses} onChange={(e) => updateAdultField('courses', e.target.value)}><option value="">Selecione</option>{renderSelectOptions(danceSpendingOptions)}</select></label>
-            <label className="access-field"><span>Figurinos e roupas de danca</span><select value={adultForm.costumes} onChange={(e) => updateAdultField('costumes', e.target.value)}><option value="">Selecione</option>{renderSelectOptions(danceSpendingOptions)}</select></label>
-            <label className="access-field"><span>Festivais e competicoes</span><select value={adultForm.festivals} onChange={(e) => updateAdultField('festivals', e.target.value)}><option value="">Selecione</option>{renderSelectOptions(danceSpendingOptions)}</select></label>
-            <label className="access-field"><span>Viagens para danca</span><select value={adultForm.travel} onChange={(e) => updateAdultField('travel', e.target.value)}><option value="">Selecione</option>{renderSelectOptions(danceSpendingOptions)}</select></label>
-            <label className="access-field"><span>Outros gastos com danca</span><select value={adultForm.otherCosts} onChange={(e) => updateAdultField('otherCosts', e.target.value)}><option value="">Selecione</option>{renderSelectOptions(danceSpendingOptions)}</select></label>
+            <label className="access-field"><span>Mensalidade de escola ou grupo</span><input type="text" inputMode="decimal" placeholder="Ex: 180,00" value={adultForm.schoolFee} onChange={(e) => updateAdultField('schoolFee', e.target.value)} /></label>
+            <label className="access-field"><span>Cursos e formações</span><input type="text" inputMode="decimal" placeholder="Ex: 120,00" value={adultForm.courses} onChange={(e) => updateAdultField('courses', e.target.value)} /></label>
+            <label className="access-field"><span>Figurinos e acessórios</span><input type="text" inputMode="decimal" placeholder="Ex: 90,00" value={adultForm.costumes} onChange={(e) => updateAdultField('costumes', e.target.value)} /></label>
+            <label className="access-field"><span>Festivais e competições</span><input type="text" inputMode="decimal" placeholder="Ex: 140,00" value={adultForm.festivals} onChange={(e) => updateAdultField('festivals', e.target.value)} /></label>
+            <label className="access-field"><span>Viagens e deslocamentos</span><input type="text" inputMode="decimal" placeholder="Ex: 110,00" value={adultForm.travel} onChange={(e) => updateAdultField('travel', e.target.value)} /></label>
+            <label className="access-field"><span>Outros</span><input type="text" inputMode="decimal" placeholder="Ex: 60,00" value={adultForm.otherCosts} onChange={(e) => updateAdultField('otherCosts', e.target.value)} /></label>
             <div className="access-field access-field-full">
               <span>Quem banca os custos da danca?</span>
               <small>Selecione todas que se aplicam</small>
               <div className="access-checkbox-grid access-checkbox-grid-compact">
-                {whoPaysOptions.map((item) => (
+                {adultWhoPaysOptions.map((item) => (
                   <label key={item} className="access-check-card">
                     <input type="checkbox" checked={adultForm.whoPays.includes(item)} onChange={() => toggleAdultArrayValue('whoPays', item)} />
                     <span>{item}</span>
                   </label>
                 ))}
+              </div>
+            </div>
+            <div className="access-field access-field-full">
+              <span>Você pesquisa conteúdos sobre dança na internet?</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', adultForm.searchesContent, (value) => updateAdultField('searchesContent', value))}
+                {renderChoiceCard('nao', adultForm.searchesContent, (value) => updateAdultField('searchesContent', value))}
               </div>
             </div>
             <div className="access-field access-field-full">
@@ -2292,14 +2223,14 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </select>
             </label>
             <label className="access-field">
-              <span>Nivel de formacao em danca</span>
+              <span>Já estudou ou estuda dança formalmente?</span>
               <select value={adultForm.danceEducationLevel} onChange={(e) => updateAdultField('danceEducationLevel', e.target.value)}>
                 <option value="">Selecione</option>
-                <option value="Livre">Livre</option>
-                <option value="Tecnica">Tecnica</option>
-                <option value="Graduacao">Graduacao</option>
-                <option value="Pos-graduacao">Pos-graduacao</option>
-                <option value="Autodidata">Autodidata</option>
+                <option value="Curso livre">Curso livre</option>
+                <option value="Técnico">Técnico</option>
+                <option value="Graduação">Graduação</option>
+                <option value="Pós-graduação">Pós-graduação</option>
+                <option value="Ainda não">Ainda não</option>
               </select>
             </label>
             <div className="access-field">
@@ -2328,6 +2259,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.participatedPublicCalls, (value) => updateAdultField('participatedPublicCalls', value))}
                 {renderChoiceCard('nao', adultForm.participatedPublicCalls, (value) => updateAdultField('participatedPublicCalls', value))}
+                {renderChoiceCard('nao_sei_como_faz', adultForm.participatedPublicCalls, (value) => updateAdultField('participatedPublicCalls', value))}
               </div>
             </div>
             <div className="access-field access-field-full">
@@ -2335,6 +2267,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.wasSelected, (value) => updateAdultField('wasSelected', value))}
                 {renderChoiceCard('nao', adultForm.wasSelected, (value) => updateAdultField('wasSelected', value))}
+                {renderChoiceCard('nao_sei_o_que_e', adultForm.wasSelected, (value) => updateAdultField('wasSelected', value))}
               </div>
             </div>
             <div className="access-field access-field-full">
@@ -2342,8 +2275,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.appliedNotSelected, (value) => updateAdultField('appliedNotSelected', value))}
                 {renderChoiceCard('nao', adultForm.appliedNotSelected, (value) => updateAdultField('appliedNotSelected', value))}
+                {renderChoiceCard('nao_sei_o_que_e', adultForm.appliedNotSelected, (value) => updateAdultField('appliedNotSelected', value))}
               </div>
             </div>
+            <label className="access-field access-field-full">
+              <span>Quais dificuldades você encontra para participar de editais?</span>
+              <textarea rows={4} placeholder="Descreva as principais dificuldades encontradas." value={adultForm.editalDifficulty} onChange={(e) => updateAdultField('editalDifficulty', e.target.value)} />
+            </label>
           </div>
         )
       case 8:
@@ -2351,9 +2289,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
           <div className="access-form-grid">
             <div className="access-field access-field-full">
               <span>Consentimento LGPD</span>
-              {activeConsentTerm ? (
-                <small>{activeConsentTerm.title} ({activeConsentTerm.version})</small>
-              ) : null}
+              {activeConsentTerm ? <small>{activeConsentTerm.title}</small> : null}
             </div>
             <label className="access-consent-card">
               <div className="access-consent-copy">
@@ -2368,460 +2304,6 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 <small>Opcional</small>
               </div>
               <input type="checkbox" checked={adultForm.consentContact} onChange={(e) => updateAdultField('consentContact', e.target.checked)} />
-            </label>
-          </div>
-        )
-      default:
-        return null
-    }
-  }
-
-  const renderAdultStep = () => {
-    switch (currentStep) {
-      case 0:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field">
-              <span>Nome completo *</span>
-              <input type="text" placeholder="Seu nome completo" value={adultForm.fullName} onChange={(e) => updateAdultField('fullName', e.target.value)} />
-            </label>
-            <label className="access-field">
-              <span>Email *</span>
-              <input type="email" placeholder="email@exemplo.com" value={adultForm.email} onChange={(e) => updateAdultField('email', e.target.value)} />
-            </label>
-            <label className="access-field">
-              <span>WhatsApp *</span>
-              <input type="text" placeholder="(11) 99999-9999" value={adultForm.whatsapp} onChange={(e) => updateAdultField('whatsapp', e.target.value)} />
-            </label>
-          </div>
-        )
-      case 1:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field">
-              <span>Região *</span>
-              <select value={adultForm.region} onChange={(e) => updateAdultField('region', e.target.value)}>
-                <option value="">Selecione a região</option>
-                {renderRegionOptions()}
-              </select>
-            </label>
-            <label className="access-field">
-              <span>Estado *</span>
-              <select value={adultForm.state} onChange={(e) => updateAdultField('state', e.target.value)}>
-                <option value="">Selecione o estado</option>
-                {renderBrazilStateOptions()}
-              </select>
-            </label>
-            <label className="access-field">
-              <span>Cidade *</span>
-              <input type="text" placeholder="Nome da cidade" value={adultForm.city} onChange={(e) => updateAdultField('city', e.target.value)} />
-            </label>
-          </div>
-        )
-      case 2:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field">
-              <span>Faixa etária *</span>
-              <select value={adultForm.ageRange} onChange={(e) => updateAdultField('ageRange', e.target.value)}>
-                <option value="">Selecione</option>
-                <option value="18 a 24 anos">18 a 24 anos</option>
-                <option value="25 a 34 anos">25 a 34 anos</option>
-                <option value="35 a 44 anos">35 a 44 anos</option>
-                <option value="45 a 59 anos">45 a 59 anos</option>
-                <option value="60+">60+</option>
-              </select>
-            </label>
-            <label className="access-field">
-              <span>Gênero *</span>
-              <select value={adultForm.gender} onChange={(e) => updateAdultField('gender', e.target.value)}>
-                <option value="">Selecione</option>
-                <option value="Feminino">Feminino</option>
-                <option value="Masculino">Masculino</option>
-                <option value="Não binário">Não binário</option>
-                <option value="Prefiro não informar">Prefiro não informar</option>
-                <option value="Outro">Outro</option>
-              </select>
-            </label>
-            <label className="access-field">
-              <span>Tempo de prática de dança *</span>
-              <select value={adultForm.practiceTime} onChange={(e) => updateAdultField('practiceTime', e.target.value)}>
-                <option value="">Selecione</option>
-                <option value="Menos de 1 ano">Menos de 1 ano</option>
-                <option value="1 a 2 anos">1 a 2 anos</option>
-                <option value="3 a 5 anos">3 a 5 anos</option>
-                <option value="Mais de 5 anos">Mais de 5 anos</option>
-              </select>
-            </label>
-            <div className="access-field access-field-full">
-              <span>Modalidades de dança *</span>
-              <small>Selecione todas que se aplicam</small>
-              <div className="access-checkbox-grid">
-                {danceModalitiesOptions.map((item) => (
-                  <label key={item} className="access-check-card">
-                    <input type="checkbox" checked={adultForm.danceModalities.includes(item)} onChange={() => toggleAdultArrayValue('danceModalities', item)} />
-                    <span>{item}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-        )
-      case 3:
-        return (
-          <div className="access-form-grid">
-            <div className="access-field access-field-full">
-              <span>Atua profissionalmente com dança? *</span>
-              <div className="access-choice-grid">
-                {renderChoiceCard('sim', adultForm.worksProfessionally, (value) => updateAdultField('worksProfessionally', value))}
-                {renderChoiceCard('nao', adultForm.worksProfessionally, (value) => updateAdultField('worksProfessionally', value))}
-              </div>
-            </div>
-            <div className="access-field access-field-full">
-              <span>Funções na dança *</span>
-              <small>Selecione todas que se aplicam</small>
-              <div className="access-checkbox-grid">
-                {adultRolesOptions.map((item) => (
-                  <label key={item} className="access-check-card">
-                    <input type="checkbox" checked={adultForm.danceRoles.includes(item)} onChange={() => toggleAdultArrayValue('danceRoles', item)} />
-                    <span>{item}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-        )
-      case 4:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field">
-              <span>Faixa de renda mensal total *</span>
-              <select value={adultForm.monthlyIncomeTotal} onChange={(e) => updateAdultField('monthlyIncomeTotal', e.target.value)}>
-                <option value="">Selecione</option>
-                {renderSelectOptions(totalIncomeOptions)}
-              </select>
-            </label>
-            <label className="access-field">
-              <span>Renda obtida com dança</span>
-              <select value={adultForm.danceIncome} onChange={(e) => updateAdultField('danceIncome', e.target.value)}>
-                <option value="">Selecione</option>
-                {renderSelectOptions(danceIncomeOptions)}
-              </select>
-            </label>
-            <label className="access-field">
-              <span>Gasto mensal total com dança</span>
-              <select value={adultForm.danceMonthlySpending} onChange={(e) => updateAdultField('danceMonthlySpending', e.target.value)}>
-                <option value="">Selecione</option>
-                {renderSelectOptions(danceSpendingOptions)}
-              </select>
-            </label>
-          </div>
-        )
-      case 5:
-        return (
-          <div className="access-form-grid">
-            <div className="access-field access-field-full">
-              <span>Custos detalhados com dança</span>
-              <small>Informe quanto você gasta mensalmente em cada categoria (opcional)</small>
-            </div>
-            <label className="access-field"><span>Mensalidade da escola/academia</span><input type="text" placeholder="Não se aplica" value={adultForm.schoolFee} onChange={(e) => updateAdultField('schoolFee', e.target.value)} /></label>
-            <label className="access-field"><span>Cursos e formações</span><input type="text" placeholder="Não se aplica" value={adultForm.courses} onChange={(e) => updateAdultField('courses', e.target.value)} /></label>
-            <label className="access-field"><span>Figurinos e roupas de dança</span><input type="text" placeholder="Não se aplica" value={adultForm.costumes} onChange={(e) => updateAdultField('costumes', e.target.value)} /></label>
-            <label className="access-field"><span>Festivais e competições</span><input type="text" placeholder="Não se aplica" value={adultForm.festivals} onChange={(e) => updateAdultField('festivals', e.target.value)} /></label>
-            <label className="access-field"><span>Viagens para dança</span><input type="text" placeholder="Não se aplica" value={adultForm.travel} onChange={(e) => updateAdultField('travel', e.target.value)} /></label>
-            <label className="access-field"><span>Outros gastos com dança</span><input type="text" placeholder="Não se aplica" value={adultForm.otherCosts} onChange={(e) => updateAdultField('otherCosts', e.target.value)} /></label>
-            <div className="access-field access-field-full">
-              <span>Quem banca os custos da dança?</span>
-              <small>Selecione todas que se aplicam</small>
-              <div className="access-checkbox-grid access-checkbox-grid-compact">
-                {whoPaysOptions.map((item) => (
-                  <label key={item} className="access-check-card">
-                    <input type="checkbox" checked={adultForm.whoPays.includes(item)} onChange={() => toggleAdultArrayValue('whoPays', item)} />
-                    <span>{item}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-        )
-      case 6:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field">
-              <span>Formação acadêmica *</span>
-              <select value={adultForm.academicEducation} onChange={(e) => updateAdultField('academicEducation', e.target.value)}>
-                <option value="">Selecione</option>
-                <option value="Ensino fundamental incompleto">Ensino fundamental incompleto</option>
-                <option value="Ensino fundamental completo">Ensino fundamental completo</option>
-                <option value="Ensino médio incompleto">Ensino médio incompleto</option>
-                <option value="Ensino médio completo">Ensino médio completo</option>
-                <option value="Ensino superior incompleto">Ensino superior incompleto</option>
-                <option value="Ensino superior completo">Ensino superior completo</option>
-                <option value="Pós-graduação">Pós-graduação</option>
-                <option value="Mestrado">Mestrado</option>
-                <option value="Doutorado">Doutorado</option>
-              </select>
-            </label>
-            <label className="access-field">
-              <span>Nível de formação em dança</span>
-              <select value={adultForm.danceEducationLevel} onChange={(e) => updateAdultField('danceEducationLevel', e.target.value)}>
-                <option value="">Selecione</option>
-                <option value="Livre">Livre</option>
-                <option value="Técnica">Técnica</option>
-                <option value="Graduação">Graduação</option>
-                <option value="Pós-graduação">Pós-graduação</option>
-                <option value="Autodidata">Autodidata</option>
-              </select>
-            </label>
-            <div className="access-field">
-              <span>Estuda dança atualmente?</span>
-              <div className="access-choice-grid">
-                {renderChoiceCard('sim', adultForm.studiesDanceNow, (value) => updateAdultField('studiesDanceNow', value))}
-                {renderChoiceCard('nao', adultForm.studiesDanceNow, (value) => updateAdultField('studiesDanceNow', value))}
-              </div>
-            </div>
-            <div className="access-field">
-              <span>Pretende estudar dança formalmente?</span>
-              <div className="access-choice-grid">
-                {renderChoiceCard('sim', adultForm.wantsFormalDanceStudy, (value) => updateAdultField('wantsFormalDanceStudy', value))}
-                {renderChoiceCard('nao', adultForm.wantsFormalDanceStudy, (value) => updateAdultField('wantsFormalDanceStudy', value))}
-              </div>
-            </div>
-            <label className="access-field"><span>Cursos presenciais por ano</span><input type="number" min="0" value={adultForm.presentialCoursesPerYear} onChange={(e) => updateAdultField('presentialCoursesPerYear', e.target.value)} /></label>
-            <label className="access-field"><span>Cursos online por ano</span><input type="number" min="0" value={adultForm.onlineCoursesPerYear} onChange={(e) => updateAdultField('onlineCoursesPerYear', e.target.value)} /></label>
-          </div>
-        )
-      case 7:
-        return (
-          <div className="access-form-grid">
-            <div className="access-field access-field-full">
-              <span>Já participou de editais públicos? *</span>
-              <div className="access-choice-grid">
-                {renderChoiceCard('sim', adultForm.participatedPublicCalls, (value) => updateAdultField('participatedPublicCalls', value))}
-                {renderChoiceCard('nao', adultForm.participatedPublicCalls, (value) => updateAdultField('participatedPublicCalls', value))}
-              </div>
-            </div>
-            <div className="access-field access-field-full">
-              <span>Foi contemplado(a)?</span>
-              <div className="access-choice-grid">
-                {renderChoiceCard('sim', adultForm.wasSelected, (value) => updateAdultField('wasSelected', value))}
-                {renderChoiceCard('nao', adultForm.wasSelected, (value) => updateAdultField('wasSelected', value))}
-              </div>
-            </div>
-            <div className="access-field access-field-full">
-              <span>Se inscreveu e não foi contemplado(a)?</span>
-              <div className="access-choice-grid">
-                {renderChoiceCard('sim', adultForm.appliedNotSelected, (value) => updateAdultField('appliedNotSelected', value))}
-                {renderChoiceCard('nao', adultForm.appliedNotSelected, (value) => updateAdultField('appliedNotSelected', value))}
-              </div>
-            </div>
-          </div>
-        )
-      case 8:
-        return (
-          <div className="access-form-grid">
-            <div className="access-field access-field-full"><span>Consentimento LGPD</span></div>
-            <label className="access-consent-card">
-              <div className="access-consent-copy">
-                <strong>Autorizo o uso estatístico e anonimizado dos dados fornecidos para fins de pesquisa, políticas públicas e desenvolvimento do setor da dança.</strong>
-                <small>É necessário autorizar o uso estatístico</small>
-              </div>
-              <input type="checkbox" checked={adultForm.consentStats} onChange={(e) => updateAdultField('consentStats', e.target.checked)} />
-            </label>
-            <label className="access-consent-card">
-              <div className="access-consent-copy">
-                <strong>Autorizo o contato por email e WhatsApp para informações sobre o SIBRADANÇA e oportunidades no setor da dança.</strong>
-                <small>É necessário autorizar o contato</small>
-              </div>
-              <input type="checkbox" checked={adultForm.consentContact} onChange={(e) => updateAdultField('consentContact', e.target.checked)} />
-            </label>
-          </div>
-        )
-      default:
-        return null
-    }
-  }
-
-  const renderInstitutionStep = () => {
-    switch (currentStep) {
-      case 0:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field">
-              <span>Nome completo do responsável *</span>
-              <input type="text" placeholder="Seu nome completo" value={institutionForm.responsibleName} onChange={(e) => updateInstitutionField('responsibleName', e.target.value)} />
-            </label>
-            <label className="access-field">
-              <span>Email *</span>
-              <input type="email" placeholder="email@instituicao.com" value={institutionForm.email} onChange={(e) => updateInstitutionField('email', e.target.value)} />
-            </label>
-            <label className="access-field">
-              <span>WhatsApp *</span>
-              <input type="text" placeholder="(11) 99999-9999" value={institutionForm.whatsapp} onChange={(e) => updateInstitutionField('whatsapp', e.target.value)} />
-            </label>
-          </div>
-        )
-      case 1:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field">
-              <span>Nome da instituição *</span>
-              <input type="text" placeholder="Nome da escola, grupo ou companhia" value={institutionForm.institutionName} onChange={(e) => updateInstitutionField('institutionName', e.target.value)} />
-              {!institutionForm.institutionName && <small>Nome da instituição obrigatório</small>}
-            </label>
-            <label className="access-field">
-              <span>Tipo de instituição *</span>
-              <select value={institutionForm.institutionType} onChange={(e) => updateInstitutionField('institutionType', e.target.value)}>
-                <option value="">Selecione</option>
-                {renderSelectOptions(institutionTypeOptions)}
-              </select>
-            </label>
-            <label className="access-field">
-              <span>Período de fundação *</span>
-              <select value={institutionForm.foundationPeriod} onChange={(e) => updateInstitutionField('foundationPeriod', e.target.value)}>
-                <option value="">Selecione</option>
-                <option value="Antes de 1990">Antes de 1990</option>
-                <option value="1990 a 1999">1990 a 1999</option>
-                <option value="2000 a 2009">2000 a 2009</option>
-                <option value="2010 a 2019">2010 a 2019</option>
-                <option value="2020 em diante">2020 em diante</option>
-              </select>
-              <small>Selecione o período de fundação</small>
-            </label>
-            <div className="access-field">
-              <span>Possui CNPJ? *</span>
-              <div className="access-choice-grid">
-                {renderChoiceCard('sim', institutionForm.hasCnpj, (value) => updateInstitutionField('hasCnpj', value))}
-                {renderChoiceCard('nao', institutionForm.hasCnpj, (value) => updateInstitutionField('hasCnpj', value))}
-              </div>
-            </div>
-            <label className="access-field">
-              <span>CNPJ</span>
-              <input type="text" placeholder="00.000.000/0000-00" value={institutionForm.cnpj} onChange={(e) => updateInstitutionField('cnpj', e.target.value)} />
-            </label>
-          </div>
-        )
-      case 2:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field">
-              <span>Região *</span>
-              <select value={institutionForm.region} onChange={(e) => updateInstitutionField('region', e.target.value)}>
-                <option value="">Selecione a região</option>
-                {renderRegionOptions()}
-              </select>
-            </label>
-            <label className="access-field">
-              <span>Estado *</span>
-              <select value={institutionForm.state} onChange={(e) => updateInstitutionField('state', e.target.value)}>
-                <option value="">Selecione o estado</option>
-                {renderBrazilStateOptions()}
-              </select>
-            </label>
-            <label className="access-field">
-              <span>Cidade *</span>
-              <input type="text" placeholder="Nome da cidade" value={institutionForm.city} onChange={(e) => updateInstitutionField('city', e.target.value)} />
-            </label>
-            <div className="access-field">
-              <span>Atua em periferia? *</span>
-              <div className="access-choice-grid">
-                {renderChoiceCard('sim', institutionForm.actsInPeriphery, (value) => updateInstitutionField('actsInPeriphery', value))}
-                {renderChoiceCard('nao', institutionForm.actsInPeriphery, (value) => updateInstitutionField('actsInPeriphery', value))}
-              </div>
-            </div>
-            <div className="access-field">
-              <span>Atua em zona rural? *</span>
-              <div className="access-choice-grid">
-                {renderChoiceCard('sim', institutionForm.actsInRuralArea, (value) => updateInstitutionField('actsInRuralArea', value))}
-                {renderChoiceCard('nao', institutionForm.actsInRuralArea, (value) => updateInstitutionField('actsInRuralArea', value))}
-              </div>
-            </div>
-          </div>
-        )
-      case 3:
-        return (
-          <div className="access-form-grid">
-            <div className="access-field"><span>Possui sede própria? *</span><div className="access-choice-grid">{renderChoiceCard('sim', institutionForm.hasOwnHeadquarters, (value) => updateInstitutionField('hasOwnHeadquarters', value))}{renderChoiceCard('nao', institutionForm.hasOwnHeadquarters, (value) => updateInstitutionField('hasOwnHeadquarters', value))}</div></div>
-            <div className="access-field"><span>Sede alugada? *</span><div className="access-choice-grid">{renderChoiceCard('sim', institutionForm.rentedHeadquarters, (value) => updateInstitutionField('rentedHeadquarters', value))}{renderChoiceCard('nao', institutionForm.rentedHeadquarters, (value) => updateInstitutionField('rentedHeadquarters', value))}</div></div>
-            <div className="access-field"><span>Utiliza espaço público? *</span><div className="access-choice-grid">{renderChoiceCard('sim', institutionForm.usesPublicSpace, (value) => updateInstitutionField('usesPublicSpace', value))}{renderChoiceCard('nao', institutionForm.usesPublicSpace, (value) => updateInstitutionField('usesPublicSpace', value))}</div></div>
-            <label className="access-field"><span>Número de salas *</span><select value={institutionForm.numberOfRooms} onChange={(e) => updateInstitutionField('numberOfRooms', e.target.value)}><option value="">Selecione</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5+">5+</option></select></label>
-            <label className="access-field"><span>Capacidade média de público *</span><select value={institutionForm.averageAudienceCapacity} onChange={(e) => updateInstitutionField('averageAudienceCapacity', e.target.value)}><option value="">Selecione</option><option value="Até 30 pessoas">Até 30 pessoas</option><option value="31 a 60 pessoas">31 a 60 pessoas</option><option value="61 a 100 pessoas">61 a 100 pessoas</option><option value="101 a 200 pessoas">101 a 200 pessoas</option><option value="Mais de 200 pessoas">Mais de 200 pessoas</option></select></label>
-          </div>
-        )
-      case 4:
-        return (
-          <div className="access-form-grid">
-            <label className="access-field"><span>Número de alunos ativos *</span><select value={institutionForm.activeStudents} onChange={(e) => updateInstitutionField('activeStudents', e.target.value)}><option value="">Selecione</option><option value="Até 20">Até 20</option><option value="21 a 50">21 a 50</option><option value="51 a 100">51 a 100</option><option value="101 a 300">101 a 300</option><option value="Mais de 300">Mais de 300</option></select></label>
-            <label className="access-field"><span>Número de professores *</span><select value={institutionForm.numberOfTeachers} onChange={(e) => updateInstitutionField('numberOfTeachers', e.target.value)}><option value="">Selecione</option><option value="1 a 2">1 a 2</option><option value="3 a 5">3 a 5</option><option value="6 a 10">6 a 10</option><option value="11 a 20">11 a 20</option><option value="Mais de 20">Mais de 20</option></select></label>
-            <label className="access-field"><span>Número de funcionários *</span><select value={institutionForm.numberOfStaff} onChange={(e) => updateInstitutionField('numberOfStaff', e.target.value)}><option value="">Selecione</option><option value="0">0</option><option value="1 a 2">1 a 2</option><option value="3 a 5">3 a 5</option><option value="6 a 10">6 a 10</option><option value="Mais de 10">Mais de 10</option></select></label>
-            <label className="access-field"><span>Público atendido mensalmente *</span><select value={institutionForm.monthlyAudience} onChange={(e) => updateInstitutionField('monthlyAudience', e.target.value)}><option value="">Selecione</option><option value="Até 50">Até 50</option><option value="51 a 100">51 a 100</option><option value="101 a 300">101 a 300</option><option value="301 a 500">301 a 500</option><option value="Mais de 500">Mais de 500</option></select></label>
-            <div className="access-field"><span>Atende população em situação de vulnerabilidade? *</span><div className="access-choice-grid">{renderChoiceCard('sim', institutionForm.servesVulnerablePopulation, (value) => updateInstitutionField('servesVulnerablePopulation', value))}{renderChoiceCard('nao', institutionForm.servesVulnerablePopulation, (value) => updateInstitutionField('servesVulnerablePopulation', value))}</div></div>
-          </div>
-        )
-      case 5:
-        return (
-          <div className="access-form-grid">
-            <div className="access-field access-field-full">
-              <span>Principais fontes de renda *</span>
-              <small>Selecione todas que se aplicam</small>
-              <div className="access-checkbox-grid">
-                {institutionIncomeSourcesOptions.map((item) => (
-                  <label key={item} className="access-check-card">
-                    <input type="checkbox" checked={institutionForm.mainIncomeSources.includes(item)} onChange={() => toggleInstitutionArrayValue('mainIncomeSources', item)} />
-                    <span>{item}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div className="access-field access-field-full">
-              <span>Recebeu recurso de edital público nos últimos 2 anos? *</span>
-              <div className="access-choice-grid">
-                {renderChoiceCard('sim', institutionForm.receivedPublicFundingLast2Years, (value) => updateInstitutionField('receivedPublicFundingLast2Years', value))}
-                {renderChoiceCard('nao', institutionForm.receivedPublicFundingLast2Years, (value) => updateInstitutionField('receivedPublicFundingLast2Years', value))}
-              </div>
-            </div>
-            {institutionForm.receivedPublicFundingLast2Years === 'nao' && (
-              <div className="access-field access-field-full">
-                <span>Dificuldades de acesso a editais (se não)</span>
-                <small>Selecione as que se aplicam</small>
-                <div className="access-checkbox-grid">
-                  {institutionEditalDifficultiesOptions.map((item) => (
-                    <label key={item} className="access-check-card">
-                      <input type="checkbox" checked={institutionForm.editalDifficulties.includes(item)} onChange={() => toggleInstitutionArrayValue('editalDifficulties', item)} />
-                      <span>{item}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )}
-            <label className="access-field"><span>Faixa de orçamento anual *</span><select value={institutionForm.annualBudgetRange} onChange={(e) => updateInstitutionField('annualBudgetRange', e.target.value)}><option value="">Selecione</option><option value="Até R$ 50 mil">Até R$ 50 mil</option><option value="R$ 50 mil a R$ 100 mil">R$ 50 mil a R$ 100 mil</option><option value="R$ 100 mil a R$ 300 mil">R$ 100 mil a R$ 300 mil</option><option value="R$ 300 mil a R$ 1 milhão">R$ 300 mil a R$ 1 milhão</option><option value="Mais de R$ 1 milhão">Mais de R$ 1 milhão</option></select></label>
-          </div>
-        )
-      case 6:
-        return (
-          <div className="access-form-grid">
-            <div className="access-field"><span>Conhece o Plano Municipal de Cultura da sua cidade? *</span><div className="access-choice-grid">{renderChoiceCard('sim', institutionForm.knowsMunicipalCulturePlan, (value) => updateInstitutionField('knowsMunicipalCulturePlan', value))}{renderChoiceCard('nao', institutionForm.knowsMunicipalCulturePlan, (value) => updateInstitutionField('knowsMunicipalCulturePlan', value))}</div></div>
-            <div className="access-field"><span>Participa de algum conselho de cultura? *</span><div className="access-choice-grid">{renderChoiceCard('sim', institutionForm.participatesInCultureCouncil, (value) => updateInstitutionField('participatesInCultureCouncil', value))}{renderChoiceCard('nao', institutionForm.participatesInCultureCouncil, (value) => updateInstitutionField('participatesInCultureCouncil', value))}</div></div>
-            <div className="access-field"><span>Tem interesse em parcerias com o poder público? *</span><div className="access-choice-grid">{renderChoiceCard('sim', institutionForm.interestedInPublicPartnerships, (value) => updateInstitutionField('interestedInPublicPartnerships', value))}{renderChoiceCard('nao', institutionForm.interestedInPublicPartnerships, (value) => updateInstitutionField('interestedInPublicPartnerships', value))}</div></div>
-          </div>
-        )
-      case 7:
-        return (
-          <div className="access-form-grid">
-            <div className="access-field access-field-full"><span>Consentimento LGPD</span></div>
-            <label className="access-consent-card">
-              <div className="access-consent-copy">
-                <strong>Autorizo o uso estatístico e anonimizado dos dados institucionais fornecidos para fins de pesquisa, políticas públicas e desenvolvimento do setor da dança.</strong>
-                <small>É necessário autorizar o uso estatístico</small>
-              </div>
-              <input type="checkbox" checked={institutionForm.consentStats} onChange={(e) => updateInstitutionField('consentStats', e.target.checked)} />
-            </label>
-            <label className="access-consent-card">
-              <div className="access-consent-copy">
-                <strong>Autorizo o contato institucional por email e WhatsApp para informações sobre o SIBRADANÇA e oportunidades no setor da dança.</strong>
-                <small>É necessário autorizar o contato</small>
-              </div>
-              <input type="checkbox" checked={institutionForm.consentContact} onChange={(e) => updateInstitutionField('consentContact', e.target.checked)} />
             </label>
           </div>
         )
@@ -2868,6 +2350,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </select>
             </label>
             <label className="access-field">
+              <span>Natureza jurídica *</span>
+              <select value={institutionForm.legalNature} onChange={(e) => updateInstitutionField('legalNature', e.target.value)}>
+                <option value="">Selecione</option>
+                {renderSelectOptions(institutionLegalNatureOptions)}
+              </select>
+            </label>
+            <label className="access-field">
               <span>A instituição é *</span>
               <select value={institutionForm.institutionNature} onChange={(e) => updateInstitutionField('institutionNature', e.target.value)}>
                 <option value="">Selecione</option>
@@ -2896,6 +2385,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       case 2:
         return (
           <div className="access-form-grid">
+            <label className="access-field">
+              <span>Região</span>
+              <select value={institutionForm.region} onChange={(e) => updateInstitutionField('region', e.target.value)}>
+                <option value="">Selecione a região</option>
+                {renderRegionOptions()}
+              </select>
+            </label>
             <label className="access-field">
               <span>Estado *</span>
               <select value={institutionForm.state} onChange={(e) => updateInstitutionField('state', e.target.value)}>
@@ -2957,6 +2453,18 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 {renderSelectOptions(institutionSpaceTypeOptions)}
               </select>
             </label>
+            <div className="access-field access-field-full">
+              <span>Infraestrutura disponível</span>
+              <small>Selecione os itens presentes no espaço.</small>
+              <div className="access-checkbox-grid access-checkbox-grid-compact">
+                {institutionInfrastructureOptions.map((item) => (
+                  <label key={item} className="access-check-card">
+                    <input type="checkbox" checked={institutionForm.infrastructureItems.includes(item)} onChange={() => toggleInstitutionArrayValue('infrastructureItems', item)} />
+                    <span>{item}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
           </div>
         )
       case 4:
@@ -2971,14 +2479,42 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <input type="number" min="0" placeholder="Ex: 120" value={institutionForm.averageStudents} onChange={(e) => updateInstitutionField('averageStudents', e.target.value)} />
             </label>
             <label className="access-field">
+              <span>Alunos ativos no momento</span>
+              <input type="number" min="0" placeholder="Ex: 98" value={institutionForm.activeStudents} onChange={(e) => updateInstitutionField('activeStudents', e.target.value)} />
+            </label>
+            <label className="access-field">
               <span>Mensalidade média (R$) *</span>
-              <input type="number" min="0" step="0.01" placeholder="Ex: 250" value={institutionForm.monthlyFee} onChange={(e) => updateInstitutionField('monthlyFee', e.target.value)} />
+              <input type="text" inputMode="decimal" placeholder="Ex: 250,00" value={institutionForm.monthlyFee} onChange={(e) => updateInstitutionField('monthlyFee', e.target.value)} />
+            </label>
+            <label className="access-field">
+              <span>Capacidade média de público</span>
+              <input type="number" min="0" placeholder="Ex: 80" value={institutionForm.averageAudienceCapacity} onChange={(e) => updateInstitutionField('averageAudienceCapacity', e.target.value)} />
             </label>
             <div className="access-field">
               <span>Possui bolsas? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.hasScholarShip, (value) => updateInstitutionField('hasScholarShip', value))}
                 {renderChoiceCard('nao', institutionForm.hasScholarShip, (value) => updateInstitutionField('hasScholarShip', value))}
+              </div>
+            </div>
+            {institutionForm.hasScholarShip === 'sim' ? (
+              <label className="access-field">
+                <span>Quantidade de bolsistas</span>
+                <input type="number" min="0" placeholder="Ex: 12" value={institutionForm.scholarshipCount} onChange={(e) => updateInstitutionField('scholarshipCount', e.target.value)} />
+              </label>
+            ) : null}
+            <div className="access-field">
+              <span>Os alunos pagam mensalidade?</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.studentsPayMonthlyFee, (value) => updateInstitutionField('studentsPayMonthlyFee', value))}
+                {renderChoiceCard('nao', institutionForm.studentsPayMonthlyFee, (value) => updateInstitutionField('studentsPayMonthlyFee', value))}
+              </div>
+            </div>
+            <div className="access-field">
+              <span>Atende população em situação de vulnerabilidade?</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.servesVulnerablePopulation, (value) => updateInstitutionField('servesVulnerablePopulation', value))}
+                {renderChoiceCard('nao', institutionForm.servesVulnerablePopulation, (value) => updateInstitutionField('servesVulnerablePopulation', value))}
               </div>
             </div>
           </div>
@@ -2996,7 +2532,15 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
             <label className="access-field">
               <span>Faturamento mensal médio (R$) *</span>
-              <input type="number" min="0" step="0.01" placeholder="Ex: 15000" value={institutionForm.monthlyRevenue} onChange={(e) => updateInstitutionField('monthlyRevenue', e.target.value)} />
+              <input type="text" inputMode="decimal" placeholder="Ex: 15000,00" value={institutionForm.monthlyRevenue} onChange={(e) => updateInstitutionField('monthlyRevenue', e.target.value)} />
+            </label>
+            <label className="access-field">
+              <span>Número total de pessoas na equipe</span>
+              <input type="number" min="0" placeholder="Ex: 10" value={institutionForm.numberOfStaff} onChange={(e) => updateInstitutionField('numberOfStaff', e.target.value)} />
+            </label>
+            <label className="access-field">
+              <span>Público mensal</span>
+              <input type="number" min="0" placeholder="Ex: 350" value={institutionForm.monthlyAudience} onChange={(e) => updateInstitutionField('monthlyAudience', e.target.value)} />
             </label>
             <div className="access-field">
               <span>Usa sistema de gestão? *</span>
@@ -3005,11 +2549,133 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 {renderChoiceCard('nao', institutionForm.usesManagementSystem, (value) => updateInstitutionField('usesManagementSystem', value))}
               </div>
             </div>
+            <div className="access-field">
+              <span>Recebeu recurso público nos últimos 2 anos?</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.receivedPublicFundingLast2Years, (value) => updateInstitutionField('receivedPublicFundingLast2Years', value))}
+                {renderChoiceCard('nao', institutionForm.receivedPublicFundingLast2Years, (value) => updateInstitutionField('receivedPublicFundingLast2Years', value))}
+              </div>
+            </div>
+            <label className="access-field">
+              <span>Faixa de orçamento anual</span>
+              <select value={institutionForm.annualBudgetRange} onChange={(e) => updateInstitutionField('annualBudgetRange', e.target.value)}>
+                <option value="">Selecione</option>
+                <option value="Até R$ 50 mil">Até R$ 50 mil</option>
+                <option value="R$ 50 mil a R$ 100 mil">R$ 50 mil a R$ 100 mil</option>
+                <option value="R$ 100 mil a R$ 300 mil">R$ 100 mil a R$ 300 mil</option>
+                <option value="R$ 300 mil a R$ 1 milhão">R$ 300 mil a R$ 1 milhão</option>
+                <option value="Mais de R$ 1 milhão">Mais de R$ 1 milhão</option>
+              </select>
+            </label>
+            <div className="access-field access-field-full">
+              <span>Principais fontes de renda</span>
+              <small>Selecione todas que se aplicam</small>
+              <div className="access-checkbox-grid access-checkbox-grid-compact">
+                {institutionIncomeSourcesOptions.map((item) => (
+                  <label key={item} className="access-check-card">
+                    <input type="checkbox" checked={institutionForm.mainIncomeSources.includes(item)} onChange={() => toggleInstitutionArrayValue('mainIncomeSources', item)} />
+                    <span>{item}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
           </div>
         )
       case 6:
         return (
           <div className="access-form-grid">
+            <label className="access-field">
+              <span>Quem arca com os custos dos eventos?</span>
+              <select value={institutionForm.eventCostResponsibility} onChange={(e) => updateInstitutionField('eventCostResponsibility', e.target.value)}>
+                <option value="">Selecione</option>
+                {renderSelectOptions(institutionEventCostOptions)}
+              </select>
+            </label>
+            <div className="access-field access-field-full">
+              <span>Profissionais da estrutura</span>
+              <small>Selecione todos que fazem parte da instituição.</small>
+              <div className="access-checkbox-grid access-checkbox-grid-compact">
+                {institutionStaffRoleOptions.map((item) => (
+                  <label key={item} className="access-check-card">
+                    <input type="checkbox" checked={institutionForm.staffRoles.includes(item)} onChange={() => toggleInstitutionArrayValue('staffRoles', item)} />
+                    <span>{item}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div className="access-field">
+              <span>Já se cadastrou em editais públicos?</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.registeredInPublicCalls, (value) => updateInstitutionField('registeredInPublicCalls', value))}
+                {renderChoiceCard('nao', institutionForm.registeredInPublicCalls, (value) => updateInstitutionField('registeredInPublicCalls', value))}
+              </div>
+            </div>
+            <div className="access-field">
+              <span>Já foi contemplada em edital?</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.approvedInPublicCalls, (value) => updateInstitutionField('approvedInPublicCalls', value))}
+                {renderChoiceCard('nao', institutionForm.approvedInPublicCalls, (value) => updateInstitutionField('approvedInPublicCalls', value))}
+              </div>
+            </div>
+            <div className="access-field">
+              <span>Conhece os mecanismos de acesso a políticas públicas?</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.knowsPublicPolicyAccessMechanisms, (value) => updateInstitutionField('knowsPublicPolicyAccessMechanisms', value))}
+                {renderChoiceCard('nao', institutionForm.knowsPublicPolicyAccessMechanisms, (value) => updateInstitutionField('knowsPublicPolicyAccessMechanisms', value))}
+              </div>
+            </div>
+            <div className="access-field">
+              <span>Usaria plataforma gratuita para divulgar aulas e eventos?</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.wouldUseFreePromotionPlatform, (value) => updateInstitutionField('wouldUseFreePromotionPlatform', value))}
+                {renderChoiceCard('nao', institutionForm.wouldUseFreePromotionPlatform, (value) => updateInstitutionField('wouldUseFreePromotionPlatform', value))}
+              </div>
+            </div>
+            <div className="access-field">
+              <span>Conhece o plano municipal de cultura?</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.knowsMunicipalCulturePlan, (value) => updateInstitutionField('knowsMunicipalCulturePlan', value))}
+                {renderChoiceCard('nao', institutionForm.knowsMunicipalCulturePlan, (value) => updateInstitutionField('knowsMunicipalCulturePlan', value))}
+              </div>
+            </div>
+            <div className="access-field">
+              <span>Participa de conselho de cultura?</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.participatesInCultureCouncil, (value) => updateInstitutionField('participatesInCultureCouncil', value))}
+                {renderChoiceCard('nao', institutionForm.participatesInCultureCouncil, (value) => updateInstitutionField('participatesInCultureCouncil', value))}
+              </div>
+            </div>
+            <div className="access-field">
+              <span>Tem interesse em parcerias públicas?</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.interestedInPublicPartnerships, (value) => updateInstitutionField('interestedInPublicPartnerships', value))}
+                {renderChoiceCard('nao', institutionForm.interestedInPublicPartnerships, (value) => updateInstitutionField('interestedInPublicPartnerships', value))}
+              </div>
+            </div>
+            <div className="access-field access-field-full">
+              <span>Dificuldades com editais</span>
+              <small>Selecione todas as dificuldades encontradas.</small>
+              <div className="access-checkbox-grid access-checkbox-grid-compact">
+                {institutionEditalDifficultiesOptions.map((item) => (
+                  <label key={item} className="access-check-card">
+                    <input type="checkbox" checked={institutionForm.editalDifficulties.includes(item)} onChange={() => toggleInstitutionArrayValue('editalDifficulties', item)} />
+                    <span>{item}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div className="access-field access-field-full">
+              <span>Canais de divulgação</span>
+              <small>Selecione os canais utilizados pela instituição.</small>
+              <div className="access-checkbox-grid access-checkbox-grid-compact">
+                {institutionPromotionChannelOptions.map((item) => (
+                  <label key={item} className="access-check-card">
+                    <input type="checkbox" checked={institutionForm.promotionChannels.includes(item)} onChange={() => toggleInstitutionArrayValue('promotionChannels', item)} />
+                    <span>{item}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
             <label className="access-field access-field-full">
               <span>Principal desafio da instituição *</span>
               <textarea rows={5} placeholder="Ex: captação de alunos, sustentabilidade financeira, estrutura, equipe, gestão..." value={institutionForm.mainChallenges} onChange={(e) => updateInstitutionField('mainChallenges', e.target.value)} />
@@ -3022,14 +2688,21 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             <div className="access-field access-field-full"><span>Consentimento LGPD</span></div>
             <label className="access-consent-card">
               <div className="access-consent-copy">
-                <strong>
+                <strong>Autorizo o uso estatístico e anonimizado dos dados institucionais fornecidos.</strong>
+                <small>
                   {activeConsentTerm
-                    ? `${activeConsentTerm.title} (${activeConsentTerm.version})`
-                    : 'Autorizo o uso estatístico e anonimizado dos dados institucionais fornecidos.'}
-                </strong>
-                <small>É necessário autorizar o uso estatístico</small>
+                    ? activeConsentTerm.title
+                    : 'É necessário autorizar o uso estatístico'}
+                </small>
               </div>
               <input type="checkbox" checked={institutionForm.consentStats} onChange={(e) => updateInstitutionField('consentStats', e.target.checked)} />
+            </label>
+            <label className="access-consent-card">
+              <div className="access-consent-copy">
+                <strong>Autorizo o contato institucional por email e WhatsApp para informações sobre o SIBRADANÇA.</strong>
+                <small>Opcional</small>
+              </div>
+              <input type="checkbox" checked={institutionForm.consentContact} onChange={(e) => updateInstitutionField('consentContact', e.target.checked)} />
             </label>
           </div>
         )
@@ -3040,15 +2713,12 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
   const renderCurrentStep = () => {
     if (view === 'minor-flow') {
-      void renderMinorStep
       return renderMinorRealStep()
     }
     if (view === 'adult-flow') {
-      void renderAdultStep
       return renderAdultRealStep()
     }
     if (view === 'institution-flow') {
-      void renderInstitutionStep
       return renderInstitutionRealStep()
     }
     return null
@@ -3062,7 +2732,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={handleClose}
+          onClick={handleOverlayClick}
         >
           <motion.div
             className={`access-floating-panel ${view !== 'menu' ? 'is-form-mode' : ''}`}
@@ -3077,9 +2747,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 {view === 'menu' ? (
                   <>
                     <Badge dark>Acesso</Badge>
-                    <h3 className="access-panel-title">Escolha como deseja entrar</h3>
+                    <h3 className="access-panel-title">Escolha seu perfil</h3>
                     <p className="access-panel-text">
-                      Selecione uma opção para continuar no ecossistema do SIBRADANÇA.
+                      Selecione a opção que melhor representa você para abrir o formulário certo.
                     </p>
                   </>
                 ) : (

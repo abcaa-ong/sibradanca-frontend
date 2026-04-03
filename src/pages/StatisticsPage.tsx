@@ -22,13 +22,6 @@ import type {
   StatisticsProfileResponse,
 } from "../types/statistics";
 
-type ExportRow = {
-  categoria: string;
-  indicador: string;
-  valor: string | number;
-  detalhe: string;
-};
-
 type OverviewCardItem = {
   label: string;
   value: string;
@@ -407,171 +400,6 @@ function buildPublicPolicyCards(
   ];
 }
 
-function buildExportRows(
-  selectedSectorLabel: string,
-  selectedRegionLabel: string,
-  overviewCards: OverviewCardItem[],
-  economyCards: MetricCardItem[],
-  educationCards: MetricCardItem[],
-  publicPolicyCards: MetricCardItem[],
-  sectorDistributionData: ChartItem[],
-  ageData: ChartItem[],
-  genderData: ChartItem[],
-  modalitiesData: ChartItem[],
-  incomeData: ChartItem[],
-  financingData: ChartItem[],
-  costCoursesData: ChartItem[],
-  monthlyFeeData: ChartItem[],
-  institutionIndicatorsData: ChartItem[],
-  monthlyRevenueData: ChartItem[],
-  danceEducationLevelData: ChartItem[],
-  costumesCostData: ChartItem[],
-  publicCallsParticipationData: ChartItem[],
-  mainEditalDifficultiesData: ChartItem[],
-  selectedStateLabel: string,
-): ExportRow[] {
-  const buildChartRows = (
-    categoria: string,
-    detalhe: string,
-    data: ChartItem[],
-  ) =>
-    data.map((item) => ({
-      categoria,
-      indicador: item.name,
-      valor: item.value,
-      detalhe,
-    }));
-
-  const buildMetricRows = (categoria: string, items: MetricCardItem[]) =>
-    items.map((item) => ({
-      categoria,
-      indicador: item.label,
-      valor: item.percent,
-      detalhe: item.detail,
-    }));
-
-  return [
-    {
-      categoria: "Filtros",
-      indicador: "Setor selecionado",
-      valor: selectedSectorLabel,
-      detalhe: "Recorte aplicado no painel estatístico.",
-    },
-    {
-      categoria: "Filtros",
-      indicador: "Região selecionada",
-      valor: selectedRegionLabel,
-      detalhe: "Recorte aplicado no painel estatístico.",
-    },
-    {
-      categoria: "Filtros",
-      indicador: "Estado selecionado",
-      valor: selectedStateLabel,
-      detalhe: "Visão filtrada por estado quando a UF é selecionada no painel.",
-    },
-    ...overviewCards.map((item) => ({
-      categoria: "Visão geral",
-      indicador: item.label,
-      valor: item.value,
-      detalhe: "Dados consolidados na base do sistema.",
-    })),
-    ...sectorDistributionData.map((item) => ({
-      categoria: "Distribuição por setor",
-      indicador: item.name,
-      valor: item.value,
-      detalhe: "Participação por setor com base nas respostas registradas.",
-    })),
-    ...buildChartRows(
-      "Perfil da dança",
-      "Distribuição por faixa etária.",
-      ageData,
-    ),
-    ...buildChartRows(
-      "Perfil da dança",
-      "Distribuição por gênero.",
-      genderData,
-    ),
-    ...buildChartRows(
-      "Perfil da dança",
-      "Modalidades mais praticadas.",
-      modalitiesData,
-    ),
-    ...buildMetricRows("Economia da dança", economyCards),
-    ...buildChartRows(
-      "Economia da dança",
-      "Faixa de renda dos profissionais.",
-      incomeData,
-    ),
-    ...buildChartRows(
-      "Economia da dança",
-      "Quem financia a dança.",
-      financingData,
-    ),
-    ...buildChartRows(
-      "Economia da dança",
-      "Gasto com cursos e formações.",
-      costCoursesData,
-    ),
-    ...buildChartRows(
-      "Economia da dança",
-      "Gasto com mensalidade.",
-      monthlyFeeData,
-    ),
-    ...buildChartRows(
-      "Economia da dança",
-      "Estrutura institucional.",
-      institutionIndicatorsData,
-    ),
-    ...buildChartRows(
-      "Economia da dança",
-      "Faturamento mensal das instituições.",
-      monthlyRevenueData,
-    ),
-    ...buildMetricRows("Formação em dança", educationCards),
-    ...buildChartRows(
-      "Formação em dança",
-      "Nível de formação em dança.",
-      danceEducationLevelData,
-    ),
-    ...buildChartRows(
-      "Formação em dança",
-      "Gasto com figurinos.",
-      costumesCostData,
-    ),
-    ...buildMetricRows("Políticas públicas", publicPolicyCards),
-    ...buildChartRows(
-      "Políticas públicas",
-      "Participação em editais.",
-      publicCallsParticipationData,
-    ),
-    ...buildChartRows(
-      "Políticas públicas",
-      "Principais dificuldades com editais.",
-      mainEditalDifficultiesData,
-    ),
-  ];
-}
-
-function escapeCsvCell(value: string | number) {
-  return `"${String(value).replace(/"/g, '""')}"`;
-}
-
-function buildCsv(rows: ExportRow[]) {
-  const header = ["categoria", "indicador", "valor", "detalhe"];
-  const separator = ";";
-  const lines = [
-    header.map(escapeCsvCell).join(separator),
-    ...rows.map((row) =>
-      [row.categoria, row.indicador, row.valor, row.detalhe]
-        .map(escapeCsvCell)
-        .join(separator),
-    ),
-  ];
-
-  return `\uFEFF${lines.join("\r\n")}`;
-}
-void buildCsv;
-
 function downloadBlob(blob: Blob, filename: string) {
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
@@ -693,16 +521,6 @@ export default function StatisticsPage() {
     return [allStatesOption, ...regionStates];
   }, [stateOptions, region]);
 
-  const selectedStateLabel =
-    stateOptions.find((item) => item.code === state)?.name ??
-    allStatesOption.name;
-  const selectedSectorLabel =
-    sectorOptions.find((item) => item.value === sector)?.label ??
-    sectorOptions[0].label;
-  const selectedRegionLabel =
-    regionOptions.find((item) => item.value === region)?.label ??
-    regionOptions[0].label;
-
   const overviewCards = useMemo(() => buildOverviewCards(overview), [overview]);
   const sectorDistributionData = useMemo(
     () => buildSectorDistribution(overview),
@@ -758,57 +576,6 @@ export default function StatisticsPage() {
     () => details.editalDifficultyDistribution,
     [details],
   );
-
-  const exportRows = useMemo(
-    () =>
-      buildExportRows(
-        selectedSectorLabel,
-        selectedRegionLabel,
-        overviewCards,
-        economyCards,
-        educationCards,
-        publicPolicyCards,
-        sectorDistributionData,
-        ageData,
-        genderData,
-        modalitiesData,
-        incomeData,
-        financingData,
-        costCoursesData,
-        monthlyFeeData,
-        institutionIndicatorsData,
-        monthlyRevenueData,
-        danceEducationLevelData,
-        costumesCostData,
-        publicCallsParticipationData,
-        mainEditalDifficultiesData,
-        selectedStateLabel,
-      ),
-    [
-      selectedSectorLabel,
-      selectedRegionLabel,
-      overviewCards,
-      economyCards,
-      educationCards,
-      publicPolicyCards,
-      sectorDistributionData,
-      ageData,
-      genderData,
-      modalitiesData,
-      incomeData,
-      financingData,
-      costCoursesData,
-      monthlyFeeData,
-      institutionIndicatorsData,
-      monthlyRevenueData,
-      danceEducationLevelData,
-      costumesCostData,
-      publicCallsParticipationData,
-      mainEditalDifficultiesData,
-      selectedStateLabel,
-    ],
-  );
-  void exportRows;
 
   const hasOverviewData = overview.totalResponses > 0;
 

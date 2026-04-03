@@ -11,18 +11,28 @@ export interface YouthFormRequest {
   cpf?: string | null
   email: string
   whatsapp: string
+  region?: string | null
+  age?: number | null
   birthDate: string
-  gender: string
+  gender?: string | null
   cityId: number
   modalityIds: number[]
   practiceTime: string
   careerInterest: boolean
   whoPaysExpenses: string
   familyIncomeRange: string
+  monthlyFee?: string | null
+  monthlyCostSchool?: string | null
+  monthlyCostCourses?: string | null
+  monthlyCostCostumes?: string | null
+  monthlyCostFestivals?: string | null
+  monthlyCostTravel?: string | null
+  monthlyCostOthers?: string | null
   searchesContent: boolean
   contentIds: number[]
   consentCode: string
   consentAccepted: boolean
+  consentContact?: boolean | null
 }
 
 export interface YouthFormResponse {
@@ -55,8 +65,11 @@ export interface ProfessionalFormRequest {
   cpf?: string | null
   email: string
   whatsapp: string
+  region?: string | null
+  age?: number | null
+  ageRange?: string | null
   birthDate: string
-  gender: string
+  gender?: string | null
   cityId: number
   modalityIds: number[]
   contentIds: number[]
@@ -75,6 +88,7 @@ export interface ProfessionalFormRequest {
   coursesPerYear: number
   onlineCoursesPerYear: number
   currentlyStudies: boolean
+  academicEducation?: string | null
   formalStudyType?: string | null
   wantsFormalStudy: boolean
   monthlyCostCourses: number
@@ -87,9 +101,14 @@ export interface ProfessionalFormRequest {
   participatedInEdital: boolean
   approvedInEdital: boolean
   appliedNotApproved: boolean
+  participatedInEditalStatus?: string | null
+  approvedInEditalStatus?: string | null
+  appliedNotApprovedStatus?: string | null
   editalDifficulty?: string | null
+  searchesContent?: boolean | null
   consentCode: string
   consentAccepted: boolean
+  consentContact?: boolean | null
 }
 
 export interface ProfessionalFormResponse {
@@ -145,11 +164,13 @@ export interface InstitutionFormRequest {
   legalName: string
   tradeName: string
   cnpj?: string | null
+  region?: string | null
   cityId: number
   email: string
   phone: string
   socialMedia?: string | null
   type: string
+  legalNature?: string | null
   nature: string
   locationType: string
   foundationYear: number
@@ -196,6 +217,7 @@ export interface InstitutionFormRequest {
   wouldUseFreePromotionPlatform?: boolean | null
   consentCode: string
   consentAccepted: boolean
+  consentContact?: boolean | null
 }
 
 export interface InstitutionFormResponse {
@@ -210,6 +232,7 @@ export interface InstitutionFormResponse {
   city: string
   state: string
   type: string
+  legalNature: string | null
   nature: string
   locationType: string
   foundationYear: number | null

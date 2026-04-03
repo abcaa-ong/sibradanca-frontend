@@ -6,6 +6,5 @@ export interface ReferenceItemResponse {
 export interface ActiveConsentTermResponse {
   id: number
   code: string
-  version: string
   title: string
 }

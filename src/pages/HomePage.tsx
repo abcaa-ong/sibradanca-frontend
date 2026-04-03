@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   ArrowRight,
-  BarChart3,
   BookOpen,
   ClipboardList,
   Database,
@@ -18,7 +17,6 @@ import {
 import { useNavigate } from 'react-router-dom'
 
 import logo from '../assets/logo-sibradanca.png'
-import { AccessFloatingMenu } from '../components/AccessFloatingMenu'
 import { Badge } from '../components/Badge'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
@@ -44,7 +42,7 @@ const highlights = [
   {
     title: 'Coleta organizada',
     description:
-      'Os formulários foram desenhados para reunir respostas de jovens, profissionais e instituições com leitura clara e objetiva.',
+      'Os formulários foram organizados para facilitar o preenchimento de jovens, profissionais e instituições.',
     icon: ClipboardList,
     color: colors.blue,
   },
@@ -58,7 +56,7 @@ const highlights = [
   {
     title: 'Experiência acessível',
     description:
-      'A navegação foi organizada para facilitar o acesso aos formulários e separar a leitura estatística em uma página própria.',
+      'A navegação foi pensada para que cada perfil encontre rapidamente o formulário certo.',
     icon: Sparkles,
     color: colors.pink,
   },
@@ -176,17 +174,14 @@ function HeroArtwork() {
 }
 
 export default function HomePage() {
-  const [accessMenuOpen, setAccessMenuOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const navigate = useNavigate()
 
-  const openAccessMenu = () => setAccessMenuOpen(true)
-  const closeAccessMenu = () => setAccessMenuOpen(false)
-
-  const handleAccessSelect = (value: string) => {
-    if (value === 'Estatísticas Nacionais') {
-      navigate('/estatisticas-nacionais')
-    }
+  const scrollToForms = () => {
+    document.getElementById('formularios')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+  const scrollToAbout = () => {
+    document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   return (
@@ -218,8 +213,8 @@ export default function HomePage() {
 
           <div className="header-actions">
             <motion.div variants={itemVariants}>
-              <Button large onClick={openAccessMenu}>
-                Acessar <ArrowRight size={18} />
+              <Button large onClick={scrollToForms}>
+                Participar <ArrowRight size={18} />
               </Button>
             </motion.div>
 
@@ -257,23 +252,11 @@ export default function HomePage() {
               className="mobile-menu-link mobile-menu-action"
               onClick={() => {
                 setMobileMenuOpen(false)
-                openAccessMenu()
+                scrollToForms()
               }}
             >
               <ArrowRight size={18} />
-              <span>Acessar</span>
-            </button>
-
-            <button
-              type="button"
-              className="mobile-menu-link mobile-menu-action"
-              onClick={() => {
-                setMobileMenuOpen(false)
-                navigate('/estatisticas-nacionais')
-              }}
-            >
-              <BarChart3 size={18} />
-              <span>Estatísticas</span>
+              <span>Participar</span>
             </button>
 
             <a
@@ -301,18 +284,13 @@ export default function HomePage() {
               <motion.h1 variants={itemVariants}>O banco nacional de dados da dança no Brasil</motion.h1>
 
               <motion.p variants={itemVariants} className="hero-description">
-                O SIBRADANÇA é um observatório nacional dedicado à escuta, organização e leitura estruturada da dança no Brasil. Nesta página, o foco está na apresentação da plataforma e no acesso aos formulários. Toda a parte de estatísticas e análises fica concentrada na página específica de indicadores.
+                O SIBRADANÇA é um observatório nacional dedicado à dança no Brasil. Nesta página, você conhece a plataforma e encontra os formulários de participação.
               </motion.p>
 
               <motion.div variants={itemVariants} className="hero-actions">
-                <Button large onClick={openAccessMenu}>
-                  Acessar formulários <ArrowRight size={18} />
+                <Button large onClick={scrollToAbout}>
+                  Saiba mais <ArrowRight size={18} />
                 </Button>
-
-                <Button large variant="outline" onClick={() => navigate('/estatisticas-nacionais')}>
-                  Ver estatísticas <BarChart3 size={18} />
-                </Button>
-
               </motion.div>
             </motion.div>
 
@@ -323,9 +301,9 @@ export default function HomePage() {
         <section id="sobre" className="section-space">
           <div className="container">
             <SectionTitle
-              badge="Visão da plataforma"
-              title="Uma interface organizada para apresentar o projeto e direcionar cada perfil ao formulário certo"
-              description="A Home fica dedicada à identidade visual do sistema, ao contexto institucional e ao acesso guiado aos formulários. A leitura analítica permanece concentrada na página de estatísticas nacionais."
+              badge="Sobre o SIBRADANÇA"
+              title="Uma plataforma nacional voltada à participação de jovens, profissionais e instituições da dança"
+              description="Conheça o projeto e entenda como participar."
             />
 
             <motion.div
@@ -358,8 +336,8 @@ export default function HomePage() {
           <div className="container">
             <SectionTitle
               badge="Formulários de participação"
-              title="Mapeamento nacional"
-              description="Ajude a construir nossos dados."
+              title="Escolha como você participa da dança"
+              description="Selecione a opção que mais combina com a sua atuação."
             />
 
             <div className="access-grid">
@@ -377,27 +355,11 @@ export default function HomePage() {
                     <h3>{item.title}</h3>
                     <p className="card-text">{item.description}</p>
                     <Button onClick={() => navigate(item.route)}>
-                      Abrir fluxo <ArrowRight size={16} />
+                      Iniciar cadastro <ArrowRight size={16} />
                     </Button>
                   </Card>
                 )
               })}
-
-              <Card className="access-card access-card--highlight" hover>
-                <div className="access-card-header">
-                  <Badge>Leitura pública</Badge>
-                  <div className="icon-wrap access-icon" style={{ backgroundColor: colors.green }}>
-                    <BarChart3 size={22} />
-                  </div>
-                </div>
-                <h3>Estatísticas nacionais</h3>
-                <p className="card-text">
-                  Toda a visualização de indicadores, gráficos, relatórios e informações analíticas fica centralizada em uma página separada para manter a Home mais limpa e objetiva.
-                </p>
-                <Button variant="outline" onClick={() => navigate('/estatisticas-nacionais')}>
-                  Ir para estatísticas <ArrowRight size={16} />
-                </Button>
-              </Card>
 
             </div>
           </div>
@@ -414,26 +376,26 @@ export default function HomePage() {
             <div className="partners-grid">
               <Card className="partner-card">
                 <div className="partner-logo placeholder" />
-                <h4>Empresa 1</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                <h4>Apoiadores institucionais</h4>
+                <p>Espaço reservado para instituições e organizações que apoiam a iniciativa.</p>
               </Card>
 
               <Card className="partner-card">
                 <div className="partner-logo placeholder" />
-                <h4>Empresa 2</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                <h4>Organizações culturais</h4>
+                <p>Área destinada a coletivos, espaços e iniciativas ligadas ao campo da dança.</p>
               </Card>
 
               <Card className="partner-card">
                 <div className="partner-logo placeholder" />
-                <h4>Empresa 3</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                <h4>Redes de pesquisa</h4>
+                <p>Espaço para grupos de estudo, pesquisadores e instituições acadêmicas do setor.</p>
               </Card>
 
               <Card className="partner-card">
                 <div className="partner-logo placeholder" />
-                <h4>Empresa 4</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                <h4>Articulação da dança</h4>
+                <p>Área voltada a parceiros, iniciativas e redes dedicadas ao desenvolvimento da dança.</p>
               </Card>
             </div>
           </div>
@@ -451,7 +413,6 @@ export default function HomePage() {
 
           <div className="footer-links">
             <a href="#formularios">Formulários</a>
-            <a href="/estatisticas-nacionais">Estatísticas nacionais</a>
             <a href="#">Política de privacidade</a>
           </div>
         </div>
@@ -461,7 +422,6 @@ export default function HomePage() {
         </div>
       </footer>
 
-      <AccessFloatingMenu open={accessMenuOpen} onClose={closeAccessMenu} onSelect={handleAccessSelect} />
     </div>
   )
 }
