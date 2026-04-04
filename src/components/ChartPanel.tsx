@@ -37,7 +37,9 @@ const colors = {
   cyan: '#6fd8e6',
 }
 
-function resolveTooltipLabel(item: {
+function resolveTooltipLabel(
+  label: string | number | undefined,
+  item: {
   name?: string | number
   payload?: unknown
 }) {
@@ -45,6 +47,10 @@ function resolveTooltipLabel(item: {
 
   if (payload?.name) {
     return payload.name
+  }
+
+  if (typeof label === 'string' && label && label !== 'value') {
+    return label
   }
 
   if (typeof item.name === 'string' && item.name !== 'value') {
@@ -82,19 +88,19 @@ export function ChartPanel({
 
   const formatNumber = (value: number) => new Intl.NumberFormat('pt-BR').format(value)
 
-  function CustomTooltip({ active, payload }: TooltipProps<number, string>) {
+  function CustomTooltip({ active, payload, label }: TooltipProps<number, string>) {
     if (!active || !payload?.length) {
       return null
     }
 
     const item = payload[0]
     const value = typeof item.value === 'number' ? item.value : Number(item.value ?? 0)
-    const label = resolveTooltipLabel(item)
+    const resolvedLabel = resolveTooltipLabel(label, item)
 
     return (
       <div className="statistics-tooltip">
-        <strong>{label}</strong>
-        <span>Total nesta leitura: {formatNumber(value)}</span>
+        <strong>{resolvedLabel}</strong>
+        <span>{formatNumber(value)} cadastros nesta leitura</span>
       </div>
     )
   }
@@ -104,7 +110,7 @@ export function ChartPanel({
       <div className="panel-top">
         <div>
           <span className="eyebrow">{eyebrowLabel}</span>
-          <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800 }}>{title}</h3>
+          <h3 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 800, lineHeight: 1.3 }}>{title}</h3>
         </div>
       </div>
 

@@ -17,19 +17,19 @@
 
 .statistics-hero-copy h1 {
   margin: 18px 0 0;
-  font-size: clamp(2.55rem, 4.7vw, 4.2rem);
-  line-height: 1.04;
+  font-size: clamp(2.05rem, 3.8vw, 3.2rem);
+  line-height: 1.08;
   letter-spacing: -0.03em;
   font-weight: 900;
-  max-inline-size: 12ch;
+  max-inline-size: 13ch;
   text-wrap: balance;
 }
 
 .statistics-hero-description {
-  max-width: 42ch;
-  margin: 18px 0 0;
-  font-size: 1.02rem;
-  line-height: 1.7;
+  max-width: 34ch;
+  margin: 14px 0 0;
+  font-size: 0.98rem;
+  line-height: 1.65;
   color: var(--muted);
 }
 
@@ -37,7 +37,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  margin-top: 20px;
+  margin-top: 18px;
 }
 
 .statistics-status-strip {
@@ -48,10 +48,10 @@
 }
 
 .statistics-status-card {
-  min-height: 144px;
-  padding: 20px;
+  min-height: 132px;
+  padding: 18px;
   display: grid;
-  gap: 10px;
+  gap: 8px;
   align-content: start;
 }
 
@@ -60,7 +60,7 @@
 }
 
 .statistics-status-value {
-  font-size: 1.55rem;
+  font-size: 1.35rem;
   line-height: 1.05;
   font-weight: 900;
 }
@@ -68,8 +68,8 @@
 .statistics-status-detail {
   margin: 0;
   color: var(--muted);
-  line-height: 1.55;
-  font-size: 0.94rem;
+  line-height: 1.5;
+  font-size: 0.9rem;
 }
 
 .statistics-note-grid {
@@ -166,7 +166,7 @@
 }
 
 .statistics-kpi-card {
-  min-height: 160px;
+  min-height: 148px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -174,13 +174,13 @@
 
 .statistics-kpi-title {
   margin: 12px 0 0;
-  font-size: 1.25rem;
+  font-size: 1.12rem;
   font-weight: 800;
 }
 
 .statistics-kpi-value {
   margin-top: 16px;
-  font-size: clamp(2.8rem, 5vw, 4rem);
+  font-size: clamp(2.25rem, 4vw, 3.2rem);
   line-height: 1;
   font-weight: 900;
 }
@@ -188,7 +188,7 @@
 .statistics-chart-grid {
   display: grid;
   gap: 18px;
-  margin-top: 24px;
+  margin-top: 18px;
 }
 
 .statistics-compact-stage {
@@ -201,7 +201,7 @@
 
 .statistics-compact-title {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 800;
 }
 
@@ -214,21 +214,24 @@
 
 .statistics-compact-item {
   display: grid;
+  grid-template-rows: 1fr auto;
   gap: 10px;
-  padding: 16px 14px;
+  padding: 15px 14px;
   border-radius: 18px;
   background: rgba(248, 250, 252, 0.92);
   border: 1px solid rgba(16, 24, 40, 0.08);
+  align-content: space-between;
 }
 
 .statistics-compact-item span {
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   line-height: 1.4;
+  min-height: 2.6em;
 }
 
 .statistics-compact-item strong {
-  font-size: 1.55rem;
+  font-size: 1.4rem;
   line-height: 1;
   font-weight: 900;
 }
@@ -359,7 +362,7 @@
 }
 
 .statistics-chart-panel {
-  min-height: 420px;
+  min-height: 395px;
 }
 
 .statistics-tooltip {
@@ -384,7 +387,7 @@
 .statistics-chart-summary {
   display: grid;
   gap: 10px;
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .statistics-chart-summary-row {
@@ -398,12 +401,12 @@
 
 .statistics-chart-summary-row span {
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 .statistics-chart-summary-row strong {
   white-space: nowrap;
-  font-size: 0.98rem;
+  font-size: 0.94rem;
 }
 
 .statistics-metric-grid {
@@ -541,12 +544,12 @@
   }
 
   .statistics-hero-copy h1 {
-    font-size: 2.2rem;
-    line-height: 1.08;
+    font-size: 1.95rem;
+    line-height: 1.1;
   }
 
   .statistics-hero-description {
-    font-size: 0.98rem;
+    font-size: 0.94rem;
   }
 
   .statistics-chart-panel,

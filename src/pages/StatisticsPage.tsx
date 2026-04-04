@@ -31,10 +31,10 @@ const overviewCards: OverviewCard[] = [
 ]
 
 const statusCards: StatusCard[] = [
-  { label: 'Cobertura', value: '27 UFs', detail: 'Presença nas cinco regiões' },
-  { label: 'Formulários', value: '3 frentes', detail: 'Jovens, profissionais e instituições' },
-  { label: 'Captação', value: '5.240 registros', detail: 'Leitura pública da base nacional' },
-  { label: 'Painel', value: 'Atualizado', detail: 'Visão geral da dança no Brasil' },
+  { label: 'Cobertura nacional', value: '27 UFs', detail: 'Presença nas cinco regiões do país' },
+  { label: 'Formulários ativos', value: '3 frentes', detail: 'Jovens, profissionais e instituições' },
+  { label: 'Base atual', value: '5.240 cadastros', detail: 'Leitura pública da base nacional' },
+  { label: 'Painel público', value: 'Em operação', detail: 'Visão geral da dança no Brasil' },
 ]
 
 const profileDistribution: ChartItem[] = [
@@ -107,6 +107,22 @@ const supportDistribution: ChartItem[] = [
   { name: 'Editais e oportunidades', value: 790 },
   { name: 'Conteúdo digital', value: 650 },
   { name: 'Gestão e carreira', value: 520 },
+]
+
+const institutionStructureDistribution: ChartItem[] = [
+  { name: 'Com aulas regulares', value: 710 },
+  { name: 'Atuação em periferias', value: 520 },
+  { name: 'Uso de espaço público', value: 430 },
+  { name: 'Sede própria', value: 390 },
+  { name: 'Com bolsas ativas', value: 265 },
+]
+
+const publicPolicyDistribution: ChartItem[] = [
+  { name: 'Já acessou edital', value: 640 },
+  { name: 'Busca formação em gestão', value: 530 },
+  { name: 'Quer parcerias públicas', value: 470 },
+  { name: 'Conhece conselho de cultura', value: 315 },
+  { name: 'Conhece plano municipal', value: 280 },
 ]
 
 const formatNumber = (value: number) => new Intl.NumberFormat('pt-BR').format(value)
@@ -182,7 +198,7 @@ export default function StatisticsPage() {
             <div className="statistics-hero-copy">
               <Badge dark>Banco Nacional da Dança</Badge>
               <h1>Banco Nacional da Dança do Brasil</h1>
-              <p className="statistics-hero-description">Acompanhe a presença da dança no país.</p>
+              <p className="statistics-hero-description">Acompanhe os principais retratos da dança no país.</p>
             </div>
 
             <div className="statistics-hero-actions">
@@ -206,7 +222,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Visão geral" title="Base cadastrada" />
+            <SectionTitle badge="Visão geral" title="Leitura nacional da base" />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
               {overviewCards.map((item) => (
@@ -308,7 +324,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Formação e interesses" title="Trajetórias da dança" />
+            <SectionTitle badge="Formação e interesses" title="Formação, trabalho e continuidade" />
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
@@ -326,10 +342,35 @@ export default function StatisticsPage() {
             </div>
           </div>
         </section>
+
+        <section className="section-space">
+          <div className="container">
+            <SectionTitle badge="Instituições e políticas públicas" title="Estrutura e articulação da dança" />
+
+            <div className="statistics-chart-grid two-columns">
+              <ChartPanel
+                title="Estrutura institucional"
+                data={institutionStructureDistribution}
+                eyebrowLabel="Instituições"
+                summaryItems={5}
+              />
+              <ChartPanel
+                title="Temas ligados a apoio público"
+                data={publicPolicyDistribution}
+                eyebrowLabel="Políticas públicas"
+                summaryItems={5}
+              />
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="site-footer">
         <div className="container footer-inner">
+          <div className="footer-edge footer-edge-left">
+            <Link to="/">Formulários</Link>
+          </div>
+
           <div className="footer-brand">
             <img src={logo} alt="Logo SIBRADANÇA" />
             <p>
@@ -337,9 +378,8 @@ export default function StatisticsPage() {
             </p>
           </div>
 
-          <div className="footer-links">
-            <Link to="/">Formulários</Link>
-            <Link to="/estatisticas-nacionais">Estatísticas nacionais</Link>
+          <div className="footer-edge footer-edge-right">
+            <a href="#">Política de privacidade</a>
           </div>
         </div>
 

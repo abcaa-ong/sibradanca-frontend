@@ -221,11 +221,11 @@
 #sobre .section-title,
 #formularios .section-title,
 #parceiros .section-title {
-  max-width: 980px;
+  max-width: 760px;
   margin: 0 auto;
   justify-items: center;
   text-align: center;
-  padding-inline: 18px;
+  padding-inline: 30px;
 }
 
 #sobre .section-title::after,
@@ -237,31 +237,33 @@
 #sobre .section-title h2,
 #formularios .section-title h2,
 #parceiros .section-title h2 {
-  max-width: 19ch;
-  margin-top: 22px;
-  line-height: 1.16;
+  max-width: 17ch;
+  margin-top: 18px;
+  font-size: clamp(1.9rem, 2.5vw, 2.55rem);
+  line-height: 1.2;
 }
 
 #sobre .section-title p,
 #formularios .section-title p,
 #parceiros .section-title p {
-  max-width: 54ch;
-  margin-top: 20px;
-  line-height: 1.7;
+  max-width: 43ch;
+  margin-top: 16px;
+  line-height: 1.72;
+  font-size: 0.98rem;
 }
 
 #formularios .section-title h2 {
-  max-width: 18ch;
+  max-width: 15ch;
 }
 
 #sobre.section-space {
-  padding-top: 56px;
+  padding-top: 66px;
 }
 
 #sobre .stats-grid,
 #formularios .access-grid,
 #parceiros .partners-grid {
-  margin-top: 38px;
+  margin-top: 32px;
 }
 
 .stats-grid > *:nth-child(1) .card {
@@ -621,10 +623,13 @@
 .partner-card h4 {
   margin: 8px 0 0;
   font-weight: 800;
+  font-size: 1.02rem;
+  line-height: 1.3;
 }
 
 .partner-card p {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
+  line-height: 1.65;
 }
 
 /* ============================================================
@@ -707,11 +712,11 @@
   #sobre .section-title,
   #formularios .section-title,
   #parceiros .section-title {
-    max-width: 760px;
+    max-width: 680px;
     margin: 0 auto;
     justify-items: center;
     text-align: center;
-    padding-inline: 18px;
+    padding-inline: 20px;
   }
 
   #sobre .section-title::after,
@@ -723,13 +728,14 @@
   #sobre .section-title h2,
   #formularios .section-title h2,
   #parceiros .section-title h2 {
-    max-width: 16ch;
+    max-width: 15ch;
+    font-size: clamp(1.7rem, 6vw, 2.15rem);
   }
 
   #sobre .section-title p,
   #formularios .section-title p,
   #parceiros .section-title p {
-    max-width: 62ch;
+    max-width: 34ch;
   }
 
   .hero-actions {

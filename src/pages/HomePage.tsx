@@ -313,7 +313,7 @@ export default function HomePage() {
             <SectionTitle
               badge="Sobre o SIBRADANÇA"
               title="Uma plataforma nacional para jovens, profissionais e instituições da dança"
-              description="Conheça o projeto e veja como participar."
+              description="Conheça o projeto e saiba como participar."
             />
 
             <motion.div
@@ -347,7 +347,7 @@ export default function HomePage() {
             <SectionTitle
               badge="Formulários de participação"
               title="Escolha como você participa da dança"
-              description="Selecione a opção que mais combina com a sua atuação."
+              description="Selecione o formulário que mais combina com a sua atuação."
             />
 
             <div className="access-grid">
@@ -379,7 +379,7 @@ export default function HomePage() {
           <div className="container">
             <SectionTitle
               badge="Rede institucional"
-              title="Parceiros e apoiadores da dança no Brasil"
+              title="Parceiros e apoiadores da dança"
               description="Instituições, redes e organizações que fortalecem o projeto."
             />
 
@@ -414,6 +414,10 @@ export default function HomePage() {
 
       <footer className="site-footer">
         <div className="container footer-inner">
+          <div className="footer-edge footer-edge-left">
+            <a href="#formularios">Formulários</a>
+          </div>
+
           <div className="footer-brand">
             <img src={logo} alt="Logo SIBRADANÇA" />
             <p>
@@ -421,8 +425,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="footer-links">
-            <a href="#formularios">Formulários</a>
+          <div className="footer-edge footer-edge-right">
             <a href="#">Política de privacidade</a>
           </div>
         </div>
