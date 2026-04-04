@@ -270,6 +270,67 @@ function formatCurrency(value: number | null) {
   }).format(value)
 }
 
+function repairText(value: string) {
+  if (!value || (!value.includes('Ã') && !value.includes('Â') && !value.includes('â'))) {
+    return value
+  }
+
+  let repaired = value
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const bytes = Uint8Array.from(Array.from(repaired).map((character) => character.charCodeAt(0) & 0xff))
+    const candidate = new TextDecoder('utf-8').decode(bytes)
+
+    if (!candidate || candidate === repaired || candidate.includes('\uFFFD')) {
+      break
+    }
+
+    repaired = candidate
+  }
+
+  return repaired
+}
+
+function parseBirthDateFromSection(value: string) {
+  const normalizedValue = repairText(value).trim()
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(normalizedValue)
+
+  if (!match) {
+    return null
+  }
+
+  const [, day, month, year] = match
+  return new Date(Number(year), Number(month) - 1, Number(day))
+}
+
+function calculateAge(birthDate: Date) {
+  const today = new Date()
+  let age = today.getFullYear() - birthDate.getFullYear()
+  const monthDifference = today.getMonth() - birthDate.getMonth()
+
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    age -= 1
+  }
+
+  return age
+}
+
+function resolveAgeRangeForSector(sector: string, age: number) {
+  if (sector === 'YOUTH') {
+    if (age <= 10) return 'Ate 10 anos'
+    if (age <= 13) return '11 a 13 anos'
+    if (age <= 15) return '14 a 15 anos'
+    if (age <= 17) return '16 a 17 anos'
+    return '18 anos ou mais'
+  }
+
+  if (age <= 24) return '18 a 24 anos'
+  if (age <= 34) return '25 a 34 anos'
+  if (age <= 44) return '35 a 44 anos'
+  if (age <= 59) return '45 a 59 anos'
+  return '60+'
+}
+
 function humanizeEnum(value: string | null) {
   if (!value) {
     return '-'
@@ -361,6 +422,37 @@ function renderSections<T extends object>(sections: Array<SectionConfig<T>>, val
   ))
 }
 
+function normalizeStructuredSections(sections: AdminDetailSectionResponse[], sector: string) {
+  return sections.map((section) => {
+    const birthDateField = section.fields.find((field) => field.key === 'birthDate')
+    const parsedBirthDate = birthDateField ? parseBirthDateFromSection(birthDateField.value) : null
+    const calculatedAge = parsedBirthDate ? calculateAge(parsedBirthDate) : null
+
+    return {
+      ...section,
+      title: repairText(section.title),
+      fields: section.fields.map((field) => {
+        const repairedLabel = repairText(field.label)
+        let repairedValue = repairText(field.value)
+
+        if (calculatedAge !== null && field.key === 'age') {
+          repairedValue = String(calculatedAge)
+        }
+
+        if (calculatedAge !== null && field.key === 'ageRange') {
+          repairedValue = resolveAgeRangeForSector(sector, calculatedAge)
+        }
+
+        return {
+          ...field,
+          label: repairedLabel,
+          value: repairedValue,
+        }
+      }),
+    }
+  })
+}
+
 function renderStructuredSections(sections: AdminDetailSectionResponse[]) {
   return sections.map((section) => (
     <Card key={section.title} className="admin-panel-card">
@@ -415,7 +507,7 @@ export default function AdminSubmissionDetailPage() {
     }
 
     if (detail.sections?.length) {
-      return renderStructuredSections(detail.sections)
+      return renderStructuredSections(normalizeStructuredSections(detail.sections, detail.summary.sector))
     }
 
     if (detail.youthForm) {
