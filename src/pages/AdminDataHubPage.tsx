@@ -34,7 +34,7 @@ type DownloadRow = {
   action: DownloadAction
 }
 
-const completeDownloadRows: DownloadRow[] = [
+const completeDownloadRowsRaw: DownloadRow[] = [
   {
     title: 'Fichas por protocolo',
     format: 'PDF',
@@ -58,7 +58,7 @@ const completeDownloadRows: DownloadRow[] = [
   },
 ]
 
-const statisticsDownloadRows: DownloadRow[] = [
+const statisticsDownloadRowsRaw: DownloadRow[] = [
   {
     title: 'Relatório analítico',
     format: 'PDF',
@@ -82,7 +82,7 @@ const statisticsDownloadRows: DownloadRow[] = [
   },
 ]
 
-const operationalDownloadRows: DownloadRow[] = [
+const operationalDownloadRowsRaw: DownloadRow[] = [
   {
     title: 'Cadastros operacionais',
     format: 'XLSX',
@@ -98,6 +98,75 @@ const operationalDownloadRows: DownloadRow[] = [
     action: downloadAdminSubmissionsCsv,
   },
 ]
+
+const completeDownloadRows: DownloadRow[] = [
+  {
+    title: 'Fichas por protocolo',
+    format: 'PDF',
+    scope: 'Resumo e respostas organizadas de cada cadastro',
+    actionLabel: 'Baixar PDF',
+    action: downloadAdminSubmissionsDetailedPdf,
+  },
+  {
+    title: 'Base interna em camadas',
+    format: 'XLSX',
+    scope: 'Abas com visão da ONG, cadastros e respostas organizadas',
+    actionLabel: 'Baixar Excel',
+    action: downloadAdminSubmissionsDetailedXlsx,
+  },
+  {
+    title: 'Base interna em camadas',
+    format: 'CSV',
+    scope: 'Linhas por protocolo, bloco, campo e resposta',
+    actionLabel: 'Baixar CSV',
+    action: downloadAdminSubmissionsDetailedCsv,
+  },
+]
+
+const statisticsDownloadRows: DownloadRow[] = [
+  {
+    title: 'Relatório analítico',
+    format: 'PDF',
+    scope: 'Resumo executivo com indicadores por tema',
+    actionLabel: 'Baixar PDF',
+    action: downloadAdminStatisticsPdf,
+  },
+  {
+    title: 'Indicadores analíticos',
+    format: 'XLSX',
+    scope: 'Leitura executiva com abas temáticas',
+    actionLabel: 'Baixar Excel',
+    action: downloadAdminStatisticsXlsx,
+  },
+  {
+    title: 'Base estatística BI',
+    format: 'CSV',
+    scope: 'Indicadores e recortes para cruzamentos e relatórios',
+    actionLabel: 'Baixar CSV',
+    action: downloadAdminStatisticsCsv,
+  },
+]
+
+const operationalDownloadRows: DownloadRow[] = [
+  {
+    title: 'Cadastros operacionais',
+    format: 'XLSX',
+    scope: 'Consulta resumida por protocolo',
+    actionLabel: 'Baixar Excel',
+    action: downloadAdminSubmissionsXlsx,
+  },
+  {
+    title: 'Cadastros operacionais',
+    format: 'CSV',
+    scope: 'Consulta resumida por protocolo',
+    actionLabel: 'Baixar CSV',
+    action: downloadAdminSubmissionsCsv,
+  },
+]
+
+void completeDownloadRowsRaw
+void statisticsDownloadRowsRaw
+void operationalDownloadRowsRaw
 
 function getTopItem(
   items: Array<{ name: string; value: number }> | undefined,
@@ -244,7 +313,7 @@ export default function AdminDataHubPage() {
     [stateSummary],
   )
 
-  const dataControlRows = useMemo(
+  const dataControlRowsRaw = useMemo(
     () => [
       {
         label: 'Registros consolidados',
@@ -270,7 +339,7 @@ export default function AdminDataHubPage() {
     [latestRecordAt, overview, sectorSummary.length, stateSummary],
   )
 
-  const datasetLayers = [
+  const datasetLayersRaw = [
     {
       title: 'Visão ONG',
       description: 'Camada executiva para coordenação, leitura rápida e acompanhamento institucional.',
@@ -292,6 +361,58 @@ export default function AdminDataHubPage() {
       outputs: 'PDF / XLSX / CSV',
     },
   ] as const
+
+  const dataControlRows = useMemo(
+    () => [
+      {
+        label: 'Registros consolidados',
+        value: overview ? formatNumber(overview.totalResponses) : '-',
+        detail: 'Cadastros consolidados e prontos para consulta da equipe.',
+      },
+      {
+        label: 'UFs com presença',
+        value: formatNumber(stateSummary.filter((item) => item.totalSubmissions > 0).length),
+        detail: 'Estados com registros ativos na base nacional.',
+      },
+      {
+        label: 'Último registro',
+        value: latestRecordAt ? formatBackendDateTime(latestRecordAt) : 'Sem registro',
+        detail: 'Movimento mais recente encontrado entre os cadastros.',
+      },
+      {
+        label: 'Perfis monitorados',
+        value: sectorSummary.length ? `${sectorSummary.length}/3` : '-',
+        detail: 'Jovens, profissionais e instituições acompanhados pela equipe.',
+      },
+    ],
+    [latestRecordAt, overview, sectorSummary.length, stateSummary],
+  )
+
+  const datasetLayers = [
+    {
+      title: 'Visão de gestão',
+      description: 'Painel e arquivos para coordenação, leitura rápida e acompanhamento da equipe.',
+      outputs: 'PDF / XLSX',
+    },
+    {
+      title: 'Consulta nominal',
+      description: 'Protocolos e dados principais organizados para conferência e acompanhamento.',
+      outputs: 'XLSX / CSV',
+    },
+    {
+      title: 'Leitura por formulário',
+      description: 'Respostas organizadas por bloco do formulário para revisão detalhada.',
+      outputs: 'XLSX / CSV',
+    },
+    {
+      title: 'Indicadores consolidados',
+      description: 'Arquivos sintéticos para relatórios, planilhas e leitura analítica.',
+      outputs: 'PDF / XLSX / CSV',
+    },
+  ] as const
+
+  void dataControlRowsRaw
+  void datasetLayersRaw
 
   return (
     <div className="admin-page-content">

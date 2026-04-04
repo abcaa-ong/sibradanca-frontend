@@ -3,7 +3,7 @@ import { Card } from '../components/Card'
 import { getAdminOverview, getBackendHealthStatus } from '../services/admin.service'
 import type { AdminInsightsOverviewResponse, BackendHealthStatusResponse } from '../types/admin'
 
-const serviceStatus = [
+const serviceStatusRaw = [
   ['Backend', 'Ativo', 'API principal do sistema'],
   ['Banco de dados', 'Conectado', 'Base única do projeto'],
   ['Exportações', 'Disponíveis', 'PDF, CSV e Excel'],
@@ -11,7 +11,7 @@ const serviceStatus = [
   ['Análise de dados', 'Disponível', 'Base pronta para BI'],
 ] as const
 
-const adminModules = [
+const adminModulesRaw = [
   {
     title: 'Ambiente',
     text: 'Saúde do backend, banco e rotinas do sistema.',
@@ -29,6 +29,36 @@ const adminModules = [
     text: 'Arquivos, BI e conexões com outras ferramentas.',
   },
 ] as const
+
+const serviceStatus = [
+  ['Sistema principal', 'Ativo', 'Serviço central da plataforma'],
+  ['Banco de dados', 'Conectado', 'Base única do projeto'],
+  ['Exportações', 'Disponíveis', 'PDF, CSV e Excel'],
+  ['Credenciais', 'Controladas', 'Acesso interno por perfil'],
+  ['Análise de dados', 'Disponível', 'Base pronta para relatórios e leituras analíticas'],
+] as const
+
+const adminModules = [
+  {
+    title: 'Ambiente',
+    text: 'Situação do sistema, da base e das rotinas internas.',
+  },
+  {
+    title: 'Segurança',
+    text: 'Permissões, credenciais e uso do ambiente interno.',
+  },
+  {
+    title: 'Suporte',
+    text: 'Incidentes, manutenção e apoio para a equipe.',
+  },
+  {
+    title: 'Integrações',
+    text: 'Arquivos, leituras analíticas e conexões com outras ferramentas.',
+  },
+] as const
+
+void serviceStatusRaw
+void adminModulesRaw
 
 export default function AdminGovernancePage() {
   const [health, setHealth] = useState<BackendHealthStatusResponse | null>(null)
@@ -74,7 +104,7 @@ export default function AdminGovernancePage() {
 
       <section className="admin-grid">
         <Card className="admin-metric-card">
-          <span className="eyebrow">Backend</span>
+          <span className="eyebrow">Sistema</span>
           <strong>{health?.status ?? '-'}</strong>
         </Card>
 
