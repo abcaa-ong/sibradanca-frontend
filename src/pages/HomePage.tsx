@@ -405,15 +405,18 @@ export default function HomePage() {
 
       <footer className="site-footer">
         <div className="container footer-inner">
-          <div className="footer-brand">
+          <div className="footer-links footer-links-left">
+            <a href="#formularios">Formulários</a>
+          </div>
+
+          <div className="footer-brand footer-brand-centered">
             <img src={logo} alt="Logo SIBRADANÇA" />
             <p>
               <strong>SIBRADANÇA – Sistema Brasileiro de Evidências da Dança</strong>
             </p>
           </div>
 
-          <div className="footer-links">
-            <a href="#formularios">Formulários</a>
+          <div className="footer-links footer-links-right">
             <a href="#">Política de privacidade</a>
           </div>
         </div>
