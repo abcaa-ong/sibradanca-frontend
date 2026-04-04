@@ -3,11 +3,13 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import { Badge } from './Badge'
 import { TurnstileWidget } from './TurnstileWidget'
+import { ApiRequestError } from '../services/api'
 import { listCities, listStates } from '../services/geo.services'
 import { submitInstitutionForm, submitProfessionalForm, submitYouthForm } from '../services/forms.service'
 import { getActiveConsentTerm, listContents, listModalities } from '../services/reference.service'
 import { setPublicFormGuardMetadata } from '../services/api'
 import type { CityResponse, StateResponse } from '../types/geo'
+import type { ApiFieldError } from '../types/api'
 import type { ActiveConsentTermResponse, ReferenceItemResponse } from '../types/reference'
 import type {
   InstitutionFormResponse,
@@ -169,6 +171,59 @@ type InstitutionFormData = {
 type OptionItem = { value: string; label: string }
 
 const TURNSTILE_SITE_KEY = (import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '').trim()
+const MAX_CURRENCY_INTEGER_DIGITS = 9
+const MAX_CURRENCY_DECIMAL_DIGITS = 2
+const MAX_CURRENCY_VALUE = 999_999_999.99
+const MAX_GENERIC_INTEGER_DIGITS = 9
+
+const minorCurrencyFields = new Set<keyof MinorFormData>([
+  'monthlyFee',
+  'schoolFee',
+  'courses',
+  'costumes',
+  'festivals',
+  'travel',
+  'otherCosts',
+])
+
+const adultCurrencyFields = new Set<keyof AdultFormData>([
+  'monthlyIncomeTotal',
+  'danceIncome',
+  'danceMonthlySpending',
+  'schoolFee',
+  'courses',
+  'costumes',
+  'festivals',
+  'travel',
+  'otherCosts',
+])
+
+const institutionCurrencyFields = new Set<keyof InstitutionFormData>(['monthlyFee', 'monthlyRevenue'])
+
+const minorIntegerFieldDigits: Partial<Record<keyof MinorFormData, number>> = {
+  age: 2,
+}
+
+const adultIntegerFieldDigits: Partial<Record<keyof AdultFormData, number>> = {
+  age: 2,
+  presentialCoursesPerYear: 4,
+  onlineCoursesPerYear: 4,
+}
+
+const institutionIntegerFieldDigits: Partial<Record<keyof InstitutionFormData, number>> = {
+  foundationYearExact: 4,
+  numberOfRooms: 3,
+  classesPerWeek: 3,
+  numberOfTeachers: 4,
+  averageStudents: 6,
+  activeStudents: 6,
+  averageAudienceCapacity: 6,
+  scholarshipCount: 6,
+  cltEmployees: 5,
+  pjContracts: 5,
+  numberOfStaff: 5,
+  monthlyAudience: 6,
+}
 
 const accessOptions = [
   {
@@ -539,6 +594,179 @@ function parseBooleanChoice(value: string) {
   return value === 'sim'
 }
 
+function sanitizeIntegerInput(value: string, maxDigits = MAX_GENERIC_INTEGER_DIGITS) {
+  return value.replace(/\D/g, '').slice(0, maxDigits)
+}
+
+function sanitizeCurrencyInput(
+  value: string,
+  maxIntegerDigits = MAX_CURRENCY_INTEGER_DIGITS,
+  maxDecimalDigits = MAX_CURRENCY_DECIMAL_DIGITS,
+) {
+  const cleanedValue = value.replace(/[^\d,.-]/g, '')
+
+  if (!cleanedValue) {
+    return ''
+  }
+
+  const separatorIndex = Math.max(cleanedValue.lastIndexOf(','), cleanedValue.lastIndexOf('.'))
+
+  if (separatorIndex < 0) {
+    return cleanedValue.replace(/\D/g, '').slice(0, maxIntegerDigits)
+  }
+
+  const integerDigits = cleanedValue.slice(0, separatorIndex).replace(/\D/g, '').slice(0, maxIntegerDigits)
+  const fractionDigits = cleanedValue
+    .slice(separatorIndex + 1)
+    .replace(/\D/g, '')
+    .slice(0, maxDecimalDigits)
+
+  const normalizedIntegerDigits = integerDigits || (fractionDigits ? '0' : '')
+
+  if (!normalizedIntegerDigits && !fractionDigits) {
+    return ''
+  }
+
+  if (cleanedValue.endsWith(',') || cleanedValue.endsWith('.')) {
+    return `${normalizedIntegerDigits},`
+  }
+
+  return fractionDigits ? `${normalizedIntegerDigits},${fractionDigits}` : normalizedIntegerDigits
+}
+
+function parseStrictCurrencyValue(value: string) {
+  const normalizedValue = value.trim()
+
+  if (!normalizedValue) {
+    return null
+  }
+
+  const sanitizedValue = sanitizeCurrencyInput(normalizedValue)
+  if (!sanitizedValue) {
+    return null
+  }
+
+  const parsedValue = Number(sanitizedValue.replace(',', '.'))
+
+  if (!Number.isFinite(parsedValue) || parsedValue < 0 || parsedValue > MAX_CURRENCY_VALUE) {
+    return null
+  }
+
+  return parsedValue
+}
+
+function validateCurrencyFields(fields: Array<{ label: string; value: string; required?: boolean }>) {
+  for (const field of fields) {
+    const normalizedValue = field.value.trim()
+
+    if (!normalizedValue) {
+      if (field.required) {
+        return `Preencha ${field.label.toLowerCase()}.`
+      }
+
+      continue
+    }
+
+    if (parseStrictCurrencyValue(normalizedValue) === null) {
+      return `${field.label} deve ter um valor válido, com até 9 dígitos e 2 casas decimais.`
+    }
+  }
+
+  return null
+}
+
+function mapFlowValidationError(
+  flow: ActiveFlow,
+  errors: ApiFieldError[],
+  fallbackStep: number,
+): { step: number; message: string } | null {
+  const groups: Array<{ step: number; fields: string[]; message: string }> =
+    flow === 'adult-flow'
+      ? [
+          {
+            step: 4,
+            fields: ['totalIncome', 'danceIncome'],
+            message: 'Revise os valores de renda. Use números válidos, sem letras, e até 9 dígitos.',
+          },
+          {
+            step: 5,
+            fields: [
+              'monthlyCostCourses',
+              'monthlyCostCostumes',
+              'monthlyCostEvents',
+              'monthlyCostTravel',
+              'monthlyCostSchool',
+              'monthlyCostOthers',
+            ],
+            message:
+              'Revise os valores de gastos mensais com dança. Use números válidos, sem letras, e até 9 dígitos.',
+          },
+          {
+            step: 6,
+            fields: ['coursesPerYear', 'onlineCoursesPerYear'],
+            message: 'Revise a quantidade de cursos por ano. Use números válidos e menores.',
+          },
+        ]
+      : flow === 'institution-flow'
+        ? [
+            {
+              step: 4,
+              fields: ['monthlyFee'],
+              message: 'Revise a mensalidade média. Use um valor válido e dentro do limite permitido.',
+            },
+            {
+              step: 5,
+              fields: ['monthlyRevenue'],
+              message:
+                'Revise o faturamento mensal. Use um valor válido, sem letras, e dentro do limite permitido.',
+            },
+          ]
+        : [
+            {
+              step: 3,
+              fields: [
+                'monthlyFee',
+                'monthlyCostSchool',
+                'monthlyCostCourses',
+                'monthlyCostCostumes',
+                'monthlyCostFestivals',
+                'monthlyCostTravel',
+                'monthlyCostOthers',
+              ],
+              message:
+                'Revise os valores de gastos com dança. Use números válidos, sem letras, e dentro do limite permitido.',
+            },
+          ]
+
+  for (const group of groups) {
+    if (errors.some((error) => group.fields.includes(error.field))) {
+      return { step: group.step, message: group.message }
+    }
+  }
+
+  const firstError = errors[0]
+  if (!firstError) {
+    return null
+  }
+
+  return {
+    step: fallbackStep,
+    message: firstError.message,
+  }
+}
+
+function resolveSubmissionError(flow: ActiveFlow, error: unknown, fallbackStep: number) {
+  if (error instanceof ApiRequestError && Array.isArray(error.errors) && error.errors.length > 0) {
+    return mapFlowValidationError(flow, error.errors, fallbackStep)
+  }
+
+  if (error instanceof Error) {
+    return { step: fallbackStep, message: formatMinorSubmissionError(error.message) }
+  }
+
+  return null
+}
+
 function formatMinorSubmissionError(message: string) {
   if (message.includes('Cidade')) {
     return 'Selecione uma cidade valida na lista.'
@@ -560,42 +788,8 @@ function formatMinorSubmissionError(message: string) {
 }
 
 function parseNumericSelection(value: string, fallback = 0) {
-  const normalizedValue = value.trim()
-
-  if (!normalizedValue) {
-    return fallback
-  }
-
-  const cleanedValue = normalizedValue.replace(/[^\d,.-]/g, '')
-
-  if (!cleanedValue) {
-    return fallback
-  }
-
-  let normalizedNumber = cleanedValue
-
-  if (cleanedValue.includes(',') && cleanedValue.includes('.')) {
-    normalizedNumber =
-      cleanedValue.lastIndexOf(',') > cleanedValue.lastIndexOf('.')
-        ? cleanedValue.replace(/\./g, '').replace(',', '.')
-        : cleanedValue.replace(/,/g, '')
-  } else if (cleanedValue.includes(',')) {
-    normalizedNumber = cleanedValue.replace(/\./g, '').replace(',', '.')
-  }
-
-  const directNumber = Number(normalizedNumber)
-
-  if (!Number.isNaN(directNumber)) {
-    return directNumber
-  }
-
-  const matches = normalizedValue.match(/\d+/g)
-
-  if (!matches?.length) {
-    return fallback
-  }
-
-  return Number(matches[matches.length - 1] ?? fallback)
+  const parsedValue = parseStrictCurrencyValue(value)
+  return parsedValue ?? fallback
 }
 
 function parseOptionalChoice(value: string, fallback = false) {
@@ -962,18 +1156,51 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   }
 
   const updateMinorField = <K extends keyof MinorFormData>(field: K, value: MinorFormData[K]) => {
-    setMinorForm((prev) => ({ ...prev, [field]: value }))
+    const nextValue =
+      typeof value === 'string'
+        ? (
+            minorCurrencyFields.has(field)
+              ? sanitizeCurrencyInput(value)
+              : minorIntegerFieldDigits[field]
+                ? sanitizeIntegerInput(value, minorIntegerFieldDigits[field])
+                : value
+          )
+        : value
+
+    setMinorForm((prev) => ({ ...prev, [field]: nextValue as MinorFormData[K] }))
   }
 
   const updateAdultField = <K extends keyof AdultFormData>(field: K, value: AdultFormData[K]) => {
-    setAdultForm((prev) => ({ ...prev, [field]: value }))
+    const nextValue =
+      typeof value === 'string'
+        ? (
+            adultCurrencyFields.has(field)
+              ? sanitizeCurrencyInput(value)
+              : adultIntegerFieldDigits[field]
+                ? sanitizeIntegerInput(value, adultIntegerFieldDigits[field])
+                : value
+          )
+        : value
+
+    setAdultForm((prev) => ({ ...prev, [field]: nextValue as AdultFormData[K] }))
   }
 
   const updateInstitutionField = <K extends keyof InstitutionFormData>(
     field: K,
     value: InstitutionFormData[K]
   ) => {
-    setInstitutionForm((prev) => ({ ...prev, [field]: value }))
+    const nextValue =
+      typeof value === 'string'
+        ? (
+            institutionCurrencyFields.has(field)
+              ? sanitizeCurrencyInput(value)
+              : institutionIntegerFieldDigits[field]
+                ? sanitizeIntegerInput(value, institutionIntegerFieldDigits[field])
+                : value
+          )
+        : value
+
+    setInstitutionForm((prev) => ({ ...prev, [field]: nextValue as InstitutionFormData[K] }))
   }
 
   const toggleMinorArrayValue = (
@@ -1092,6 +1319,23 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
+    if (currentStep === 3) {
+      const currencyError = validateCurrencyFields([
+        { label: 'a mensalidade', value: minorForm.monthlyFee },
+        { label: 'o gasto com escola ou academia', value: minorForm.schoolFee },
+        { label: 'o gasto com cursos e formações', value: minorForm.courses },
+        { label: 'o gasto com figurinos e acessórios', value: minorForm.costumes },
+        { label: 'o gasto com festivais e competições', value: minorForm.festivals },
+        { label: 'o gasto com viagens e deslocamentos', value: minorForm.travel },
+        { label: 'outros gastos com dança', value: minorForm.otherCosts },
+      ])
+
+      if (currencyError) {
+        setStepError(currencyError)
+        return false
+      }
+    }
+
     if (
       currentStep === 4 &&
       (!minorForm.careerInterest || minorForm.whoPays.length === 0 || !minorForm.searchesContent)
@@ -1161,6 +1405,34 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         'Preencha renda da casa, renda total, renda com dança, renda principal e outra renda.'
       )
       return false
+    }
+
+    if (currentStep === 4) {
+      const currencyError = validateCurrencyFields([
+        { label: 'a renda mensal total', value: adultForm.monthlyIncomeTotal, required: true },
+        { label: 'a renda mensal com dança', value: adultForm.danceIncome, required: true },
+      ])
+
+      if (currencyError) {
+        setStepError(currencyError)
+        return false
+      }
+    }
+
+    if (currentStep === 5) {
+      const currencyError = validateCurrencyFields([
+        { label: 'a mensalidade de escola ou grupo', value: adultForm.schoolFee },
+        { label: 'o gasto com cursos e formações', value: adultForm.courses },
+        { label: 'o gasto com figurinos e acessórios', value: adultForm.costumes },
+        { label: 'o gasto com festivais e competições', value: adultForm.festivals },
+        { label: 'o gasto com viagens e deslocamentos', value: adultForm.travel },
+        { label: 'outros gastos', value: adultForm.otherCosts },
+      ])
+
+      if (currencyError) {
+        setStepError(currencyError)
+        return false
+      }
     }
 
     if (currentStep === 6 && !adultForm.academicEducation) {
@@ -1349,6 +1621,17 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
+    if (currentStep === 4) {
+      const currencyError = validateCurrencyFields([
+        { label: 'a mensalidade média', value: institutionForm.monthlyFee, required: true },
+      ])
+
+      if (currencyError) {
+        setStepError(currencyError)
+        return false
+      }
+    }
+
     if (
       currentStep === 5 &&
       (!institutionForm.cltEmployees ||
@@ -1361,6 +1644,17 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     ) {
       setStepError('Preencha equipe, faturamento, sistema de gestão, fontes de renda, recurso público e orçamento anual.')
       return false
+    }
+
+    if (currentStep === 5) {
+      const currencyError = validateCurrencyFields([
+        { label: 'o faturamento mensal médio', value: institutionForm.monthlyRevenue, required: true },
+      ])
+
+      if (currencyError) {
+        setStepError(currencyError)
+        return false
+      }
     }
 
     if (
@@ -1473,11 +1767,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
       setMinorSubmission(response)
     } catch (error) {
-      setStepError(
-        error instanceof Error
-          ? formatMinorSubmissionError(error.message)
-          : 'Não foi possível enviar o formulário de jovens.'
-      )
+      const resolvedError = resolveSubmissionError('minor-flow', error, currentStep)
+      if (resolvedError) {
+        setCurrentStep(resolvedError.step)
+        setStepError(resolvedError.message)
+      } else {
+        setStepError('Não foi possível enviar o formulário de jovens.')
+      }
     } finally {
       setIsMinorSubmitting(false)
     }
@@ -1560,11 +1856,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
       setAdultSubmission(response)
     } catch (error) {
-      setStepError(
-        error instanceof Error
-          ? formatMinorSubmissionError(error.message)
-          : 'Não foi possível enviar o formulário profissional.'
-      )
+      const resolvedError = resolveSubmissionError('adult-flow', error, currentStep)
+      if (resolvedError) {
+        setCurrentStep(resolvedError.step)
+        setStepError(resolvedError.message)
+      } else {
+        setStepError('Não foi possível enviar o formulário profissional.')
+      }
     } finally {
       setIsAdultSubmitting(false)
     }
@@ -1695,11 +1993,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
       setInstitutionSubmission(response)
     } catch (error) {
-      setStepError(
-        error instanceof Error
-          ? formatMinorSubmissionError(error.message)
-          : 'Não foi possível enviar o formulário institucional.'
-      )
+      const resolvedError = resolveSubmissionError('institution-flow', error, currentStep)
+      if (resolvedError) {
+        setCurrentStep(resolvedError.step)
+        setStepError(resolvedError.message)
+      } else {
+        setStepError('Não foi possível enviar o formulário institucional.')
+      }
     } finally {
       setIsInstitutionSubmitting(false)
     }

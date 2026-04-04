@@ -19,6 +19,16 @@ type PublicFormGuardMetadata = {
 
 let publicFormGuardMetadata: PublicFormGuardMetadata | null = null
 
+export class ApiRequestError extends Error {
+  errors: ApiErrorResponse['errors']
+
+  constructor(message: string, errors: ApiErrorResponse['errors'] = []) {
+    super(message)
+    this.name = 'ApiRequestError'
+    this.errors = errors
+  }
+}
+
 async function performRequest(input: RequestInfo | URL, init?: RequestInit) {
   try {
     return await fetch(input, init)
@@ -37,12 +47,12 @@ async function parseApiResponse<T>(response: Response, fallbackMessage: string):
   }
 
   if (!response.ok || !json?.success) {
-    const details =
+    const errors =
       json && 'errors' in json && Array.isArray(json.errors)
-        ? json.errors.map((item) => `${item.field}: ${item.message}`).join(' | ')
-        : ''
+        ? json.errors
+        : []
 
-    throw new Error(details || json?.message || fallbackMessage)
+    throw new ApiRequestError(json?.message || fallbackMessage, errors)
   }
 
   return (json as ApiResponse<T>).data
