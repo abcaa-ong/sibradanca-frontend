@@ -3,7 +3,7 @@
    ============================================================ */
 .hero-section {
   position: relative;
-  padding: 76px 0 56px;
+  padding: 76px 0 78px;
 }
 
 .hero-section::before {
@@ -237,21 +237,25 @@
 #sobre .section-title h2,
 #formularios .section-title h2,
 #parceiros .section-title h2 {
-  max-width: 18ch;
+  max-width: 22ch;
   margin-top: 22px;
-  line-height: 1.14;
+  line-height: 1.16;
 }
 
 #sobre .section-title p,
 #formularios .section-title p,
 #parceiros .section-title p {
-  max-width: 70ch;
+  max-width: 62ch;
   margin-top: 24px;
   line-height: 1.8;
 }
 
 #formularios .section-title h2 {
   max-width: 18ch;
+}
+
+#sobre.section-space {
+  padding-top: 56px;
 }
 
 #sobre .stats-grid,
