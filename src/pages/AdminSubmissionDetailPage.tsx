@@ -10,6 +10,7 @@ import type {
   ProfessionalFormDetailResponse,
   YouthFormDetailResponse,
 } from '../types/admin'
+import { formatBackendDate, formatBackendDateTime } from '../utils/backend-date'
 
 type FieldKind = 'text' | 'enum' | 'boolean' | 'date' | 'datetime' | 'currency' | 'list' | 'number'
 
@@ -243,22 +244,6 @@ const institutionSections: Array<SectionConfig<InstitutionFormDetailResponse>> =
   },
 ]
 
-function formatDate(value: string | null) {
-  if (!value) {
-    return '-'
-  }
-
-  return new Date(value).toLocaleDateString('pt-BR')
-}
-
-function formatDateTime(value: string | null) {
-  if (!value) {
-    return '-'
-  }
-
-  return new Date(value).toLocaleString('pt-BR')
-}
-
 function formatCurrency(value: number | null) {
   if (value === null || value === undefined) {
     return '-'
@@ -381,11 +366,11 @@ function formatValue(value: unknown, kind: FieldKind = 'text') {
   }
 
   if (kind === 'date' && typeof value === 'string') {
-    return formatDate(value)
+    return formatBackendDate(value)
   }
 
   if (kind === 'datetime' && typeof value === 'string') {
-    return formatDateTime(value)
+    return formatBackendDateTime(value)
   }
 
   if (kind === 'currency' && typeof value === 'number') {

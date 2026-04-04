@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Card } from '../components/Card'
 import { getAdminAudit, getBackendHealthStatus } from '../services/admin.service'
 import type { AdminAuditLogResponse, BackendHealthStatusResponse } from '../types/admin'
+import { formatBackendDateTime } from '../utils/backend-date'
 
 const roles = [
   ['Gestao', 'Indicadores e relatorios'],
@@ -17,14 +18,6 @@ const controls = [
   ['Permissoes', 'Restritas'],
   ['Recuperacao', 'Em configuracao'],
 ] as const
-
-function formatDateTime(value: string | null) {
-  if (!value) {
-    return '-'
-  }
-
-  return new Date(value).toLocaleString('pt-BR')
-}
 
 export default function AdminAccessHubPage() {
   const [auditLogs, setAuditLogs] = useState<AdminAuditLogResponse[]>([])
@@ -87,7 +80,7 @@ export default function AdminAccessHubPage() {
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Ultimo registro</span>
-          <strong>{formatDateTime(lastAudit)}</strong>
+          <strong>{formatBackendDateTime(lastAudit)}</strong>
         </Card>
 
         <Card className="admin-metric-card">
@@ -181,7 +174,7 @@ export default function AdminAccessHubPage() {
                     <td>{item.actor}</td>
                     <td>{item.targetKey}</td>
                     <td>{item.details}</td>
-                    <td>{formatDateTime(item.createdAt)}</td>
+                    <td>{formatBackendDateTime(item.createdAt)}</td>
                   </tr>
                 ))}
               </tbody>

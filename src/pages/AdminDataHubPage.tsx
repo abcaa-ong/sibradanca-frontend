@@ -22,6 +22,7 @@ import type {
   AdminInsightsDashboardResponse,
   AdminInsightsOverviewResponse,
 } from '../types/admin'
+import { formatBackendDateTime } from '../utils/backend-date'
 
 type DownloadAction = () => Promise<{ blob: Blob; filename: string | null }>
 
@@ -97,14 +98,6 @@ const operationalDownloadRows: DownloadRow[] = [
     action: downloadAdminSubmissionsCsv,
   },
 ]
-
-function formatDateTime(value: string | null) {
-  if (!value) {
-    return '-'
-  }
-
-  return new Date(value).toLocaleString('pt-BR')
-}
 
 function getTopItem(
   items: Array<{ name: string; value: number }> | undefined,
@@ -294,7 +287,7 @@ export default function AdminDataHubPage() {
                     <td>{item.sectorLabel}</td>
                     <td>{item.totalSubmissions}</td>
                     <td>{item.totalStates}</td>
-                    <td>{formatDateTime(item.lastSubmissionAt)}</td>
+                    <td>{formatBackendDateTime(item.lastSubmissionAt)}</td>
                   </tr>
                 ))}
               </tbody>

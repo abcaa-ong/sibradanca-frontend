@@ -7,14 +7,7 @@ import type {
   AdminInsightsOverviewResponse,
   AdminSubmissionSummaryResponse,
 } from '../types/admin'
-
-function formatDateTime(value: string | null) {
-  if (!value) {
-    return '-'
-  }
-
-  return new Date(value).toLocaleString('pt-BR')
-}
+import { formatBackendDateTime } from '../utils/backend-date'
 
 function formatSector(value: string) {
   if (value === 'YOUTH') return 'Jovens'
@@ -168,7 +161,7 @@ export default function AdminSubmissionsPage() {
                     <td>{item.phone || '-'}</td>
                     <td>{item.city || '-'}</td>
                     <td>{item.state || '-'}</td>
-                    <td>{formatDateTime(item.submittedAt)}</td>
+                    <td>{formatBackendDateTime(item.submittedAt)}</td>
                     <td>
                       <div className="admin-table-actions">
                         <Button

@@ -12,14 +12,7 @@ import type {
   AdminInsightsDashboardResponse,
   AdminInsightsOverviewResponse,
 } from '../types/admin'
-
-function formatDateTime(value: string | null) {
-  if (!value) {
-    return '-'
-  }
-
-  return new Date(value).toLocaleString('pt-BR')
-}
+import { formatBackendDateTime } from '../utils/backend-date'
 
 export default function AdminPanelPage() {
   const [overview, setOverview] = useState<AdminInsightsOverviewResponse | null>(null)
@@ -141,7 +134,7 @@ export default function AdminPanelPage() {
                     <td>{item.sectorLabel}</td>
                     <td>{item.totalSubmissions}</td>
                     <td>{item.totalStates}</td>
-                    <td>{formatDateTime(item.lastSubmissionAt)}</td>
+                    <td>{formatBackendDateTime(item.lastSubmissionAt)}</td>
                   </tr>
                 ))}
               </tbody>

@@ -2,14 +2,7 @@ import { useEffect, useState } from 'react'
 import { Card } from '../components/Card'
 import { getAdminAudit } from '../services/admin.service'
 import type { AdminAuditLogResponse } from '../types/admin'
-
-function formatDateTime(value: string | null) {
-  if (!value) {
-    return '-'
-  }
-
-  return new Date(value).toLocaleString('pt-BR')
-}
+import { formatBackendDateTime } from '../utils/backend-date'
 
 const auditFocus = [
   'Historico de movimentacoes internas da base',
@@ -111,7 +104,7 @@ export default function AdminAuditPage() {
                     <td>{item.actor}</td>
                     <td>{item.targetKey}</td>
                     <td>{item.details}</td>
-                    <td>{formatDateTime(item.createdAt)}</td>
+                    <td>{formatBackendDateTime(item.createdAt)}</td>
                   </tr>
                 ))}
               </tbody>
