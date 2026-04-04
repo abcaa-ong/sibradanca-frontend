@@ -60,9 +60,9 @@ type TopicCard = {
 
 const overviewCards: OverviewCard[] = [
   {
-    label: 'Cadastros nesta previa',
+    label: 'Participacoes nesta demonstracao',
     value: '5.240',
-    description: 'Volume ilustrativo para mostrar como a leitura nacional pode aparecer na plataforma.',
+    description: 'Exemplo de volume para mostrar como o Banco Nacional da Danca pode aparecer ao publico.',
   },
   {
     label: 'Jovens e estudantes',
@@ -101,18 +101,18 @@ const sourceCards: SourceCard[] = [
 
 const noteCards: NoteCard[] = [
   {
-    title: 'Visao publica da base',
-    description: 'Aqui aparecem somente numeros gerais e recortes amplos. Nenhum cadastro individual e exibido.',
+    title: 'Visao publica e segura',
+    description: 'Aqui aparecem somente numeros gerais. Nenhuma informacao pessoal e mostrada nesta pagina.',
     icon: ShieldCheck,
   },
   {
-    title: 'Leitura clara do movimento',
-    description: 'Os numeros foram organizados para mostrar como a base pode ser acompanhada de forma simples.',
+    title: 'Panorama da danca no Brasil',
+    description: 'Os numeros foram organizados para mostrar, de forma clara, como esse retrato nacional pode aparecer.',
     icon: Database,
   },
   {
-    title: 'Retrato nacional da danca',
-    description: 'A proposta e mostrar alcance, diversidade e presenca da danca no Brasil com leitura acessivel.',
+    title: 'Presenca da danca pelo pais',
+    description: 'A ideia e mostrar alcance, diversidade e distribuicao da danca no Brasil com leitura acessivel.',
     icon: Globe2,
   },
 ]
@@ -382,10 +382,10 @@ export default function StatisticsPage() {
           <div className="container">
             <div className="statistics-hero-copy">
               <Badge dark>Estatisticas nacionais</Badge>
-              <h1>Um retrato de como o Banco Nacional da Danca pode aparecer no Brasil</h1>
+              <h1>O Banco Nacional da Danca do Brasil em numeros</h1>
               <p className="statistics-hero-description">
-                Aqui aparece uma visao publica do Banco Nacional da Danca, com numeros gerais que
-                ajudam a mostrar alcance, presenca e diversidade sem expor informacoes pessoais.
+                Esta demonstracao mostra como o projeto pode apresentar ao publico um retrato da
+                danca no Brasil, com informacoes gerais sobre territorios, perfis e modalidades.
               </p>
             </div>
 
@@ -418,8 +418,8 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Visao geral"
-              title="Um exemplo de como essa leitura nacional pode ganhar forma"
-              description="Os numeros abaixo ajudam a visualizar como o Banco Nacional da Danca pode ser apresentado ao publico."
+              title="Um retrato nacional da danca em numeros"
+              description="Os numeros abaixo ajudam a visualizar como essa apresentacao pode mostrar a forca e a diversidade da danca no pais."
             />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
@@ -455,8 +455,8 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Leitura dos formularios"
-              title="O que esta visao publica pode mostrar sobre a base"
-              description="A proposta e reunir, em um mesmo painel, as tres frentes do cadastro nacional: jovens, profissionais e instituicoes."
+              title="O que os formularios ajudam a revelar sobre a danca no Brasil"
+              description="Jovens, profissionais e instituicoes aparecem aqui de forma reunida, sem expor informacoes pessoais."
             />
 
             <div className="statistics-source-grid">
@@ -492,8 +492,8 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Territorio"
-              title="Como a danca pode ser vista por regiao, estado e municipio"
-              description="Uma leitura publica para mostrar alcance, presenca e distribuicao da iniciativa pelo pais."
+              title="A danca pelo Brasil"
+              description="Regioes, estados e municipios ajudam a mostrar onde essa mobilizacao nacional ganha presenca."
             />
 
             <div className="statistics-chart-grid three-columns">
@@ -554,8 +554,8 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Perfis da danca"
-              title="Quem aparece nesse retrato nacional da danca"
-              description="Faixa etaria, genero e modalidades ajudam a mostrar diversidade, alcance e presenca no setor."
+              title="Quem faz parte desse retrato nacional"
+              description="Idades, identidades e modalidades ajudam a mostrar a diversidade da danca no Brasil."
             />
 
             <div className="statistics-chart-grid three-columns">
@@ -587,8 +587,8 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Formacao e estrutura"
-              title="Sinais de formacao, continuidade e organizacao da danca"
-              description="Uma leitura sobre formacao em danca, presenca das instituicoes e temas que pedem mais apoio."
+              title="Como a danca se organiza e segue crescendo"
+              description="Aqui aparecem caminhos de estudo, presenca das instituicoes e temas que pedem mais apoio."
             />
 
             <div className="statistics-chart-grid two-columns">
@@ -612,11 +612,11 @@ export default function StatisticsPage() {
               />
               <div className="statistics-callout">
                 <div className="card statistics-callout-card">
-                  <span className="eyebrow">Visao publica</span>
-                  <h3>Uma leitura nacional para mostrar presenca, diversidade e alcance</h3>
+                  <span className="eyebrow">Apresentacao publica</span>
+                  <h3>Uma forma de mostrar o movimento da danca no Brasil</h3>
                   <p>
-                    Esta previa apresenta crescimento, distribuicao, modalidades e retratos do
-                    setor. A leitura completa da base segue no painel interno da ONG.
+                    Esta demonstracao mostra crescimento, distribuicao, modalidades e diferentes
+                    retratos da danca. A leitura completa segue no ambiente interno da ONG.
                   </p>
                 </div>
               </div>
@@ -640,8 +640,8 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Sustentacao e circulacao"
-              title="Temas que ajudam a entender continuidade, apoio e desenvolvimento"
-              description="Esta parte amplia a leitura com recortes sobre sustentacao da pratica, busca por conteudo e caminhos de fortalecimento da danca."
+              title="O que fortalece a continuidade da danca"
+              description="Apoio, formacao e circulacao ajudam a entender como a danca segue viva em diferentes contextos."
             />
 
             <div className="statistics-chart-grid three-columns">

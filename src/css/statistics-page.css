@@ -8,18 +8,18 @@
 
 .statistics-hero-copy h1 {
   margin: 18px 0 0;
-  font-size: clamp(2rem, 3.6vw, 3.4rem);
-  line-height: 1.1;
+  font-size: clamp(2.55rem, 4.8vw, 4.45rem);
+  line-height: 1.04;
   letter-spacing: -0.03em;
   font-weight: 900;
-  max-inline-size: 12ch;
+  max-inline-size: 14ch;
   text-wrap: balance;
 }
 
 .statistics-hero-description {
-  max-width: 62ch;
-  margin: 20px 0 0;
-  font-size: 1.05rem;
+  max-width: 66ch;
+  margin: 22px 0 0;
+  font-size: 1.08rem;
   line-height: 1.8;
   color: var(--muted);
 }
@@ -44,7 +44,7 @@
 
 .statistics-note-card h3 {
   margin: 18px 0 0;
-  font-size: 1.1rem;
+  font-size: 1.14rem;
   line-height: 1.35;
 }
 
