@@ -631,13 +631,57 @@ button:focus-visible {
   pointer-events: none;
 }
 
+.site-footer::after {
+  content: '';
+  position: absolute;
+  left: 56px;
+  bottom: 44px;
+  width: 88px;
+  height: 88px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.35), rgba(239, 47, 141, 0) 45%),
+    rgba(239, 47, 141, 0.7);
+  box-shadow: 0 18px 40px rgba(239, 47, 141, 0.18);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
 .footer-inner {
+  position: relative;
   padding: 18px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 28px;
   flex-wrap: wrap;
+}
+
+.footer-inner::before,
+.footer-inner::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+.footer-inner::before {
+  right: 86px;
+  top: -8px;
+  width: 92px;
+  height: 92px;
+  border-radius: 30px;
+  background: linear-gradient(180deg, rgba(72, 169, 230, 0.82), rgba(72, 169, 230, 0.66));
+  box-shadow: 0 18px 40px rgba(72, 169, 230, 0.16);
+}
+
+.footer-inner::after {
+  left: 148px;
+  bottom: -18px;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(244, 235, 0, 0.95);
+  box-shadow: 0 12px 24px rgba(244, 235, 0, 0.28);
 }
 
 .footer-brand {
@@ -792,6 +836,26 @@ a:focus-visible {
     gap: 16px;
   }
 
+  .site-footer::after {
+    left: 28px;
+    bottom: 56px;
+    width: 72px;
+    height: 72px;
+  }
+
+  .footer-inner::before {
+    right: 18px;
+    top: 6px;
+    width: 72px;
+    height: 72px;
+    border-radius: 24px;
+  }
+
+  .footer-inner::after {
+    left: 98px;
+    bottom: -8px;
+  }
+
   .footer-brand {
     gap: 10px;
   }
@@ -864,6 +928,13 @@ a:focus-visible {
     padding: 20px 0;
   }
 
+  .site-footer::after {
+    left: 18px;
+    bottom: 58px;
+    width: 58px;
+    height: 58px;
+  }
+
   .footer-brand {
     flex: none;
     flex-direction: column;
@@ -876,6 +947,21 @@ a:focus-visible {
     width: 100%;
     gap: 12px 18px;
     justify-content: flex-start;
+  }
+
+  .footer-inner::before {
+    right: 8px;
+    top: 10px;
+    width: 54px;
+    height: 54px;
+    border-radius: 18px;
+  }
+
+  .footer-inner::after {
+    left: 84px;
+    bottom: 6px;
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -929,6 +1015,28 @@ a:focus-visible {
 
   .footer-brand img {
     width: 54px;
+  }
+
+  .site-footer::after {
+    left: 10px;
+    bottom: 72px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .footer-inner::before {
+    right: 4px;
+    top: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
+  }
+
+  .footer-inner::after {
+    left: 72px;
+    bottom: 10px;
+    width: 14px;
+    height: 14px;
   }
 
   .footer-brand p,
