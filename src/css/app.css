@@ -461,7 +461,10 @@ button:focus-visible {
   position: relative;
   max-width: 860px;
   margin: 0 auto;
+  display: grid;
+  justify-items: center;
   text-align: center;
+  padding-inline: 68px;
 }
 
 .section-title::after {
@@ -475,9 +478,34 @@ button:focus-visible {
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
 }
 
+.section-title-orb {
+  position: absolute;
+  top: 104px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+.section-title-orb-left {
+  left: 10px;
+  background: rgba(239, 47, 141, 0.88);
+  box-shadow: 0 14px 28px rgba(239, 47, 141, 0.2);
+}
+
+.section-title-orb-right {
+  right: 16px;
+  width: 18px;
+  height: 18px;
+  background: rgba(72, 169, 230, 0.86);
+  box-shadow: 0 14px 28px rgba(72, 169, 230, 0.2);
+}
+
 .section-title h2,
 .section-heading {
   margin: 18px 0 0;
+  max-width: 14ch;
   font-size: clamp(2rem, 3vw, 3rem);
   line-height: 1.14;
   letter-spacing: -0.03em;
@@ -488,9 +516,11 @@ button:focus-visible {
 .section-title p,
 .section-paragraph {
   margin-top: 18px;
+  max-width: 62ch;
   color: var(--muted);
   line-height: 1.8;
   font-size: 1.05rem;
+  text-wrap: pretty;
 }
 
 .card {
@@ -913,6 +943,22 @@ a:focus-visible {
     width: 64px;
   }
 
+  .section-title {
+    padding-inline: 44px;
+  }
+
+  .section-title-orb {
+    top: 92px;
+  }
+
+  .section-title-orb-left {
+    left: 2px;
+  }
+
+  .section-title-orb-right {
+    right: 4px;
+  }
+
   .badge {
     letter-spacing: 0.11em;
   }
@@ -1006,6 +1052,21 @@ a:focus-visible {
   .section-title p,
   .section-paragraph {
     font-size: 0.98rem;
+  }
+
+  .section-title {
+    padding-inline: 18px;
+  }
+
+  .section-title-orb {
+    top: 84px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .section-title-orb-right {
+    width: 14px;
+    height: 14px;
   }
 
   .card {
