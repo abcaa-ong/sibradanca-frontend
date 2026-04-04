@@ -226,9 +226,30 @@
   align-items: stretch;
 }
 
+.stats-grid .card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 12px 18px;
+}
+
+.stats-grid .icon-wrap {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: start;
+}
+
+.stats-grid .eyebrow {
+  grid-column: 2;
+  margin-top: 6px;
+}
+
 .stats-grid .card-text {
+  grid-column: 2;
+  margin-top: 0;
   font-size: 0.96rem;
   line-height: 1.62;
+  max-width: 34ch;
 }
 
 .stats-grid > *:nth-child(1) .card {
@@ -762,6 +783,26 @@
 @media (max-width: 720px) {
   .hero-grid {
     gap: 28px;
+  }
+
+  .stats-grid .card {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .stats-grid .icon-wrap,
+  .stats-grid .eyebrow,
+  .stats-grid .card-text {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .stats-grid .eyebrow {
+    margin-top: 0;
+  }
+
+  .stats-grid .card-text {
+    max-width: none;
   }
 
   .access-grid {
