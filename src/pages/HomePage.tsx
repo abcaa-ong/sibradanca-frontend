@@ -14,7 +14,7 @@ import {
   Users,
   X,
 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import logo from '../assets/logo-sibradanca.png'
 import { Badge } from '../components/Badge'
@@ -198,6 +198,7 @@ export default function HomePage() {
           <nav className="desktop-nav">
             <a href="#sobre">Sobre</a>
             <a href="#formularios">Formulários</a>
+            <Link to="/estatisticas-nacionais">Estatísticas nacionais</Link>
             <a href="#parceiros">Parceiros</a>
             <a
               href="https://www.instagram.com/sibradanca"
@@ -241,6 +242,15 @@ export default function HomePage() {
               <ClipboardList size={18} />
               <span>Formulários</span>
             </a>
+
+            <Link
+              to="/estatisticas-nacionais"
+              className="mobile-menu-link"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Database size={18} />
+              <span>Estatísticas nacionais</span>
+            </Link>
 
             <a href="#parceiros" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
               <Landmark size={18} />

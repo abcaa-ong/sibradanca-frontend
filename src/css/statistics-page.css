@@ -14,6 +14,48 @@
   font-weight: 900;
 }
 
+.statistics-hero-description {
+  max-width: 70ch;
+  margin: 20px 0 0;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.statistics-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.statistics-note-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 30px;
+}
+
+.statistics-note-card {
+  min-height: 100%;
+}
+
+.statistics-note-card h3 {
+  margin: 18px 0 0;
+  font-size: 1.1rem;
+  line-height: 1.35;
+}
+
+.statistics-note-card p {
+  margin: 14px 0 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.statistics-note-icon {
+  background: linear-gradient(180deg, rgba(72, 169, 230, 0.22), rgba(72, 169, 230, 0.08));
+}
+
 .statistics-toolbar {
   margin-top: 28px;
   display: grid;
@@ -74,6 +116,10 @@
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 18px;
+}
+
+.statistics-kpi-grid--four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .statistics-kpi-card {
@@ -147,7 +193,37 @@
   text-align: center;
 }
 
+.statistics-callout {
+  display: flex;
+}
+
+.statistics-callout-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+  background: linear-gradient(180deg, rgba(72, 169, 230, 0.06), rgba(255, 255, 255, 0.98));
+}
+
+.statistics-callout-card h3 {
+  margin: 14px 0 0;
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+.statistics-callout-card p {
+  margin: 16px 0 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
 @media (max-width: 1280px) {
+  .statistics-note-grid,
+  .statistics-kpi-grid--four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .statistics-metric-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -161,6 +237,8 @@
    STATISTICS PAGE — RESPONSIVE
    ============================================================ */
 @media (max-width: 1100px) {
+  .statistics-note-grid,
+  .statistics-kpi-grid--four,
   .statistics-chart-grid.two-columns,
   .statistics-chart-grid.three-columns,
   .statistics-metric-grid,
@@ -173,6 +251,10 @@
   .statistics-hero-copy h1 {
     font-size: 2.2rem;
     line-height: 1.08;
+  }
+
+  .statistics-hero-description {
+    font-size: 0.98rem;
   }
 
   .statistics-chart-panel,
@@ -188,5 +270,9 @@
   .statistics-export-actions .btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .statistics-hero-actions .btn {
+    width: 100%;
   }
 }
