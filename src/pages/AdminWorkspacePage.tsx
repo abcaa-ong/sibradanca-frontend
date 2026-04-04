@@ -242,7 +242,7 @@ export default function AdminWorkspacePage() {
       <header className="admin-page-header admin-page-header-compact">
         <div>
           <p className="eyebrow">Central da ONG</p>
-          <h2>Painel interno do Banco Nacional da Dança</h2>
+          <h2>Painel interno do Banco Nacional de Dados da Dança do Brasil</h2>
           <p className="admin-page-subtitle">
             A ONG acompanha os cadastros, entende o retrato da base e prepara análises, exportações
             e decisões a partir deste ambiente.

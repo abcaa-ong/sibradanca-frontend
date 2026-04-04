@@ -5,7 +5,7 @@ import { clearAdminCredentials, hasAdminSession } from '../services/admin-auth.s
 
 const navSections = [
   {
-    title: 'Banco nacional da dança',
+    title: 'Banco Nacional da Dança do Brasil',
     items: [
       {
         to: '/painel-interno/dashboard',
@@ -55,7 +55,7 @@ export default function AdminLayout() {
           <p className="eyebrow">SIBRADANÇA</p>
           <h1>Painel interno da ONG</h1>
           <p className="admin-sidebar-text">
-            Base nacional, análises, exportações e segurança em um único ambiente.
+            Base nacional, análises, exportações e segurança reunidas em um único ambiente.
           </p>
         </div>
 
