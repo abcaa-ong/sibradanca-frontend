@@ -127,21 +127,21 @@ const statisticsDownloadRows: DownloadRow[] = [
   {
     title: 'Relatório geral',
     format: 'PDF',
-    scope: 'Resumo visual com indicadores por tema',
+    scope: 'Resumo visual com os principais recortes da base',
     actionLabel: 'Baixar PDF',
     action: downloadAdminStatisticsPdf,
   },
   {
     title: 'Indicadores da base',
     format: 'XLSX',
-    scope: 'Leitura da base com abas temáticas',
+    scope: 'Leitura da base com abas temáticas para a equipe',
     actionLabel: 'Baixar Excel',
     action: downloadAdminStatisticsXlsx,
   },
   {
     title: 'Indicadores em CSV',
     format: 'CSV',
-    scope: 'Indicadores e recortes para cruzamentos e relatórios',
+    scope: 'Indicadores e recortes para cruzamentos, planilhas e apresentações',
     actionLabel: 'Baixar CSV',
     action: downloadAdminStatisticsCsv,
   },
@@ -364,25 +364,25 @@ export default function AdminDataHubPage() {
 
   const dataControlRows = useMemo(
     () => [
-    {
-      label: 'Registros consolidados',
-      value: overview ? formatNumber(overview.totalResponses) : '-',
-      detail: 'Cadastros consolidados e prontos para consulta da equipe.',
+      {
+        label: 'Registros consolidados',
+        value: overview ? formatNumber(overview.totalResponses) : '-',
+        detail: 'Cadastros já disponíveis para consulta, acompanhamento e exportação da equipe.',
       },
       {
         label: 'UFs com presença',
         value: formatNumber(stateSummary.filter((item) => item.totalSubmissions > 0).length),
-        detail: 'Estados com registros ativos na base nacional.',
+        detail: 'Estados e Distrito Federal que já aparecem nesta leitura da base.',
       },
       {
         label: 'Último registro',
         value: latestRecordAt ? formatBackendDateTime(latestRecordAt) : 'Sem registro',
-        detail: 'Cadastro mais recente encontrado entre os registros da base.',
+        detail: 'Envio mais recente recebido pela plataforma.',
       },
       {
         label: 'Perfis monitorados',
         value: sectorSummary.length ? `${sectorSummary.length}/3` : '-',
-        detail: 'Jovens, profissionais e instituições acompanhados pela equipe.',
+        detail: 'Jovens, profissionais e instituições acompanhados neste painel.',
       },
     ],
     [latestRecordAt, overview, sectorSummary.length, stateSummary],
@@ -390,8 +390,8 @@ export default function AdminDataHubPage() {
 
   const datasetLayers = [
     {
-      title: 'Visão de gestão',
-      description: 'Painel e arquivos para coordenação, leitura rápida e acompanhamento da equipe.',
+      title: 'Visão da equipe',
+      description: 'Painel e arquivos para coordenação, leitura rápida e acompanhamento do dia a dia.',
       outputs: 'PDF / XLSX',
     },
     {
@@ -405,8 +405,8 @@ export default function AdminDataHubPage() {
       outputs: 'XLSX / CSV',
     },
     {
-      title: 'Indicadores consolidados',
-      description: 'Arquivos organizados para relatórios, planilhas e leitura dos números da base.',
+      title: 'Indicadores para apresentação',
+      description: 'Arquivos organizados para relatórios, planilhas e apresentações da ONG.',
       outputs: 'PDF / XLSX / CSV',
     },
   ] as const
@@ -419,9 +419,9 @@ export default function AdminDataHubPage() {
       <header className="admin-page-header">
         <div>
           <p className="eyebrow">Dados</p>
-          <h2>Área de dados e arquivos</h2>
+          <h2>Indicadores e arquivos da equipe</h2>
           <p className="admin-page-subtitle">
-            Consulta da base, números gerais e arquivos organizados para o trabalho da equipe.
+            Consulte os números da base e baixe os arquivos que a equipe usa no dia a dia.
           </p>
         </div>
       </header>
@@ -454,8 +454,8 @@ export default function AdminDataHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Governança</p>
-              <h2>Resumo da base</h2>
+              <p className="eyebrow">Controle da base</p>
+              <h2>Situação atual da base</h2>
             </div>
           </div>
 
@@ -475,8 +475,8 @@ export default function AdminDataHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Camadas</p>
-              <h2>Como os arquivos estão organizados</h2>
+              <p className="eyebrow">Arquivos</p>
+              <h2>Como os materiais chegam para a equipe</h2>
             </div>
           </div>
 
@@ -607,7 +607,7 @@ export default function AdminDataHubPage() {
 
         <DownloadTable
           eyebrow="Indicadores"
-          title="Arquivos de leitura geral"
+          title="Arquivos para leitura geral"
           rows={statisticsDownloadRows}
           onDownload={handleDownload}
         />
@@ -645,7 +645,7 @@ export default function AdminDataHubPage() {
                   <td>Acompanhamento da equipe</td>
                 </tr>
                 <tr>
-                  <td>Relatórios complementares</td>
+                  <td>Apresentações e relatórios</td>
                   <td>Disponível</td>
                   <td>CSV de indicadores e base detalhada</td>
                 </tr>

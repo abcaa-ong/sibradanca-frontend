@@ -20,7 +20,7 @@ import { formatBackendDateTime } from '../utils/backend-date'
 const workAreas = [
   {
     title: 'Cadastros',
-    audience: 'Cadastros da base',
+    audience: 'Fichas da base',
     description: 'Protocolos, fichas completas e acompanhamento individual de cada envio.',
     route: '/painel-interno/cadastros',
     actionLabel: 'Abrir módulo',
@@ -28,16 +28,16 @@ const workAreas = [
   },
   {
     title: 'Dados',
-    audience: 'Leitura e relatórios',
-    description: 'Números da base, arquivos para a equipe e visão geral do movimento nacional.',
+    audience: 'Indicadores e arquivos',
+    description: 'Números da base, materiais para apresentação e arquivos de trabalho da equipe.',
     route: '/painel-interno/dados',
     actionLabel: 'Abrir módulo',
     outputs: ['Painel', 'PDF/XLSX/CSV', 'Respostas organizadas'],
   },
   {
     title: 'Acessos',
-    audience: 'Contas da equipe',
-    description: 'Contas internas, permissões de uso e histórico de acessos.',
+    audience: 'Equipe da ONG',
+    description: 'Contas internas, permissões de uso e histórico de acessos da equipe.',
     route: '/painel-interno/acessos',
     actionLabel: 'Abrir módulo',
     outputs: ['Contas', 'Permissões', 'Histórico'],
@@ -187,20 +187,20 @@ export default function AdminWorkspacePage() {
       {
         label: 'Estados com registros',
         value: `${formatNumber(activeStates.length)} UFs`,
-        detail: `${formatPercent(activeStates.length, 27)} da presença possível entre estados e DF.`,
+        detail: `${formatPercent(activeStates.length, 27)} de presença já confirmada entre estados e DF.`,
       },
       {
         label: 'Perfis com registros',
         value: `${sectorDistribution.filter((item) => item.value > 0).length}/3`,
-        detail: 'Jovens, profissionais e instituições acompanhados pela equipe.',
+        detail: 'Jovens, profissionais e instituições já aparecem na base da ONG.',
       },
       {
         label: 'Último cadastro',
         value: latestSubmission ? formatBackendDateTime(latestSubmission) : 'Sem registro',
-        detail: 'Horário mais recente encontrado entre os registros da base.',
+        detail: 'Registro mais recente recebido pela plataforma.',
       },
       {
-        label: 'Estado com mais registros',
+        label: 'Estado com maior presença',
         value: topState ? `${topState.stateCode} (${formatNumber(topState.totalSubmissions)})` : 'Sem registro',
         detail: `${formatNumber(totalResponses)} cadastros acumulados no banco nacional até o momento.`,
       },
@@ -232,7 +232,7 @@ export default function AdminWorkspacePage() {
       {
         label: 'Tema ligado a editais',
         value: callLeader ? `${callLeader.name} (${formatNumber(callLeader.value)})` : 'Sem leitura',
-        detail: 'Leitura mais forte sobre participação em editais e chamadas.',
+        detail: 'Tema que mais aparece quando a base fala de editais e chamadas públicas.',
       },
     ]
   }, [dashboard])
@@ -244,7 +244,7 @@ export default function AdminWorkspacePage() {
           <p className="eyebrow">Central da ONG</p>
           <h2>Painel interno</h2>
           <p className="admin-page-subtitle">
-            Acompanhamento da base nacional, dos cadastros e dos principais números da plataforma.
+            Acompanhe os cadastros, consulte os indicadores e organize os materiais da equipe.
           </p>
         </div>
       </header>
@@ -359,7 +359,7 @@ export default function AdminWorkspacePage() {
         <ChartPanel
           title="Cadastros por perfil"
           data={sectorDistribution}
-          eyebrowLabel="Base"
+          eyebrowLabel="Base atual"
           isLoading={isLoading}
           emptyMessage="Carregando distribuição dos perfis..."
         />
@@ -368,7 +368,7 @@ export default function AdminWorkspacePage() {
           title="Participação por perfil"
           data={sectorDistribution}
           type="pie"
-          eyebrowLabel="Base"
+          eyebrowLabel="Base atual"
           isLoading={isLoading}
           emptyMessage="Carregando participação dos perfis..."
         />
@@ -377,7 +377,7 @@ export default function AdminWorkspacePage() {
           title="Faixa etária"
           data={dashboard?.profile.ageDistribution ?? []}
           type="pie"
-          eyebrowLabel="Perfis"
+          eyebrowLabel="Pessoas"
           isLoading={isLoading}
           emptyMessage="Carregando faixa etária..."
         />
@@ -386,7 +386,7 @@ export default function AdminWorkspacePage() {
           title="Gênero"
           data={dashboard?.profile.genderDistribution ?? []}
           type="pie"
-          eyebrowLabel="Perfis"
+          eyebrowLabel="Pessoas"
           isLoading={isLoading}
           emptyMessage="Carregando gênero..."
         />

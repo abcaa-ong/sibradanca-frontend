@@ -3,7 +3,7 @@
    ============================================================ */
 .hero-section {
   position: relative;
-  padding: 84px 0 56px;
+  padding: 76px 0 56px;
 }
 
 .hero-section::before {
@@ -20,8 +20,8 @@
 
 .hero-grid {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 48px;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+  gap: 40px;
   align-items: center;
 }
 
@@ -38,6 +38,7 @@
   line-height: 1.06;
   letter-spacing: -0.04em;
   font-weight: 900;
+  max-inline-size: 10.5ch;
   background: linear-gradient(90deg, #101828 0%, #1d2939 40%, #2f3f58 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -47,7 +48,7 @@
 
 .hero-description {
   margin-top: 24px;
-  max-width: 650px;
+  max-width: 58ch;
   font-size: 1.1rem;
   line-height: 1.8;
   color: var(--muted);
@@ -583,7 +584,7 @@
 /* ============================================================
    HOME PAGE — RESPONSIVE
    ============================================================ */
-@media (max-width: 1100px) {
+@media (max-width: 1240px) {
   .hero-grid,
   .modules-grid,
   .analysis-grid {
@@ -593,7 +594,8 @@
   .stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-    .access-grid {
+
+  .access-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -602,9 +604,19 @@
   .access-grid > *:nth-child(5) {
     grid-column: span 1;
   }
+
+  .hero-copy h1,
+  .hero-description {
+    max-inline-size: none;
+  }
+
+  .hero-artwork {
+    width: min(100%, 720px);
+    margin: 0 auto;
+  }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .partners-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -636,7 +648,7 @@
   }
 
   .hero-copy h1 {
-    font-size: 2.2rem;
+    font-size: 2.15rem;
     line-height: 1.08;
   }
 
@@ -657,7 +669,7 @@
   }
 
   .hero-artwork {
-    min-height: 360px;
+    min-height: 340px;
   }
 
   .brand-card {
@@ -681,17 +693,22 @@
     padding: 8px;
   }
 
-  .a1 { left: 6px; top: 80px; width: 110px; height: 110px; }
-  .a2 { left: 44px; top: 128px; width: 180px; height: 180px; }
-  .a3 { left: 116px; top: 36px; width: 160px; height: 160px; }
-  .a4 { right: 6px; top: 88px; width: 190px; height: 130px; }
-  .a5 { left: 70px; bottom: 24px; width: 220px; height: 120px; }
-  .a6 { right: 24px; bottom: 46px; width: 100px; height: 100px; }
-  .a7 { right: 4px; bottom: 98px; width: 130px; height: 100px; }
+  .a1 { left: 10px; top: 72px; width: 104px; height: 104px; }
+  .a2 { left: 48px; top: 122px; width: 168px; height: 168px; }
+  .a3 { left: 116px; top: 34px; width: 150px; height: 150px; }
+  .a4 { right: 10px; top: 84px; width: 178px; height: 122px; }
+  .a5 { left: 74px; bottom: 24px; width: 208px; height: 114px; }
+  .a6 { right: 28px; bottom: 44px; width: 92px; height: 92px; }
+  .a7 { right: 8px; bottom: 94px; width: 122px; height: 94px; }
 }
 
 @media (max-width: 720px) {
   .access-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid,
+  .partners-grid {
     grid-template-columns: 1fr;
   }
 

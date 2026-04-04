@@ -12,10 +12,12 @@
   line-height: 1.1;
   letter-spacing: -0.03em;
   font-weight: 900;
+  max-inline-size: 12ch;
+  text-wrap: balance;
 }
 
 .statistics-hero-description {
-  max-width: 70ch;
+  max-width: 62ch;
   margin: 20px 0 0;
   font-size: 1.05rem;
   line-height: 1.8;
@@ -351,6 +353,27 @@
 @media (max-width: 1100px) {
   .statistics-note-grid,
   .statistics-kpi-grid--four,
+  .statistics-chart-grid.two-columns,
+  .statistics-metric-grid,
+  .statistics-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .statistics-chart-grid.three-columns,
+  .statistics-region-summary,
+  .statistics-city-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .statistics-hero-copy h1,
+  .statistics-hero-description {
+    max-inline-size: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .statistics-note-grid,
+  .statistics-kpi-grid--four,
   .statistics-region-summary,
   .statistics-city-summary,
   .statistics-chart-grid.two-columns,
@@ -359,9 +382,7 @@
   .statistics-filters {
     grid-template-columns: 1fr;
   }
-}
 
-@media (max-width: 860px) {
   .statistics-hero-copy h1 {
     font-size: 2.2rem;
     line-height: 1.08;
@@ -388,5 +409,9 @@
 
   .statistics-hero-actions .btn {
     width: 100%;
+  }
+
+  .statistics-chart-summary-row {
+    align-items: flex-start;
   }
 }

@@ -44,7 +44,7 @@ export function ChartPanel({
   className = '',
   isLoading = false,
   emptyMessage = 'Carregando...',
-  eyebrowLabel = 'Painel',
+  eyebrowLabel = 'Leitura',
   summaryItems = 0,
 }: ChartPanelProps) {
   const palette = [
@@ -127,8 +127,17 @@ export function ChartPanel({
             ) : (
               <BarChart data={data}>
                 <CartesianGrid strokeDasharray="4 4" stroke="#e5e7eb" />
-                <XAxis dataKey="name" tickLine={false} axisLine={false} />
-                <YAxis tickLine={false} axisLine={false} />
+                <XAxis
+                  dataKey="name"
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fill: '#667085', fontSize: 12 }}
+                  interval={0}
+                  angle={data.some((item) => item.name.length > 12) ? -18 : 0}
+                  textAnchor={data.some((item) => item.name.length > 12) ? 'end' : 'middle'}
+                  height={data.some((item) => item.name.length > 12) ? 58 : 32}
+                />
+                <YAxis tickLine={false} axisLine={false} tick={{ fill: '#667085', fontSize: 12 }} />
                 {hasData ? <Tooltip content={<CustomTooltip />} /> : null}
                 <Bar dataKey="value" radius={[14, 14, 0, 0]}>
                   {data.map((entry, index) => (
