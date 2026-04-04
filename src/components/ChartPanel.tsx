@@ -40,9 +40,10 @@ const colors = {
 function resolveTooltipLabel(
   label: string | number | undefined,
   item: {
-  name?: string | number
-  payload?: unknown
-}) {
+    name?: string | number
+    payload?: unknown
+  },
+) {
   const payload = item.payload as Partial<ChartItem> | undefined
 
   if (payload?.name) {
@@ -100,7 +101,7 @@ export function ChartPanel({
     return (
       <div className="statistics-tooltip">
         <strong>{resolvedLabel}</strong>
-        <span>{formatNumber(value)} cadastros nesta leitura</span>
+        <span>{formatNumber(value)} registros na base apresentada</span>
       </div>
     )
   }

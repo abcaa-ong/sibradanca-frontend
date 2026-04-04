@@ -31,10 +31,26 @@ const overviewCards: OverviewCard[] = [
 ]
 
 const statusCards: StatusCard[] = [
-  { label: 'Cobertura nacional', value: '27 UFs', detail: 'Presença nas cinco regiões do país' },
-  { label: 'Formulários ativos', value: '3 frentes', detail: 'Jovens, profissionais e instituições' },
-  { label: 'Base atual', value: '5.240 cadastros', detail: 'Leitura pública da base nacional' },
-  { label: 'Painel público', value: 'Em operação', detail: 'Visão geral da dança no Brasil' },
+  {
+    label: 'Cobertura nacional',
+    value: '27 UFs',
+    detail: 'Presença nas cinco regiões do país',
+  },
+  {
+    label: 'Formulários',
+    value: '3 frentes',
+    detail: 'Jovens, profissionais e instituições',
+  },
+  {
+    label: 'Base cadastrada',
+    value: '5.240 registros',
+    detail: 'Retrato geral do banco nacional',
+  },
+  {
+    label: 'Visão pública',
+    value: 'Sem dados pessoais',
+    detail: 'Somente números gerais da base',
+  },
 ]
 
 const profileDistribution: ChartItem[] = [
@@ -117,14 +133,6 @@ const institutionStructureDistribution: ChartItem[] = [
   { name: 'Com bolsas ativas', value: 265 },
 ]
 
-const publicPolicyDistribution: ChartItem[] = [
-  { name: 'Já acessou edital', value: 640 },
-  { name: 'Busca formação em gestão', value: 530 },
-  { name: 'Quer parcerias públicas', value: 470 },
-  { name: 'Conhece conselho de cultura', value: 315 },
-  { name: 'Conhece plano municipal', value: 280 },
-]
-
 const formatNumber = (value: number) => new Intl.NumberFormat('pt-BR').format(value)
 
 export default function StatisticsPage() {
@@ -196,9 +204,12 @@ export default function StatisticsPage() {
         <section className="statistics-hero section-space">
           <div className="container">
             <div className="statistics-hero-copy">
-              <Badge dark>Banco Nacional da Dança</Badge>
-              <h1>Banco Nacional da Dança do Brasil</h1>
-              <p className="statistics-hero-description">Acompanhe os principais retratos da dança no país.</p>
+              <Badge dark>Estatísticas nacionais</Badge>
+              <h1>Banco Nacional de Dados da Dança do Brasil</h1>
+              <p className="statistics-hero-description">
+                Uma visão pública do movimento da dança no país, construída a partir dos formulários
+                de jovens, profissionais e instituições.
+              </p>
             </div>
 
             <div className="statistics-hero-actions">
@@ -222,7 +233,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Visão geral" title="Leitura nacional da base" />
+            <SectionTitle badge="Painel nacional" title="Visão geral da base" />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
               {overviewCards.map((item) => (
@@ -242,11 +253,10 @@ export default function StatisticsPage() {
                 summaryItems={3}
               />
               <ChartPanel
-                title="Distribuição dos cadastros"
-                data={profileDistribution}
-                type="pie"
-                eyebrowLabel="Perfis"
-                summaryItems={3}
+                title="Presença por região"
+                data={regionDistribution}
+                eyebrowLabel="Território"
+                summaryItems={5}
               />
             </div>
           </div>
@@ -254,24 +264,16 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Brasil" title="Distribuição nacional" />
+            <SectionTitle badge="Território" title="Presença da dança pelo Brasil" />
 
             <div className="statistics-chart-grid two-columns">
-              <ChartPanel
-                title="Cadastros por região"
-                data={regionDistribution}
-                eyebrowLabel="Regiões"
-                summaryItems={5}
-              />
               <ChartPanel
                 title="Estados com maior presença"
                 data={stateDistribution}
                 eyebrowLabel="Estados"
                 summaryItems={6}
               />
-            </div>
 
-            <div className="statistics-compact-stage">
               <div className="card statistics-compact-panel">
                 <div className="panel-top">
                   <div>
@@ -295,7 +297,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Perfis" title="Retratos da base" />
+            <SectionTitle badge="Perfis" title="Quem compõe a base" />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
@@ -324,40 +326,25 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Formação e interesses" title="Formação, trabalho e continuidade" />
+            <SectionTitle badge="Formação e instituições" title="Formação, trabalho e estrutura" />
 
-            <div className="statistics-chart-grid two-columns">
+            <div className="statistics-chart-grid three-columns">
               <ChartPanel
                 title="Formação"
                 data={trainingDistribution}
-                eyebrowLabel="Formação"
+                eyebrowLabel="Percursos"
                 summaryItems={5}
               />
               <ChartPanel
                 title="Interesses mais frequentes"
                 data={supportDistribution}
-                eyebrowLabel="Interesses"
+                eyebrowLabel="Temas"
                 summaryItems={5}
               />
-            </div>
-          </div>
-        </section>
-
-        <section className="section-space">
-          <div className="container">
-            <SectionTitle badge="Instituições e políticas públicas" title="Estrutura e articulação da dança" />
-
-            <div className="statistics-chart-grid two-columns">
               <ChartPanel
-                title="Estrutura institucional"
+                title="Estrutura das instituições"
                 data={institutionStructureDistribution}
                 eyebrowLabel="Instituições"
-                summaryItems={5}
-              />
-              <ChartPanel
-                title="Temas ligados a apoio público"
-                data={publicPolicyDistribution}
-                eyebrowLabel="Políticas públicas"
                 summaryItems={5}
               />
             </div>
@@ -367,18 +354,15 @@ export default function StatisticsPage() {
 
       <footer className="site-footer">
         <div className="container footer-inner">
-          <div className="footer-edge footer-edge-left">
-            <Link to="/">Formulários</Link>
-          </div>
-
           <div className="footer-brand">
             <img src={logo} alt="Logo SIBRADANÇA" />
             <p>
-              <strong>SIBRADANÇA - Sistema Brasileiro de Evidências da Dança</strong>
+              <strong>SIBRADANÇA – Sistema Brasileiro de Evidências da Dança</strong>
             </p>
           </div>
 
-          <div className="footer-edge footer-edge-right">
+          <div className="footer-links">
+            <Link to="/">Formulários</Link>
             <a href="#">Política de privacidade</a>
           </div>
         </div>

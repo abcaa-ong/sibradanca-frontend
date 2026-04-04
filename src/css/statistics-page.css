@@ -7,29 +7,29 @@
 }
 
 .statistics-page .section-space {
-  padding: 24px 0 42px;
+  padding: 18px 0 34px;
 }
 
 .statistics-hero.section-space {
-  padding-top: 28px;
-  padding-bottom: 30px;
+  padding-top: 24px;
+  padding-bottom: 24px;
 }
 
 .statistics-hero-copy h1 {
   margin: 18px 0 0;
-  font-size: clamp(2.05rem, 3.8vw, 3.2rem);
+  font-size: clamp(2.25rem, 4vw, 3.45rem);
   line-height: 1.08;
   letter-spacing: -0.03em;
   font-weight: 900;
-  max-inline-size: 13ch;
+  max-inline-size: 12ch;
   text-wrap: balance;
 }
 
 .statistics-hero-description {
-  max-width: 34ch;
-  margin: 14px 0 0;
-  font-size: 0.98rem;
-  line-height: 1.65;
+  max-width: 42ch;
+  margin: 16px 0 0;
+  font-size: 1rem;
+  line-height: 1.68;
   color: var(--muted);
 }
 
@@ -37,18 +37,18 @@
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
 .statistics-status-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: 24px;
+  gap: 14px;
+  margin-top: 20px;
 }
 
 .statistics-status-card {
-  min-height: 132px;
+  min-height: 122px;
   padding: 18px;
   display: grid;
   gap: 8px;
@@ -158,7 +158,7 @@
 .statistics-kpi-grid {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 18px;
+  gap: 14px;
 }
 
 .statistics-kpi-grid--four {
@@ -166,7 +166,7 @@
 }
 
 .statistics-kpi-card {
-  min-height: 148px;
+  min-height: 136px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -187,12 +187,12 @@
 
 .statistics-chart-grid {
   display: grid;
-  gap: 18px;
-  margin-top: 18px;
+  gap: 16px;
+  margin-top: 14px;
 }
 
 .statistics-compact-stage {
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .statistics-compact-panel {
@@ -207,9 +207,9 @@
 
 .statistics-compact-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .statistics-compact-item {
@@ -221,6 +221,7 @@
   background: rgba(248, 250, 252, 0.92);
   border: 1px solid rgba(16, 24, 40, 0.08);
   align-content: space-between;
+  min-height: 122px;
 }
 
 .statistics-compact-item span {
@@ -362,7 +363,7 @@
 }
 
 .statistics-chart-panel {
-  min-height: 395px;
+  min-height: 360px;
 }
 
 .statistics-tooltip {
@@ -482,10 +483,6 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .statistics-compact-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .statistics-source-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -495,7 +492,7 @@
   }
 
   .statistics-chart-panel {
-    min-height: 390px;
+    min-height: 350px;
   }
 }
 

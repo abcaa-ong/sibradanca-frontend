@@ -667,48 +667,60 @@ button:focus-visible {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 4% 12%, rgba(179, 108, 230, 0.14) 0 14px, transparent 15px),
-    radial-gradient(circle at 8% 30%, rgba(239, 47, 141, 0.18) 0 30px, transparent 31px),
-    radial-gradient(circle at 18% 78%, rgba(244, 235, 0, 0.62) 0 8px, transparent 9px),
-    radial-gradient(circle at 86% 24%, rgba(72, 169, 230, 0.18) 0 28px, transparent 29px),
-    radial-gradient(circle at 96% 10%, rgba(123, 227, 61, 0.16) 0 34px, transparent 35px);
+    radial-gradient(circle at 3.5% 16%, rgba(179, 108, 230, 0.14) 0 12px, transparent 13px),
+    radial-gradient(circle at 7% 24%, rgba(239, 47, 141, 0.16) 0 24px, transparent 25px),
+    radial-gradient(circle at 16% 88%, rgba(244, 235, 0, 0.54) 0 7px, transparent 8px),
+    radial-gradient(circle at 87% 18%, rgba(72, 169, 230, 0.16) 0 24px, transparent 25px),
+    radial-gradient(circle at 96% 12%, rgba(123, 227, 61, 0.14) 0 28px, transparent 29px);
 }
 
 .footer-inner {
   position: relative;
   z-index: 1;
-  padding: 22px 0 14px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, auto) minmax(0, 1fr);
+  padding: 14px 0 12px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 18px;
+  gap: 28px;
+  flex-wrap: wrap;
 }
 
-.footer-edge {
+.footer-brand {
   display: flex;
   align-items: center;
+  gap: 16px;
+  min-width: 0;
 }
 
-.footer-edge-left {
-  justify-content: flex-start;
+.footer-brand img {
+  width: 60px;
 }
 
-.footer-edge-right {
-  justify-content: flex-end;
+.footer-brand p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
 }
 
-.footer-edge a {
+.footer-links {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
   position: relative;
   font-size: 0.9rem;
   color: #475467;
   transition: color 0.25s ease;
 }
 
-.footer-edge a:hover {
+.footer-links a:hover {
   color: var(--text);
 }
 
-.footer-edge a::after {
+.footer-links a::after {
   content: '';
   position: absolute;
   left: 0;
@@ -720,28 +732,8 @@ button:focus-visible {
   transition: width 0.28s ease;
 }
 
-.footer-edge a:hover::after {
+.footer-links a:hover::after {
   width: 100%;
-}
-
-.footer-brand {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  text-align: center;
-}
-
-.footer-brand img {
-  width: 68px;
-}
-
-.footer-brand p {
-  margin: 0;
-  font-size: 0.94rem;
-  color: var(--muted);
-  overflow-wrap: anywhere;
 }
 
 .footer-bottom {
@@ -874,24 +866,23 @@ a:focus-visible {
     padding: 15px 22px;
   }
 
-  .footer-inner {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    text-align: center;
-  }
-
-  .footer-edge-left,
-  .footer-edge-right {
-    justify-content: center;
-  }
-
   .site-footer::after {
     background:
       radial-gradient(circle at 4% 10%, rgba(179, 108, 230, 0.14) 0 10px, transparent 11px),
-      radial-gradient(circle at 10% 28%, rgba(239, 47, 141, 0.16) 0 18px, transparent 19px),
-      radial-gradient(circle at 90% 24%, rgba(72, 169, 230, 0.16) 0 18px, transparent 19px),
-      radial-gradient(circle at 97% 10%, rgba(123, 227, 61, 0.14) 0 22px, transparent 23px),
-      radial-gradient(circle at 16% 84%, rgba(244, 235, 0, 0.54) 0 6px, transparent 7px);
+      radial-gradient(circle at 11% 20%, rgba(239, 47, 141, 0.14) 0 16px, transparent 17px),
+      radial-gradient(circle at 88% 16%, rgba(72, 169, 230, 0.14) 0 16px, transparent 17px),
+      radial-gradient(circle at 97% 10%, rgba(123, 227, 61, 0.14) 0 20px, transparent 21px),
+      radial-gradient(circle at 16% 88%, rgba(244, 235, 0, 0.5) 0 6px, transparent 7px);
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .footer-links {
+    justify-content: flex-start;
   }
 }
 

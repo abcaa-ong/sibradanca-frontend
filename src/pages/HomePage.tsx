@@ -49,7 +49,7 @@ const highlights = [
   {
     title: 'Leitura para decisões',
     description:
-      'A base ajuda a orientar diagnósticos, relatórios, ações institucionais e decisões futuras para o setor.',
+      'A base ajuda a orientar diagnósticos, relatórios e ações futuras para o desenvolvimento da dança.',
     icon: Landmark,
     color: colors.green,
   },
@@ -166,7 +166,8 @@ function HeroArtwork() {
 
         <img src={logo} alt="Logo SIBRADANÇA" className="hero-logo" />
         <p className="hero-logo-text">
-          Conectando artistas, escolas, companhias e profissionais para fortalecer políticas públicas e o desenvolvimento da dança brasileira.
+          Conectando artistas, escolas, companhias e profissionais para fortalecer políticas
+          públicas e o desenvolvimento da dança brasileira.
         </p>
       </motion.div>
     </motion.div>
@@ -180,6 +181,7 @@ export default function HomePage() {
   const scrollToForms = () => {
     document.getElementById('formularios')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
+
   const scrollToAbout = () => {
     document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
@@ -238,7 +240,11 @@ export default function HomePage() {
               <span>Sobre</span>
             </a>
 
-            <a href="#formularios" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
+            <a
+              href="#formularios"
+              className="mobile-menu-link"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               <ClipboardList size={18} />
               <span>Formulários</span>
             </a>
@@ -252,7 +258,11 @@ export default function HomePage() {
               <span>Estatísticas nacionais</span>
             </Link>
 
-            <a href="#parceiros" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
+            <a
+              href="#parceiros"
+              className="mobile-menu-link"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               <Landmark size={18} />
               <span>Parceiros</span>
             </a>
@@ -286,7 +296,12 @@ export default function HomePage() {
       <main>
         <section className="hero-section">
           <div className="container hero-grid">
-            <motion.div variants={containerVariants} initial="hidden" animate="show" className="hero-copy">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              className="hero-copy"
+            >
               <motion.div variants={itemVariants}>
                 <Badge>Sistema Brasileiro de Evidências da Dança</Badge>
               </motion.div>
@@ -294,7 +309,8 @@ export default function HomePage() {
               <motion.h1 variants={itemVariants}>O banco nacional de dados da dança no Brasil</motion.h1>
 
               <motion.p variants={itemVariants} className="hero-description">
-                O SIBRADANÇA é um observatório nacional dedicado à dança no Brasil. Nesta página, você conhece a plataforma e encontra os formulários de participação.
+                O SIBRADANÇA é um observatório nacional dedicado à dança no Brasil. Nesta página,
+                você conhece a plataforma e encontra os formulários de participação.
               </motion.p>
 
               <motion.div variants={itemVariants} className="hero-actions">
@@ -312,7 +328,7 @@ export default function HomePage() {
           <div className="container">
             <SectionTitle
               badge="Sobre o SIBRADANÇA"
-              title="Uma plataforma nacional para jovens, profissionais e instituições da dança"
+              title="Uma plataforma nacional voltada à participação de jovens, profissionais e instituições da dança"
               description="Conheça o projeto e saiba como participar."
             />
 
@@ -347,7 +363,7 @@ export default function HomePage() {
             <SectionTitle
               badge="Formulários de participação"
               title="Escolha como você participa da dança"
-              description="Selecione o formulário que mais combina com a sua atuação."
+              description="Selecione a opção que mais combina com a sua atuação."
             />
 
             <div className="access-grid">
@@ -370,7 +386,6 @@ export default function HomePage() {
                   </Card>
                 )
               })}
-
             </div>
           </div>
         </section>
@@ -414,10 +429,6 @@ export default function HomePage() {
 
       <footer className="site-footer">
         <div className="container footer-inner">
-          <div className="footer-edge footer-edge-left">
-            <a href="#formularios">Formulários</a>
-          </div>
-
           <div className="footer-brand">
             <img src={logo} alt="Logo SIBRADANÇA" />
             <p>
@@ -425,7 +436,8 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="footer-edge footer-edge-right">
+          <div className="footer-links">
+            <a href="#formularios">Formulários</a>
             <a href="#">Política de privacidade</a>
           </div>
         </div>
@@ -434,7 +446,6 @@ export default function HomePage() {
           <p>© {new Date().getFullYear()} SIBRADANÇA · Todos os direitos reservados</p>
         </div>
       </footer>
-
     </div>
   )
 }
