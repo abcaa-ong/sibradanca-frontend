@@ -64,7 +64,7 @@ button {
    GLOBAL LAYOUT
    ============================================================ */
 main {
-  margin-top: 50px;
+  margin-top: 76px;
 }
 
 .page-shell {
@@ -75,7 +75,7 @@ main {
 }
 
 .container {
-  width: min(1180px, calc(100% - 32px));
+  width: min(1180px, calc(100% - 40px));
   margin: 0 auto;
 }
 
@@ -186,7 +186,8 @@ main,
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 0;
+  min-height: 76px;
+  padding: 12px 0;
 }
 
 .brand-mini {
@@ -199,10 +200,17 @@ main,
   display: flex;
   width: 80px;
   height: 40px;
+  align-items: center;
   border-radius: 16px;
   position: relative;
   overflow: hidden;
   transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.brand-mini-icon img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .brand-mini:hover .brand-mini-icon {
@@ -399,12 +407,15 @@ button:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  max-width: 100%;
   padding: 10px 14px;
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  text-align: center;
+  line-height: 1.4;
   border: 1px solid rgba(16, 24, 40, 0.09);
   background: white;
   color: #475467;
@@ -621,7 +632,7 @@ button:focus-visible {
 }
 
 .footer-inner {
-  padding: 10px 0;
+  padding: 18px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -633,21 +644,26 @@ button:focus-visible {
   display: flex;
   align-items: center;
   gap: 16px;
+  flex: 1 1 340px;
+  min-width: 0;
 }
 
 .footer-brand img {
   width: 60px;
+  flex-shrink: 0;
 }
 
 .footer-brand p {
   margin: 0;
   font-size: 0.9rem;
+  line-height: 1.6;
   color: var(--muted);
 }
 
 .footer-links {
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 .footer-links a {
@@ -679,13 +695,15 @@ button:focus-visible {
 
 .footer-bottom {
   border-top: 1px solid var(--border);
+  padding: 10px 14px 14px;
   text-align: center;
   font-size: 0.85rem;
   color: var(--muted);
 }
 
 .footer-bottom p {
-  margin: 6px;
+  margin: 0;
+  line-height: 1.6;
 }
 
 /* ============================================================
@@ -742,8 +760,9 @@ a:focus-visible {
   }
 
   .header-inner {
-    min-height: 72px;
-    flex-wrap: wrap;
+    min-height: 68px;
+    flex-wrap: nowrap;
+    gap: 12px;
   }
 
   .desktop-nav {
@@ -758,12 +777,13 @@ a:focus-visible {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    padding: 0 1.25rem 1rem;
+    width: min(100% - 28px, 1180px);
+    margin: 0 auto;
+    padding: 0 0 1rem;
   }
 
   .brand-mini-icon img {
-    max-width: 120px;
-    height: auto;
+    max-width: none;
   }
 
   .header-actions .btn {
@@ -771,16 +791,96 @@ a:focus-visible {
   }
 
   .container {
-    width: min(100% - 24px, 1180px);
+    width: min(100% - 28px, 1180px);
   }
 
   .section-title::after {
     width: 64px;
   }
 
+  .badge {
+    letter-spacing: 0.11em;
+  }
+
+  .btn-large {
+    padding: 15px 22px;
+  }
+
   .footer-inner {
     flex-direction: column;
     align-items: flex-start;
+    gap: 18px;
+    padding: 20px 0;
+  }
+
+  .footer-brand {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .footer-links {
+    width: 100%;
+    gap: 12px 18px;
+  }
+}
+
+@media (max-width: 560px) {
+  main {
+    margin-top: 72px;
+  }
+
+  .container {
+    width: calc(100% - 20px);
+  }
+
+  .header-inner {
+    min-height: 64px;
+    padding: 10px 0;
+  }
+
+  .brand-mini-icon {
+    width: 68px;
+    height: 34px;
+  }
+
+  .mobile-menu {
+    width: calc(100% - 20px);
+  }
+
+  .badge {
+    padding: 9px 12px;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+  }
+
+  .btn-large {
+    width: 100%;
+  }
+
+  .section-title h2,
+  .section-heading {
+    font-size: clamp(1.7rem, 8.4vw, 2.2rem);
+  }
+
+  .section-title p,
+  .section-paragraph {
+    font-size: 0.98rem;
+  }
+
+  .card {
+    padding: 22px;
+    border-radius: 26px;
+  }
+
+  .footer-brand img {
+    width: 54px;
+  }
+
+  .footer-brand p,
+  .footer-links a,
+  .footer-bottom {
+    font-size: 0.88rem;
   }
 }
 
