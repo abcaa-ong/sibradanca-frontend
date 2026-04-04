@@ -667,11 +667,11 @@ button:focus-visible {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 7% 42%, rgba(239, 47, 141, 0.28) 0 36px, transparent 37px),
-    radial-gradient(circle at 18% 78%, rgba(244, 235, 0, 0.78) 0 10px, transparent 11px),
-    radial-gradient(circle at 84% 38%, rgba(72, 169, 230, 0.26) 0 34px, transparent 35px),
-    radial-gradient(circle at 93% 18%, rgba(123, 227, 61, 0.22) 0 46px, transparent 47px),
-    radial-gradient(circle at 3% 16%, rgba(179, 108, 230, 0.2) 0 24px, transparent 25px);
+    radial-gradient(circle at 4% 34%, rgba(239, 47, 141, 0.22) 0 28px, transparent 29px),
+    radial-gradient(circle at 16% 82%, rgba(244, 235, 0, 0.72) 0 8px, transparent 9px),
+    radial-gradient(circle at 86% 42%, rgba(72, 169, 230, 0.22) 0 28px, transparent 29px),
+    radial-gradient(circle at 96% 16%, rgba(123, 227, 61, 0.18) 0 38px, transparent 39px),
+    radial-gradient(circle at 1.5% 12%, rgba(179, 108, 230, 0.16) 0 18px, transparent 19px);
 }
 
 .footer-inner {
@@ -879,11 +879,11 @@ a:focus-visible {
 
   .site-footer::after {
     background:
-      radial-gradient(circle at 9% 36%, rgba(239, 47, 141, 0.24) 0 24px, transparent 25px),
-      radial-gradient(circle at 18% 76%, rgba(244, 235, 0, 0.72) 0 8px, transparent 9px),
-      radial-gradient(circle at 86% 34%, rgba(72, 169, 230, 0.24) 0 24px, transparent 25px),
-      radial-gradient(circle at 94% 18%, rgba(123, 227, 61, 0.2) 0 34px, transparent 35px),
-      radial-gradient(circle at 5% 12%, rgba(179, 108, 230, 0.18) 0 18px, transparent 19px);
+      radial-gradient(circle at 4% 34%, rgba(239, 47, 141, 0.2) 0 18px, transparent 19px),
+      radial-gradient(circle at 16% 78%, rgba(244, 235, 0, 0.68) 0 7px, transparent 8px),
+      radial-gradient(circle at 90% 38%, rgba(72, 169, 230, 0.2) 0 20px, transparent 21px),
+      radial-gradient(circle at 96% 18%, rgba(123, 227, 61, 0.18) 0 26px, transparent 27px),
+      radial-gradient(circle at 2% 12%, rgba(179, 108, 230, 0.16) 0 14px, transparent 15px);
   }
 }
 
