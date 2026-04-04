@@ -664,26 +664,26 @@ button:focus-visible {
 .site-footer::after {
   content: '';
   position: absolute;
-  left: 56px;
-  bottom: 44px;
-  width: 72px;
-  height: 72px;
+  left: -14px;
+  bottom: 28px;
+  width: 68px;
+  height: 68px;
   border-radius: 999px;
   background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.35), rgba(239, 47, 141, 0) 45%),
     rgba(239, 47, 141, 0.7);
   box-shadow: 0 18px 40px rgba(239, 47, 141, 0.18);
-  opacity: 0.72;
+  opacity: 0.55;
   pointer-events: none;
   z-index: 0;
 }
 
 .footer-inner {
   position: relative;
-  padding: 22px 0 18px;
+  padding: 24px 8px 18px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 20px 28px;
+  gap: 18px 36px;
 }
 
 .footer-inner::before,
@@ -696,25 +696,25 @@ button:focus-visible {
 }
 
 .footer-inner::before {
-  right: 96px;
-  top: 8px;
-  width: 72px;
-  height: 72px;
-  border-radius: 24px;
+  right: -8px;
+  top: 10px;
+  width: 62px;
+  height: 62px;
+  border-radius: 22px;
   background: linear-gradient(180deg, rgba(72, 169, 230, 0.82), rgba(72, 169, 230, 0.66));
   box-shadow: 0 18px 40px rgba(72, 169, 230, 0.16);
-  opacity: 0.7;
+  opacity: 0.56;
 }
 
 .footer-inner::after {
-  left: 148px;
-  bottom: -6px;
-  width: 18px;
-  height: 18px;
+  left: 84px;
+  bottom: 10px;
+  width: 14px;
+  height: 14px;
   border-radius: 999px;
   background: rgba(244, 235, 0, 0.95);
   box-shadow: 0 12px 24px rgba(244, 235, 0, 0.28);
-  opacity: 0.76;
+  opacity: 0.7;
 }
 
 .footer-inner > * {
@@ -759,20 +759,22 @@ button:focus-visible {
 .footer-links-left {
   justify-content: flex-start;
   justify-self: start;
+  padding-left: 18px;
 }
 
 .footer-links-right {
   justify-content: flex-end;
   justify-self: end;
+  padding-right: 18px;
 }
 
 .footer-brand-centered {
   flex-direction: column;
   width: 100%;
-  max-width: 720px;
+  max-width: 760px;
   justify-self: center;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   text-align: center;
 }
 
@@ -872,26 +874,24 @@ a:focus-visible {
    ============================================================ */
 @media (max-width: 1180px) {
   .footer-inner {
-    grid-template-columns: 1fr;
-    justify-items: center;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 18px;
   }
 
-  .footer-brand,
-  .footer-links {
+  .footer-brand {
     width: 100%;
   }
 
-  .footer-links-left,
-  .footer-links-right,
-  .footer-brand-centered {
-    justify-self: center;
-    justify-content: center;
-    text-align: center;
+  .footer-links-left {
+    padding-left: 0;
+  }
+
+  .footer-links-right {
+    padding-right: 0;
   }
 
   .footer-brand-centered {
-    max-width: 640px;
+    max-width: 620px;
   }
 }
 
@@ -903,25 +903,28 @@ a:focus-visible {
   }
 
   .site-footer::after {
-    left: 28px;
-    bottom: 56px;
-    width: 72px;
-    height: 72px;
-    opacity: 0.72;
+    left: -12px;
+    bottom: 40px;
+    width: 52px;
+    height: 52px;
+    opacity: 0.42;
   }
 
   .footer-inner::before {
-    right: 18px;
-    top: 6px;
-    width: 72px;
-    height: 72px;
-    border-radius: 24px;
-    opacity: 0.74;
+    right: -8px;
+    top: 18px;
+    width: 42px;
+    height: 42px;
+    border-radius: 16px;
+    opacity: 0.4;
   }
 
   .footer-inner::after {
-    left: 98px;
-    bottom: -8px;
+    left: 56px;
+    bottom: 16px;
+    width: 10px;
+    height: 10px;
+    opacity: 0.52;
   }
 
   .footer-brand,
@@ -934,6 +937,7 @@ a:focus-visible {
   .footer-links-right {
     justify-self: center;
     justify-content: center;
+    text-align: center;
   }
 
   .footer-brand-centered {
@@ -1020,57 +1024,58 @@ a:focus-visible {
 
   .footer-inner {
     grid-template-columns: 1fr;
-    justify-items: start;
+    justify-items: center;
     gap: 18px;
     padding: 20px 0;
   }
 
   .site-footer::after {
-    left: 8px;
-    bottom: 52px;
-    width: 46px;
-    height: 46px;
-    opacity: 0.56;
+    left: -8px;
+    bottom: 58px;
+    width: 40px;
+    height: 40px;
+    opacity: 0.34;
   }
 
   .footer-brand {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 10px;
   }
 
   .footer-links {
     width: 100%;
-    gap: 12px 18px;
-    justify-content: flex-start;
+    gap: 10px 16px;
+    justify-content: center;
   }
 
   .footer-links-left,
   .footer-links-right,
   .footer-brand-centered {
-    justify-self: start;
-    text-align: left;
+    justify-self: center;
+    text-align: center;
   }
 
   .footer-brand-centered {
-    align-items: flex-start;
+    align-items: center;
   }
 
   .footer-inner::before {
-    right: -6px;
-    top: 16px;
-    width: 38px;
-    height: 38px;
-    border-radius: 18px;
-    opacity: 0.56;
+    right: -10px;
+    top: 20px;
+    width: 34px;
+    height: 34px;
+    border-radius: 14px;
+    opacity: 0.32;
   }
 
   .footer-inner::after {
-    left: 74px;
-    bottom: 14px;
-    width: 12px;
-    height: 12px;
-    opacity: 0.62;
+    left: 50%;
+    bottom: 18px;
+    width: 10px;
+    height: 10px;
+    transform: translateX(-50%);
+    opacity: 0.38;
   }
 }
 
@@ -1142,28 +1147,27 @@ a:focus-visible {
   }
 
   .site-footer::after {
-    left: 2px;
-    bottom: 84px;
-    width: 36px;
-    height: 36px;
-    opacity: 0.46;
+    left: -10px;
+    bottom: 88px;
+    width: 30px;
+    height: 30px;
+    opacity: 0.24;
   }
 
   .footer-inner::before {
     right: -8px;
-    top: 20px;
-    width: 28px;
-    height: 28px;
-    border-radius: 15px;
-    opacity: 0.42;
+    top: 22px;
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    opacity: 0.22;
   }
 
   .footer-inner::after {
-    left: 64px;
-    bottom: 18px;
-    width: 10px;
-    height: 10px;
-    opacity: 0.5;
+    bottom: 16px;
+    width: 8px;
+    height: 8px;
+    opacity: 0.28;
   }
 
   .footer-brand p,
