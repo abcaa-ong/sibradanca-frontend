@@ -643,6 +643,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const [minorContents, setMinorContents] = useState<ReferenceItemResponse[]>([])
   const [activeConsentTerm, setActiveConsentTerm] = useState<ActiveConsentTermResponse | null>(null)
   const [isMinorLoadingReferences, setIsMinorLoadingReferences] = useState(false)
+  const [hasLoadedReferences, setHasLoadedReferences] = useState(false)
   const [isMinorSubmitting, setIsMinorSubmitting] = useState(false)
   const [minorSubmission, setMinorSubmission] = useState<YouthFormResponse | null>(null)
   const [isAdultSubmitting, setIsAdultSubmitting] = useState(false)
@@ -698,6 +699,10 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return
     }
 
+    if (hasLoadedReferences) {
+      return
+    }
+
     let isMounted = true
 
     async function loadMinorReferences() {
@@ -718,6 +723,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         setMinorModalities(modalities)
         setMinorContents(contents)
         setActiveConsentTerm(consentTerm)
+        setHasLoadedReferences(true)
       } catch (error) {
         if (!isMounted) {
           return
@@ -740,7 +746,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     return () => {
       isMounted = false
     }
-  }, [open, view])
+  }, [hasLoadedReferences, open, view])
 
   useEffect(() => {
     if (view !== 'minor-flow' || !minorForm.state) {
@@ -882,9 +888,6 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     setMinorCityOptions([])
     setAdultCityOptions([])
     setInstitutionCityOptions([])
-    setMinorModalities([])
-    setMinorContents([])
-    setActiveConsentTerm(null)
     setIsMinorLoadingReferences(false)
     setIsMinorSubmitting(false)
     setMinorSubmission(null)
