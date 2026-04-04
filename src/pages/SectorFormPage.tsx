@@ -23,17 +23,5 @@ export default function SectorFormPage() {
     return <Navigate to="/" replace />
   }
 
-  return (
-    <AccessFloatingMenu
-      open
-      initialView={initialView}
-      onClose={() => navigate('/', { replace: true })}
-      onSelect={(value) => {
-        if (value === 'Estatísticas Nacionais') {
-          navigate('/estatisticas-nacionais', { replace: true })
-          return
-        }
-      }}
-    />
-  )
+  return <AccessFloatingMenu open initialView={initialView} onClose={() => navigate('/', { replace: true })} />
 }
