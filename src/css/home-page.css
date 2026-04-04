@@ -64,10 +64,6 @@
   margin-top: 32px;
 }
 
-.hero-actions .btn {
-  min-width: min(100%, 260px);
-}
-
 /* ============================================================
    HOME PAGE — HERO ARTWORK
    ============================================================ */
@@ -131,8 +127,6 @@
 .green { background: var(--green); }
 .purple { background: var(--purple); }
 .cyan { background: var(--cyan); }
-.orange { background: linear-gradient(135deg, #ff7a18 0%, #ff9f1c 100%); }
-
 .a1 { left: 20px; top: 78px; width: 160px; height: 160px; }
 .a2 { left: 104px; top: 142px; width: 260px; height: 260px; }
 .a3 { left: 230px; top: 32px; width: 220px; height: 220px; }
@@ -500,15 +494,8 @@
 .s1 { top: 95px; left: 8%; width: 92px; height: 92px; box-shadow: 0 18px 60px rgba(244, 235, 0, 0.35); }
 .s2 { top: 68px; right: 14%; width: 108px; height: 108px; box-shadow: 0 18px 60px rgba(72, 169, 230, 0.28); }
 .s3 { bottom: 220px; left: 6%; width: 82px; height: 82px; box-shadow: 0 18px 60px rgba(179, 108, 230, 0.25); }
-.s4 {
-  top: 42%;
-  right: 10%;
-  width: 44px;
-  height: 44px;
-  opacity: 0.96;
-  box-shadow: 0 18px 48px rgba(255, 122, 24, 0.34);
-}
-.s5 { top: 36%; left: 22%; width: 26px; height: 26px; box-shadow: 0 12px 30px rgba(239, 47, 141, 0.3); }
+.s4 { bottom: 120px; right: 7%; width: 94px; height: 94px; box-shadow: 0 18px 60px rgba(123, 227, 61, 0.28); z-index: -1; }
+.s5 { top: 36%; left: 22%; width: 32px; height: 32px; box-shadow: 0 12px 30px rgba(239, 47, 141, 0.32); }
 .s6 { top: 28%; right: 27%; width: 30px; height: 30px; box-shadow: 0 12px 30px rgba(111, 216, 230, 0.3); }
 
 .shape.s1,
@@ -612,12 +599,6 @@
     grid-template-columns: 1fr;
   }
 
-  .hero-copy,
-  .hero-artwork {
-    width: min(100%, 720px);
-    margin: 0 auto;
-  }
-
   .stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -646,12 +627,8 @@
 }
 
 @media (max-width: 860px) {
-  .floating-shapes {
-    display: none;
-  }
-
   .hero-section {
-    padding: 28px 0 24px;
+    padding-top: 56px;
   }
 
   .stats-grid,
@@ -667,16 +644,15 @@
   }
 
   .hero-artwork {
-    min-height: 320px;
+    min-height: 420px;
   }
 
   .brand-card {
-    max-width: 100%;
-    margin-top: 20px;
+    margin-top: 30px;
   }
 
   .hero-copy h1 {
-    font-size: clamp(2rem, 8vw, 2.7rem);
+    font-size: 2.2rem;
     line-height: 1.08;
   }
 
@@ -689,7 +665,6 @@
   .hero-actions {
     flex-direction: column;
     align-items: stretch;
-    margin-top: 24px;
   }
 
   .btn,
@@ -698,21 +673,12 @@
   }
 
   .hero-artwork {
-    min-height: 300px;
+    min-height: 360px;
   }
 
   .brand-card {
     padding: 16px;
     border-radius: 24px;
-  }
-
-  .artboard-bg {
-    inset: 10px;
-    border-radius: 28px;
-  }
-
-  .hero-logo {
-    padding: 44px 0;
   }
 
   .hero-logo-text {
@@ -731,10 +697,12 @@
     padding: 8px;
   }
 
-  .s4 {
-    top: 46%;
-    right: 12%;
-  }
+  .s1 { top: 76px; left: 2%; width: 60px; height: 60px; }
+  .s2 { top: 74px; right: 5%; width: 68px; height: 68px; }
+  .s3 { bottom: 210px; left: 3%; width: 54px; height: 54px; }
+  .s4 { bottom: 98px; right: 5%; width: 70px; height: 70px; }
+  .s5 { top: 39%; left: 14%; width: 24px; height: 24px; }
+  .s6 { top: 29%; right: 19%; width: 22px; height: 22px; }
 
   .a1 { left: 6px; top: 80px; width: 110px; height: 110px; }
   .a2 { left: 44px; top: 128px; width: 180px; height: 180px; }
@@ -746,12 +714,8 @@
 }
 
 @media (max-width: 720px) {
-  .hero-section {
-    padding: 20px 0 18px;
-  }
-
   .hero-grid {
-    gap: 22px;
+    gap: 28px;
   }
 
   .access-grid {
@@ -769,59 +733,59 @@
   }
 
   .s4 {
-    top: auto;
-    right: 8%;
-    bottom: 32%;
-    width: 36px;
-    height: 36px;
+    right: 6%;
+    bottom: 88px;
+    width: 58px;
+    height: 58px;
   }
 
   .hero-artwork {
-    min-height: 260px;
+    min-height: 320px;
   }
 
   .brand-card {
-    margin-top: 10px;
-    border-radius: 20px;
+    margin-top: 18px;
   }
 
   .partner-card {
     padding: 22px;
   }
+
+  .s1 { top: 88px; left: 2%; width: 54px; height: 54px; }
+  .s2 { top: 92px; right: 4%; width: 58px; height: 58px; }
+  .s3 { bottom: 180px; left: 3%; width: 42px; height: 42px; }
+  .s5 { top: 43%; left: 13%; width: 20px; height: 20px; }
+  .s6 { top: 30%; right: 16%; width: 18px; height: 18px; }
 }
 
 @media (max-width: 480px) {
-  .hero-copy h1 {
-    font-size: clamp(1.9rem, 10vw, 2.3rem);
-  }
-
   .hero-description {
-    font-size: 0.95rem;
-    line-height: 1.7;
+    font-size: 0.98rem;
   }
 
   .hero-artwork {
-    min-height: 230px;
+    min-height: 300px;
   }
 
-  .artboard-bg {
-    inset: 4px;
-    border-radius: 22px;
+  .hero-copy h1 {
+    font-size: clamp(2rem, 9vw, 2.4rem);
   }
 
   .brand-card {
-    padding: 14px;
-  }
-
-  .hero-logo {
-    padding: 34px 0;
+    padding: 16px;
+    border-radius: 22px;
   }
 
   .hero-logo-text {
-    font-size: 0.88rem;
+    font-size: 0.9rem;
   }
 
   .access-card {
     gap: 16px;
   }
+
+  .s1 { width: 48px; height: 48px; }
+  .s2 { width: 54px; height: 54px; }
+  .s4 { width: 52px; height: 52px; bottom: 82px; }
+  .s5 { width: 18px; height: 18px; }
 }

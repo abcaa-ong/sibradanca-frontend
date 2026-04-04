@@ -93,7 +93,7 @@ const floatingShapes = [
   { className: 'shape yellow square s1', duration: 7 },
   { className: 'shape blue square s2', duration: 8 },
   { className: 'shape purple square s3', duration: 6 },
-  { className: 'shape orange circle s4', duration: 7.5 },
+  { className: 'shape green square s4', duration: 7.5 },
   { className: 'shape pink circle s5', duration: 5.5 },
   { className: 'shape cyan circle s6', duration: 6.2 },
 ]
@@ -179,6 +179,10 @@ export default function HomePage() {
 
   const scrollToForms = () => {
     document.getElementById('formularios')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const scrollToAbout = () => {
+    document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   return (
@@ -287,6 +291,10 @@ export default function HomePage() {
               <motion.div variants={itemVariants} className="hero-actions">
                 <Button large onClick={scrollToForms}>
                   Participar <ArrowRight size={18} />
+                </Button>
+
+                <Button large variant="outline" onClick={scrollToAbout}>
+                  Conhecer mais <ArrowRight size={18} />
                 </Button>
               </motion.div>
             </motion.div>
