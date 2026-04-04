@@ -42,7 +42,7 @@ const highlights = [
   {
     title: 'Coleta organizada',
     description:
-      'Os formulários foram desenhados para reunir respostas de jovens, profissionais e instituições com leitura clara e objetiva.',
+      'Os formulários foram organizados para facilitar o preenchimento de jovens, profissionais e instituições.',
     icon: ClipboardList,
     color: colors.blue,
   },
@@ -56,7 +56,7 @@ const highlights = [
   {
     title: 'Experiência acessível',
     description:
-      'A navegação foi organizada para facilitar o acesso aos formulários e manter a leitura pública direta e objetiva.',
+      'A navegação foi pensada para que cada perfil encontre rapidamente o formulário certo.',
     icon: Sparkles,
     color: colors.pink,
   },
@@ -180,7 +180,6 @@ export default function HomePage() {
   const scrollToForms = () => {
     document.getElementById('formularios')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
-
   const scrollToAbout = () => {
     document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
@@ -289,7 +288,7 @@ export default function HomePage() {
               </motion.p>
 
               <motion.div variants={itemVariants} className="hero-actions">
-                <Button large variant="outline" onClick={scrollToAbout}>
+                <Button large onClick={scrollToAbout}>
                   Saiba mais <ArrowRight size={18} />
                 </Button>
               </motion.div>
@@ -405,18 +404,15 @@ export default function HomePage() {
 
       <footer className="site-footer">
         <div className="container footer-inner">
-          <div className="footer-links footer-links-left">
-            <a href="#formularios">Formulários</a>
-          </div>
-
-          <div className="footer-brand footer-brand-centered">
+          <div className="footer-brand">
             <img src={logo} alt="Logo SIBRADANÇA" />
             <p>
               <strong>SIBRADANÇA – Sistema Brasileiro de Evidências da Dança</strong>
             </p>
           </div>
 
-          <div className="footer-links footer-links-right">
+          <div className="footer-links">
+            <a href="#formularios">Formulários</a>
             <a href="#">Política de privacidade</a>
           </div>
         </div>
