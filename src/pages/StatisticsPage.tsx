@@ -41,6 +41,12 @@ type RegionCard = {
   description: string
 }
 
+type CityCard = {
+  title: string
+  value: string
+  description: string
+}
+
 const overviewCards: OverviewCard[] = [
   {
     label: 'Total de participações',
@@ -113,6 +119,34 @@ const regionCards: RegionCard[] = [
   },
 ]
 
+const cityCards: CityCard[] = [
+  {
+    title: 'Salvador',
+    value: '210',
+    description: 'Presença forte em formação, grupos, festivais e ações ligadas à dança.',
+  },
+  {
+    title: 'Recife',
+    value: '185',
+    description: 'Cidade com movimento importante em escolas, coletivos e circulação cultural.',
+  },
+  {
+    title: 'Belo Horizonte',
+    value: '172',
+    description: 'Participações ligadas a formação, criação, companhias e projetos.',
+  },
+  {
+    title: 'Rio de Janeiro',
+    value: '168',
+    description: 'Presença de profissionais, instituições e iniciativas de diferentes perfis.',
+  },
+  {
+    title: 'São Paulo',
+    value: '160',
+    description: 'Concentração relevante de práticas, formação e articulação do setor.',
+  },
+]
+
 const sectorDistribution: ChartItem[] = [
   { name: 'Jovens', value: 2380 },
   { name: 'Profissionais', value: 1960 },
@@ -134,6 +168,15 @@ const stateDistribution: ChartItem[] = [
   { name: 'RJ', value: 455 },
   { name: 'MG', value: 430 },
   { name: 'DF', value: 285 },
+]
+
+const cityDistribution: ChartItem[] = [
+  { name: 'Salvador', value: 210 },
+  { name: 'Recife', value: 185 },
+  { name: 'Belo Horizonte', value: 172 },
+  { name: 'Rio de Janeiro', value: 168 },
+  { name: 'São Paulo', value: 160 },
+  { name: 'Belém', value: 132 },
 ]
 
 const ageDistribution: ChartItem[] = [
@@ -329,8 +372,8 @@ export default function StatisticsPage() {
             </div>
 
             <div className="statistics-chart-grid two-columns">
-              <ChartPanel title="Quem está participando" data={sectorDistribution} eyebrowLabel="Brasil" />
-              <ChartPanel title="Distribuição geral" data={sectorDistribution} type="pie" eyebrowLabel="Brasil" />
+              <ChartPanel title="Quem está participando" data={sectorDistribution} eyebrowLabel="Brasil" summaryItems={3} />
+              <ChartPanel title="Distribuição geral" data={sectorDistribution} type="pie" eyebrowLabel="Brasil" summaryItems={3} />
             </div>
           </div>
         </section>
@@ -344,9 +387,9 @@ export default function StatisticsPage() {
             />
 
             <div className="statistics-chart-grid three-columns">
-              <ChartPanel title="Participações por região" data={regionDistribution} eyebrowLabel="Mapa" />
-              <ChartPanel title="Estados com mais cadastros" data={stateDistribution} eyebrowLabel="Mapa" />
-              <ChartPanel title="Regiões do Brasil" data={regionDistribution} type="pie" eyebrowLabel="Mapa" />
+              <ChartPanel title="Participações por região" data={regionDistribution} eyebrowLabel="Mapa" summaryItems={5} />
+              <ChartPanel title="Estados com mais cadastros" data={stateDistribution} eyebrowLabel="Mapa" summaryItems={6} />
+              <ChartPanel title="Regiões do Brasil" data={regionDistribution} type="pie" eyebrowLabel="Mapa" summaryItems={5} />
             </div>
 
             <div className="statistics-region-summary">
@@ -358,6 +401,20 @@ export default function StatisticsPage() {
                   <p>{item.description}</p>
                 </article>
               ))}
+            </div>
+
+            <div className="statistics-chart-grid two-columns">
+              <ChartPanel title="Municípios em destaque" data={cityDistribution} eyebrowLabel="Cidades" summaryItems={6} />
+              <div className="statistics-city-summary">
+                {cityCards.map((item) => (
+                  <article key={item.title} className="card statistics-city-card">
+                    <span className="eyebrow">Município</span>
+                    <h3>{item.title}</h3>
+                    <strong>{item.value}</strong>
+                    <p>{item.description}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -371,9 +428,9 @@ export default function StatisticsPage() {
             />
 
             <div className="statistics-chart-grid three-columns">
-              <ChartPanel title="Faixas etárias" data={ageDistribution} type="pie" eyebrowLabel="Perfis" />
-              <ChartPanel title="Gênero" data={genderDistribution} type="pie" eyebrowLabel="Perfis" />
-              <ChartPanel title="Modalidades mais citadas" data={modalityDistribution} eyebrowLabel="Perfis" />
+              <ChartPanel title="Faixas etárias" data={ageDistribution} type="pie" eyebrowLabel="Perfis" summaryItems={5} />
+              <ChartPanel title="Gênero" data={genderDistribution} type="pie" eyebrowLabel="Perfis" summaryItems={4} />
+              <ChartPanel title="Modalidades mais citadas" data={modalityDistribution} eyebrowLabel="Perfis" summaryItems={6} />
             </div>
           </div>
         </section>
@@ -387,9 +444,9 @@ export default function StatisticsPage() {
             />
 
             <div className="statistics-chart-grid two-columns">
-              <ChartPanel title="Formação em dança" data={trainingDistribution} eyebrowLabel="Leitura" />
-              <ChartPanel title="Como as instituições se organizam" data={institutionalDistribution} eyebrowLabel="Leitura" />
-              <ChartPanel title="Temas que mais pedem apoio" data={policyDistribution} eyebrowLabel="Leitura" />
+              <ChartPanel title="Formação em dança" data={trainingDistribution} eyebrowLabel="Leitura" summaryItems={5} />
+              <ChartPanel title="Como as instituições se organizam" data={institutionalDistribution} eyebrowLabel="Leitura" summaryItems={5} />
+              <ChartPanel title="Temas que mais pedem apoio" data={policyDistribution} eyebrowLabel="Leitura" summaryItems={5} />
               <div className="statistics-callout">
                 <div className="card statistics-callout-card">
                   <span className="eyebrow">Apresentação pública</span>

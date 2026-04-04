@@ -10,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import type { TooltipProps } from 'recharts'
 
 type ChartItem = {
   name: string
@@ -24,6 +25,7 @@ type ChartPanelProps = {
   isLoading?: boolean
   emptyMessage?: string
   eyebrowLabel?: string
+  summaryItems?: number
 }
 
 const colors = {
@@ -43,6 +45,7 @@ export function ChartPanel({
   isLoading = false,
   emptyMessage = 'Carregando...',
   eyebrowLabel = 'Painel',
+  summaryItems = 0,
 }: ChartPanelProps) {
   const palette = [
     colors.yellow,
@@ -55,6 +58,28 @@ export function ChartPanel({
 
   const hasData = data.some((item) => item.value > 0)
   const placeholderPieData = [{ name: 'Sem dados', value: 1 }]
+  const summaryData =
+    summaryItems > 0
+      ? [...data].sort((left, right) => right.value - left.value).slice(0, summaryItems)
+      : []
+
+  const formatNumber = (value: number) => new Intl.NumberFormat('pt-BR').format(value)
+
+  function CustomTooltip({ active, payload }: TooltipProps<number, string>) {
+    if (!active || !payload?.length) {
+      return null
+    }
+
+    const item = payload[0]
+    const value = typeof item.value === 'number' ? item.value : Number(item.value ?? 0)
+
+    return (
+      <div className="statistics-tooltip">
+        <strong>{item.name}</strong>
+        <span>Total: {formatNumber(value)}</span>
+      </div>
+    )
+  }
 
   return (
     <div className={`card chart-panel statistics-chart-panel ${className}`.trim()}>
@@ -85,7 +110,7 @@ export function ChartPanel({
           <ResponsiveContainer width="100%" height="100%">
             {type === 'pie' ? (
               <PieChart>
-                {hasData ? <Tooltip /> : null}
+                {hasData ? <Tooltip content={<CustomTooltip />} /> : null}
                 <Pie
                   data={hasData ? data : placeholderPieData}
                   dataKey="value"
@@ -104,7 +129,7 @@ export function ChartPanel({
                 <CartesianGrid strokeDasharray="4 4" stroke="#e5e7eb" />
                 <XAxis dataKey="name" tickLine={false} axisLine={false} />
                 <YAxis tickLine={false} axisLine={false} />
-                {hasData ? <Tooltip /> : null}
+                {hasData ? <Tooltip content={<CustomTooltip />} /> : null}
                 <Bar dataKey="value" radius={[14, 14, 0, 0]}>
                   {data.map((entry, index) => (
                     <Cell key={`${entry.name}-${index}`} fill={palette[index % palette.length]} />
@@ -115,6 +140,17 @@ export function ChartPanel({
           </ResponsiveContainer>
         )}
       </div>
+
+      {summaryData.length ? (
+        <div className="statistics-chart-summary">
+          {summaryData.map((item) => (
+            <div key={`${title}-${item.name}`} className="statistics-chart-summary-row">
+              <span>{item.name}</span>
+              <strong>{formatNumber(item.value)}</strong>
+            </div>
+          ))}
+        </div>
+      ) : null}
     </div>
   )
 }

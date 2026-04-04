@@ -455,7 +455,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Governança</p>
-              <h2>Controle da base</h2>
+              <h2>Resumo da base</h2>
             </div>
           </div>
 
@@ -624,8 +624,8 @@ export default function AdminDataHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Integrações</p>
-              <h2>Onde esses arquivos podem ser usados</h2>
+              <p className="eyebrow">Uso dos arquivos</p>
+              <h2>Onde a equipe pode trabalhar com esse material</h2>
             </div>
           </div>
 
@@ -640,12 +640,12 @@ export default function AdminDataHubPage() {
               </thead>
               <tbody>
                 <tr>
-                  <td>Dashboard interno</td>
+                  <td>Painel interno</td>
                   <td>Ativo</td>
                   <td>Acompanhamento da equipe</td>
                 </tr>
                 <tr>
-                  <td>Power BI</td>
+                  <td>Relatórios complementares</td>
                   <td>Disponível</td>
                   <td>CSV de indicadores e base detalhada</td>
                 </tr>

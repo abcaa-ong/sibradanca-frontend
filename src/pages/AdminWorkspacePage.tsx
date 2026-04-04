@@ -167,7 +167,7 @@ export default function AdminWorkspacePage() {
       sumChartValues(details.incomeDistribution) - findChartValue(details.incomeDistribution, 'Até 1 SM')
 
     return [
-      buildMetricCard('Renda acima de 1 SM', aboveOneMinimumWage, professionals, 'profissionais'),
+      buildMetricCard('Renda acima de 1 salário mínimo', aboveOneMinimumWage, professionals, 'profissionais'),
       buildMetricCard('Custeados pela família', familyFinanced, professionals, 'profissionais'),
       buildMetricCard('Instituições com CNPJ', institutionsWithCnpj, institutions, 'instituições'),
       buildMetricCard('Participação em editais', publicCallParticipants, professionals, 'profissionais'),
@@ -334,8 +334,8 @@ export default function AdminWorkspacePage() {
             {workAreas.map((area) => (
               <div key={area.title} className="admin-module-card admin-module-card-system">
                 <div className="admin-module-head">
-                <p className="admin-module-audience">{area.audience}</p>
-                <span className="admin-status-chip">Ativo</span>
+                  <p className="admin-module-audience">{area.audience}</p>
+                  <span className="admin-status-chip">Ativo</span>
                 </div>
                 <h3>{area.title}</h3>
                 <p>{area.description}</p>
@@ -359,6 +359,7 @@ export default function AdminWorkspacePage() {
         <ChartPanel
           title="Cadastros por perfil"
           data={sectorDistribution}
+          eyebrowLabel="Base"
           isLoading={isLoading}
           emptyMessage="Carregando distribuição dos perfis..."
         />
@@ -367,6 +368,7 @@ export default function AdminWorkspacePage() {
           title="Participação por perfil"
           data={sectorDistribution}
           type="pie"
+          eyebrowLabel="Base"
           isLoading={isLoading}
           emptyMessage="Carregando participação dos perfis..."
         />
@@ -375,6 +377,7 @@ export default function AdminWorkspacePage() {
           title="Faixa etária"
           data={dashboard?.profile.ageDistribution ?? []}
           type="pie"
+          eyebrowLabel="Perfis"
           isLoading={isLoading}
           emptyMessage="Carregando faixa etária..."
         />
@@ -383,6 +386,7 @@ export default function AdminWorkspacePage() {
           title="Gênero"
           data={dashboard?.profile.genderDistribution ?? []}
           type="pie"
+          eyebrowLabel="Perfis"
           isLoading={isLoading}
           emptyMessage="Carregando gênero..."
         />
@@ -392,6 +396,7 @@ export default function AdminWorkspacePage() {
         <ChartPanel
           title="Modalidades mais praticadas"
           data={dashboard?.details.modalities ?? []}
+          eyebrowLabel="Dança"
           isLoading={isLoading}
           emptyMessage="Carregando modalidades..."
         />
@@ -399,6 +404,7 @@ export default function AdminWorkspacePage() {
         <ChartPanel
           title="Estados com mais registros"
           data={topStates}
+          eyebrowLabel="Território"
           isLoading={isLoading}
           emptyMessage="Carregando recorte territorial..."
         />
@@ -409,8 +415,8 @@ export default function AdminWorkspacePage() {
           <Card className="admin-panel-card admin-panel-card-full">
             <div className="admin-panel-header">
               <div>
-              <p className="eyebrow">Indicadores</p>
-              <h2>Destaques para a equipe</h2>
+                <p className="eyebrow">Indicadores</p>
+                <h2>Destaques para a equipe</h2>
               </div>
             </div>
 
@@ -421,6 +427,7 @@ export default function AdminWorkspacePage() {
                   label={item.label}
                   percent={item.percent}
                   detail={item.detail}
+                  eyebrowLabel="Resumo"
                 />
               ))}
             </section>
