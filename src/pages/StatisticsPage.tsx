@@ -18,13 +18,13 @@ type OverviewCard = {
 }
 
 const overviewCards: OverviewCard[] = [
-  { label: 'Base simulada', value: '5.240' },
-  { label: 'Juventudes', value: '2.380' },
+  { label: 'Cadastros totais', value: '5.240' },
+  { label: 'Jovens', value: '2.380' },
   { label: 'Profissionais', value: '1.960' },
   { label: 'Instituições', value: '900' },
 ]
 
-const sectorDistribution: ChartItem[] = [
+const profileDistribution: ChartItem[] = [
   { name: 'Jovens', value: 2380 },
   { name: 'Profissionais', value: 1960 },
   { name: 'Instituições', value: 900 },
@@ -47,7 +47,7 @@ const stateDistribution: ChartItem[] = [
   { name: 'Distrito Federal', value: 285 },
 ]
 
-const cityDistribution: ChartItem[] = [
+const cityHighlights: ChartItem[] = [
   { name: 'Salvador', value: 210 },
   { name: 'Recife', value: 185 },
   { name: 'Belo Horizonte', value: 172 },
@@ -81,36 +81,22 @@ const modalityDistribution: ChartItem[] = [
 ]
 
 const trainingDistribution: ChartItem[] = [
-  { name: 'Estudam atualmente', value: 1430 },
+  { name: 'Em formação', value: 1430 },
   { name: 'Autodidatas', value: 860 },
-  { name: 'Formação técnica', value: 720 },
+  { name: 'Cursos técnicos', value: 720 },
   { name: 'Graduação', value: 480 },
   { name: 'Pós-graduação', value: 170 },
 ]
 
-const institutionalDistribution: ChartItem[] = [
-  { name: 'Com ação formativa', value: 620 },
-  { name: 'Com programação anual', value: 540 },
-  { name: 'Com CNPJ', value: 510 },
-  { name: 'Com bolsas e apoios', value: 290 },
-  { name: 'No interior e periferias', value: 455 },
-]
-
-const policyDistribution: ChartItem[] = [
-  { name: 'Já participou de edital', value: 710 },
-  { name: 'Foi contemplado', value: 295 },
-  { name: 'Busca apoio para escrita', value: 890 },
-  { name: 'Busca orientação jurídica', value: 540 },
-  { name: 'Busca formação em gestão', value: 760 },
-]
-
-const contentInterestDistribution: ChartItem[] = [
+const supportDistribution: ChartItem[] = [
   { name: 'Cursos e formação', value: 940 },
   { name: 'Festivais e eventos', value: 860 },
   { name: 'Editais e oportunidades', value: 790 },
   { name: 'Conteúdo digital', value: 650 },
   { name: 'Gestão e carreira', value: 520 },
 ]
+
+const formatNumber = (value: number) => new Intl.NumberFormat('pt-BR').format(value)
 
 export default function StatisticsPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -183,9 +169,7 @@ export default function StatisticsPage() {
             <div className="statistics-hero-copy">
               <Badge dark>Estatísticas nacionais</Badge>
               <h1>Banco Nacional da Dança do Brasil</h1>
-              <p className="statistics-hero-description">
-                Amostra pública de um painel analítico nacional da dança.
-              </p>
+              <p className="statistics-hero-description">Números gerais do Banco Nacional da Dança.</p>
             </div>
 
             <div className="statistics-hero-actions">
@@ -199,12 +183,12 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Panorama nacional" title="Visão geral da base" />
+            <SectionTitle badge="Painel público" title="Visão geral" />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
               {overviewCards.map((item) => (
                 <article key={item.label} className="card statistics-kpi-card">
-                  <span className="eyebrow">Panorama</span>
+                  <span className="eyebrow">Resumo</span>
                   <h3 className="statistics-kpi-title">{item.label}</h3>
                   <strong className="statistics-kpi-value">{item.value}</strong>
                 </article>
@@ -214,13 +198,13 @@ export default function StatisticsPage() {
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
                 title="Participação por perfil"
-                data={sectorDistribution}
+                data={profileDistribution}
                 eyebrowLabel="Perfis"
                 summaryItems={3}
               />
               <ChartPanel
-                title="Distribuição dos perfis"
-                data={sectorDistribution}
+                title="Distribuição da base"
+                data={profileDistribution}
                 type="pie"
                 eyebrowLabel="Perfis"
                 summaryItems={3}
@@ -231,9 +215,9 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Territórios" title="A dança pelo Brasil" />
+            <SectionTitle badge="Brasil" title="Presença pelo território" />
 
-            <div className="statistics-chart-grid three-columns">
+            <div className="statistics-chart-grid two-columns">
               <ChartPanel
                 title="Participação por região"
                 data={regionDistribution}
@@ -246,19 +230,33 @@ export default function StatisticsPage() {
                 eyebrowLabel="Estados"
                 summaryItems={6}
               />
-              <ChartPanel
-                title="Municípios em destaque"
-                data={cityDistribution}
-                eyebrowLabel="Municípios"
-                summaryItems={6}
-              />
+            </div>
+
+            <div className="statistics-compact-stage">
+              <div className="card statistics-compact-panel">
+                <div className="panel-top">
+                  <div>
+                    <span className="eyebrow">Municípios</span>
+                    <h3 className="statistics-compact-title">Municípios em destaque</h3>
+                  </div>
+                </div>
+
+                <div className="statistics-compact-grid">
+                  {cityHighlights.map((item) => (
+                    <div key={item.name} className="statistics-compact-item">
+                      <span>{item.name}</span>
+                      <strong>{formatNumber(item.value)}</strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Perfis" title="Perfis da base" />
+            <SectionTitle badge="Perfis" title="Quem aparece nesta leitura" />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
@@ -272,7 +270,7 @@ export default function StatisticsPage() {
                 title="Gênero"
                 data={genderDistribution}
                 type="pie"
-                eyebrowLabel="Perfil"
+                eyebrowLabel="Pessoas"
                 summaryItems={4}
               />
               <ChartPanel
@@ -287,30 +285,18 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Formação e apoio" title="Formação e apoio" />
+            <SectionTitle badge="Formação e apoio" title="Caminhos da dança" />
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
-                title="Caminhos de formação"
+                title="Percursos de formação"
                 data={trainingDistribution}
                 eyebrowLabel="Formação"
                 summaryItems={5}
               />
               <ChartPanel
-                title="Estrutura das instituições"
-                data={institutionalDistribution}
-                eyebrowLabel="Instituições"
-                summaryItems={5}
-              />
-              <ChartPanel
-                title="Temas ligados a apoio público"
-                data={policyDistribution}
-                eyebrowLabel="Apoio"
-                summaryItems={5}
-              />
-              <ChartPanel
-                title="O que as pessoas mais buscam"
-                data={contentInterestDistribution}
+                title="Temas mais buscados"
+                data={supportDistribution}
                 eyebrowLabel="Interesses"
                 summaryItems={5}
               />
