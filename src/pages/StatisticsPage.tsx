@@ -20,7 +20,7 @@ type OverviewCard = {
 type StatusCard = {
   label: string
   value: string
-  detail: string
+  detail?: string
 }
 
 const overviewCards: OverviewCard[] = [
@@ -32,24 +32,20 @@ const overviewCards: OverviewCard[] = [
 
 const statusCards: StatusCard[] = [
   {
-    label: 'Cobertura nacional',
+    label: 'Cobertura',
     value: '27 UFs',
-    detail: 'Presença nas cinco regiões do país',
   },
   {
     label: 'Formulários',
     value: '3 frentes',
-    detail: 'Jovens, profissionais e instituições',
   },
   {
-    label: 'Base cadastrada',
+    label: 'Base atual',
     value: '5.240 registros',
-    detail: 'Retrato geral do banco nacional',
   },
   {
-    label: 'Visão pública',
+    label: 'Dados públicos',
     value: 'Sem dados pessoais',
-    detail: 'Somente números gerais da base',
   },
 ]
 
@@ -207,8 +203,8 @@ export default function StatisticsPage() {
               <Badge dark>Estatísticas nacionais</Badge>
               <h1>Banco Nacional de Dados da Dança do Brasil</h1>
               <p className="statistics-hero-description">
-                Uma visão pública do movimento da dança no país, construída a partir dos formulários
-                de jovens, profissionais e instituições.
+                Um painel público com a leitura geral da base de jovens, profissionais e
+                instituições da dança.
               </p>
             </div>
 
@@ -224,7 +220,7 @@ export default function StatisticsPage() {
                 <article key={item.label} className="card statistics-status-card">
                   <span className="eyebrow">{item.label}</span>
                   <strong className="statistics-status-value">{item.value}</strong>
-                  <p className="statistics-status-detail">{item.detail}</p>
+                  {item.detail ? <p className="statistics-status-detail">{item.detail}</p> : null}
                 </article>
               ))}
             </div>
@@ -264,7 +260,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Território" title="Presença da dança pelo Brasil" />
+            <SectionTitle badge="Território" title="Presença da dança no Brasil" />
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
@@ -297,7 +293,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Perfis" title="Quem compõe a base" />
+            <SectionTitle badge="Perfis" title="Quem aparece nesta base" />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
@@ -326,7 +322,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Formação e instituições" title="Formação, trabalho e estrutura" />
+            <SectionTitle badge="Formação e instituições" title="Formação e estrutura" />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel

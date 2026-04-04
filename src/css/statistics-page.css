@@ -7,12 +7,12 @@
 }
 
 .statistics-page .section-space {
-  padding: 18px 0 34px;
+  padding: 16px 0 28px;
 }
 
 .statistics-hero.section-space {
-  padding-top: 24px;
-  padding-bottom: 24px;
+  padding-top: 22px;
+  padding-bottom: 18px;
 }
 
 .statistics-hero-copy h1 {
@@ -48,10 +48,10 @@
 }
 
 .statistics-status-card {
-  min-height: 122px;
+  min-height: 102px;
   padding: 18px;
   display: grid;
-  gap: 8px;
+  gap: 6px;
   align-content: start;
 }
 

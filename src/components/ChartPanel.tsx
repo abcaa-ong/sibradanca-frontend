@@ -101,7 +101,7 @@ export function ChartPanel({
     return (
       <div className="statistics-tooltip">
         <strong>{resolvedLabel}</strong>
-        <span>{formatNumber(value)} registros na base apresentada</span>
+        <span>{formatNumber(value)} registros</span>
       </div>
     )
   }

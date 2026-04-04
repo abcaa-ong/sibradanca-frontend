@@ -5,10 +5,10 @@ import type { AdminAuditLogResponse, BackendHealthStatusResponse } from '../type
 import { formatBackendDateTime } from '../utils/backend-date'
 
 const roles = [
-  ['Coordenação da ONG', 'Visão geral, análises e decisões institucionais'],
-  ['Equipe de operação', 'Cadastros, protocolos e acompanhamento da base'],
-  ['Equipe de dados', 'Indicadores, cruzamentos e materiais para apresentação'],
-  ['Controle interno', 'Rastreabilidade, conferência e histórico de uso'],
+  ['Coordenação da ONG', 'Visão geral e decisões institucionais'],
+  ['Equipe de operação', 'Cadastros, protocolos e base'],
+  ['Equipe de dados', 'Indicadores, cruzamentos e materiais'],
+  ['Controle interno', 'Conferência e histórico de uso'],
 ] as const
 
 const controls = [
@@ -21,8 +21,8 @@ const controls = [
 const lgpdPrinciples = [
   'Dados pessoais e fichas individuais ficam apenas no ambiente interno da ONG.',
   'Parceiros e apoiadores não acessam o sistema administrativo.',
-  'Quando necessário, a ONG exporta e compartilha apenas o recorte adequado para cada situação.',
-  'Apresentações públicas e materiais externos devem priorizar números gerais e dados sem identificação pessoal.',
+  'A ONG exporta e compartilha apenas o recorte adequado.',
+  'Materiais externos usam números gerais, sem identificação pessoal.',
 ] as const
 
 export default function AdminAccessHubPage() {
@@ -66,8 +66,7 @@ export default function AdminAccessHubPage() {
           <p className="eyebrow">Segurança e LGPD</p>
           <h2>Acessos, proteção da base e regras de compartilhamento</h2>
           <p className="admin-page-subtitle">
-            Esta área deixa claro quem usa o sistema, o que permanece interno e como a ONG leva
-            as informações para fora com segurança.
+            Quem acessa o sistema, o que fica interno e como a ONG compartilha a base com segurança.
           </p>
         </div>
       </header>
@@ -78,25 +77,25 @@ export default function AdminAccessHubPage() {
         <Card className="admin-metric-card">
           <span className="eyebrow">Sistema</span>
           <strong>{health?.status ?? '-'}</strong>
-          <p className="card-text">Situação atual do ambiente interno.</p>
+          <p className="card-text">Status do ambiente interno.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Uso interno</span>
           <strong>Exclusivo</strong>
-          <p className="card-text">Acesso reservado à equipe da ONG.</p>
+          <p className="card-text">Acesso reservado à ONG.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Última movimentação</span>
           <strong>{formatBackendDateTime(lastAudit)}</strong>
-          <p className="card-text">Registro mais recente no histórico do ambiente.</p>
+          <p className="card-text">Registro mais recente do ambiente.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Compartilhamento externo</span>
           <strong>Mediado</strong>
-          <p className="card-text">A ONG exporta e envia os recortes necessários.</p>
+          <p className="card-text">A ONG exporta os recortes necessários.</p>
         </Card>
       </section>
 
@@ -184,9 +183,9 @@ export default function AdminAccessHubPage() {
 
           <ul className="admin-purpose-list">
             <li>Acompanhar os cadastros e consultar a base completa dentro do sistema.</li>
-            <li>Montar relatórios, apresentações e materiais de decisão a partir dos recortes internos.</li>
-            <li>Baixar arquivos adequados para uso institucional, parceiros e reuniões externas.</li>
-            <li>Preservar as fichas completas e os dados pessoais apenas no ambiente restrito da ONG.</li>
+            <li>Montar relatórios e materiais de decisão a partir dos recortes internos.</li>
+            <li>Baixar arquivos adequados para uso institucional e reuniões externas.</li>
+            <li>Preservar fichas completas e dados pessoais no ambiente restrito da ONG.</li>
           </ul>
         </Card>
       </section>
