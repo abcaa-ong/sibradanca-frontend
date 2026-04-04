@@ -3,7 +3,7 @@ import { Badge } from './Badge'
 type SectionTitleProps = {
   badge: string
   title: string
-  description: string
+  description?: string
   dark?: boolean
 }
 
@@ -17,7 +17,7 @@ export function SectionTitle({
     <div className="section-title">
       <Badge dark={dark}>{badge}</Badge>
       <h2>{title}</h2>
-      <p>{description}</p>
+      {description ? <p>{description}</p> : null}
     </div>
   )
 }

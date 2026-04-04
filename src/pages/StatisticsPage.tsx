@@ -15,30 +15,13 @@ type ChartItem = {
 type OverviewCard = {
   label: string
   value: string
-  description: string
 }
 
 const overviewCards: OverviewCard[] = [
-  {
-    label: 'Participações nesta demonstração',
-    value: '5.240',
-    description: 'Exemplo de volume para mostrar como essa leitura pode aparecer ao público.',
-  },
-  {
-    label: 'Jovens e estudantes',
-    value: '2.380',
-    description: 'Participações ligadas à descoberta, ao estudo e à permanência na dança.',
-  },
-  {
-    label: 'Profissionais da dança',
-    value: '1.960',
-    description: 'Pessoas que atuam, ensinam, criam e sustentam sua trajetória no setor.',
-  },
-  {
-    label: 'Escolas, grupos e projetos',
-    value: '900',
-    description: 'Iniciativas que fortalecem formação, circulação e presença territorial.',
-  },
+  { label: 'Base simulada', value: '5.240' },
+  { label: 'Juventudes', value: '2.380' },
+  { label: 'Profissionais', value: '1.960' },
+  { label: 'Instituições', value: '900' },
 ]
 
 const sectorDistribution: ChartItem[] = [
@@ -201,8 +184,7 @@ export default function StatisticsPage() {
               <Badge dark>Estatísticas nacionais</Badge>
               <h1>Banco Nacional da Dança do Brasil</h1>
               <p className="statistics-hero-description">
-                Demonstração pública de como os dados gerais da dança podem aparecer em um painel
-                nacional, sem expor informações pessoais.
+                Amostra pública de um painel analítico nacional da dança.
               </p>
             </div>
 
@@ -217,11 +199,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle
-              badge="Panorama nacional"
-              title="Uma leitura geral da dança no Brasil"
-              description="Totais e recortes amplos para mostrar como essa visão pode aparecer ao público."
-            />
+            <SectionTitle badge="Panorama nacional" title="Visão geral da base" />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
               {overviewCards.map((item) => (
@@ -229,7 +207,6 @@ export default function StatisticsPage() {
                   <span className="eyebrow">Panorama</span>
                   <h3 className="statistics-kpi-title">{item.label}</h3>
                   <strong className="statistics-kpi-value">{item.value}</strong>
-                  <p className="card-text">{item.description}</p>
                 </article>
               ))}
             </div>
@@ -254,11 +231,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle
-              badge="Territórios"
-              title="Onde a dança aparece com mais força"
-              description="Regiões, estados e municípios ajudam a visualizar a presença da dança pelo país."
-            />
+            <SectionTitle badge="Territórios" title="A dança pelo Brasil" />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
@@ -285,11 +258,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle
-              badge="Perfis"
-              title="Quem aparece nesse retrato nacional"
-              description="Faixa etária, gênero e modalidades ajudam a mostrar a diversidade da dança."
-            />
+            <SectionTitle badge="Perfis" title="Perfis da base" />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
@@ -318,11 +287,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle
-              badge="Formação e apoio"
-              title="Como a dança se organiza e segue crescendo"
-              description="Um recorte sobre estudo, instituições, apoio público e interesses mais presentes."
-            />
+            <SectionTitle badge="Formação e apoio" title="Formação e apoio" />
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
