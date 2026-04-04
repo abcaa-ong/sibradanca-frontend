@@ -37,44 +37,44 @@ type NoteCard = {
 
 const overviewCards: OverviewCard[] = [
   {
-    label: 'Cadastros simulados',
+    label: 'Cadastros de exemplo',
     value: '5.240',
-    description: 'Volume sintético para apresentação do desenho nacional da base.',
+    description: 'Número usado para mostrar como a leitura nacional pode aparecer na tela.',
   },
   {
     label: 'Jovens da dança',
     value: '2.380',
-    description: 'Participações ligadas a estudantes, iniciantes e trajetórias em formação.',
+    description: 'Participações de quem está começando, estudando ou crescendo na dança.',
   },
   {
     label: 'Profissionais da dança',
     value: '1.960',
-    description: 'Registros de atuação, renda, formação e inserção no setor cultural.',
+    description: 'Participações de quem atua, trabalha ou desenvolve sua trajetória na área.',
   },
   {
     label: 'Instituições da dança',
     value: '900',
-    description: 'Escolas, grupos, companhias, projetos, coletivos e espaços culturais.',
+    description: 'Escolas, grupos, companhias, projetos, coletivos e espaços dedicados à dança.',
   },
 ]
 
 const noteCards: NoteCard[] = [
   {
-    title: 'Leitura pública e segura',
+    title: 'Visão pública e segura',
     description:
-      'Esta prévia mostra só indicadores agregados. Nenhum nome, CPF, telefone, e-mail ou registro individual aparece aqui.',
+      'Esta tela mostra só números gerais. Nenhum nome, CPF, telefone, e-mail ou cadastro individual aparece aqui.',
     icon: ShieldCheck,
   },
   {
-    title: 'Base sintética para apresentação',
+    title: 'Exemplo para apresentação',
     description:
-      'Os números desta tela foram simulados para mostrar a estética e a leitura do painel quando a base nacional ganhar escala.',
+      'Os números desta página foram criados para mostrar como esse acompanhamento pode aparecer quando a base crescer.',
     icon: Database,
   },
   {
     title: 'Visão nacional do movimento',
     description:
-      'A proposta é comunicar o alcance territorial, os perfis da dança e os principais sinais do setor em linguagem pública.',
+      'A proposta é mostrar o alcance da iniciativa no país, os perfis da dança e os principais retratos do setor.',
     icon: Globe2,
   },
 ]
@@ -154,12 +154,12 @@ const highlightMetrics = [
   {
     label: 'Presença fora do eixo Rio-São Paulo',
     percent: '72%',
-    detail: 'A maioria simulada da base está distribuída em outros estados e regiões do país.',
+    detail: 'A maior parte dos registros de exemplo está distribuída em outros estados e regiões do país.',
   },
   {
-    label: 'Base ligada à formação',
+    label: 'Dança ligada à formação',
     percent: '68%',
-    detail: 'Cadastros com vínculo com escolas, grupos de estudo, projetos e processos pedagógicos.',
+    detail: 'Participações com ligação com escolas, grupos de estudo, projetos e processos de aprendizagem.',
   },
   {
     label: 'Instituições com atividade contínua',
@@ -167,9 +167,9 @@ const highlightMetrics = [
     detail: 'Organizações com rotina de aulas, ensaios, temporadas, circulação ou ação territorial.',
   },
   {
-    label: 'Demandas por políticas públicas',
+    label: 'Temas que mais aparecem',
     percent: '45%',
-    detail: 'Parcela simulada que aponta editais, gestão e financiamento como temas prioritários.',
+    detail: 'Parte dos registros de exemplo destaca editais, gestão e financiamento como temas centrais.',
   },
 ]
 
@@ -242,11 +242,11 @@ export default function StatisticsPage() {
         <section className="statistics-hero section-space">
           <div className="container">
             <div className="statistics-hero-copy">
-              <Badge dark>Painel estatístico nacional</Badge>
-              <h1>Uma prévia pública de como o Banco Nacional da Dança pode ser lido no Brasil</h1>
+              <Badge dark>Estatísticas nacionais</Badge>
+              <h1>Uma prévia pública de como o Banco Nacional da Dança pode aparecer no Brasil</h1>
               <p className="statistics-hero-description">
-                Esta tela foi desenhada para apresentação institucional. Ela mostra um painel
-                público, agregado e sem dados sensíveis, usando uma base sintética de demonstração.
+                Esta tela foi pensada para apresentações e divulgação do projeto. Ela mostra um
+                retrato geral da iniciativa, sem expor informações pessoais.
               </p>
             </div>
 
@@ -279,8 +279,8 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Visão geral"
-              title="Escala simulada para apresentar o potencial do movimento nacional"
-              description="Os números abaixo são fictícios e servem para demonstrar a leitura executiva do painel."
+              title="Um exemplo de como a leitura nacional pode ganhar forma"
+              description="Os números abaixo foram organizados para apresentar visualmente o potencial do projeto."
             />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
@@ -305,8 +305,8 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Território"
-              title="Como a dança pode ser visualizada em escala regional e estadual"
-              description="Uma leitura pública voltada a alcance territorial, concentração e capilaridade da rede."
+              title="Como a dança pode ser vista por região e por estado"
+              description="Uma leitura pública para mostrar alcance, presença e distribuição da iniciativa pelo país."
             />
 
             <div className="statistics-chart-grid three-columns">
@@ -321,8 +321,8 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Perfis da dança"
-              title="Quem aparece no retrato agregado da base"
-              description="Faixa etária, gênero e modalidades ajudam a comunicar diversidade, alcance e vocações do setor."
+              title="Quem aparece nesse retrato nacional da dança"
+              description="Faixa etária, gênero e modalidades ajudam a mostrar diversidade, alcance e presença no setor."
             />
 
             <div className="statistics-chart-grid three-columns">
@@ -337,22 +337,22 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Formação e estrutura"
-              title="Sinais de formação, continuidade e organização do campo"
-              description="Uma leitura agregada sobre aprendizagem, permanência, institucionalidade e necessidades do setor."
+              title="Sinais de formação, continuidade e organização da dança"
+              description="Uma leitura sobre aprendizagem, permanência, organizações e necessidades apontadas pelo setor."
             />
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel title="Trajetórias de formação" data={trainingDistribution} />
               <ChartPanel title="Estrutura institucional" data={institutionalDistribution} />
-              <ChartPanel title="Demandas por políticas públicas" data={policyDistribution} />
+              <ChartPanel title="Temas ligados a apoio público" data={policyDistribution} />
               <div className="statistics-callout">
                 <div className="card statistics-callout-card">
-                  <span className="eyebrow">Leitura pública</span>
-                  <h3>Um painel para mostrar movimento, não cadastros individuais</h3>
+                  <span className="eyebrow">Apresentação pública</span>
+                  <h3>Uma forma de mostrar o movimento sem expor cadastros individuais</h3>
                   <p>
-                    A versão pública do SIBRADANÇA pode comunicar crescimento, distribuição,
-                    modalidades e sinais do setor sem expor dados nominais. A camada detalhada
-                    continua exclusiva da ONG no painel interno.
+                    A versão pública do SIBRADANÇA pode mostrar crescimento, distribuição,
+                    modalidades e retratos do setor sem expor informações pessoais. A parte
+                    completa continua reservada à ONG.
                   </p>
                 </div>
               </div>
