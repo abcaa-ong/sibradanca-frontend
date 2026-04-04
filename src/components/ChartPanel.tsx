@@ -37,6 +37,23 @@ const colors = {
   cyan: '#6fd8e6',
 }
 
+function resolveTooltipLabel(item: {
+  name?: string | number
+  payload?: unknown
+}) {
+  const payload = item.payload as Partial<ChartItem> | undefined
+
+  if (payload?.name) {
+    return payload.name
+  }
+
+  if (typeof item.name === 'string' && item.name !== 'value') {
+    return item.name
+  }
+
+  return 'Registro'
+}
+
 export function ChartPanel({
   title,
   data,
@@ -72,11 +89,12 @@ export function ChartPanel({
 
     const item = payload[0]
     const value = typeof item.value === 'number' ? item.value : Number(item.value ?? 0)
+    const label = resolveTooltipLabel(item)
 
     return (
       <div className="statistics-tooltip">
-        <strong>{item.name}</strong>
-        <span>Total: {formatNumber(value)}</span>
+        <strong>{label}</strong>
+        <span>Total nesta leitura: {formatNumber(value)}</span>
       </div>
     )
   }

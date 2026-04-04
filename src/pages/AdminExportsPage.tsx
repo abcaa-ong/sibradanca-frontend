@@ -17,68 +17,77 @@ type DownloadAction = () => Promise<{ blob: Blob; filename: string | null }>
 
 const exportGroups = [
   {
-    title: 'Base interna da ONG',
-    description: 'Arquivos completos para consulta, conferência, leitura e trabalho do dia a dia da equipe.',
+    title: 'Leitura completa da equipe',
+    description:
+      'Arquivos para ver o cadastro inteiro, revisar respostas e entender cada formulario com profundidade.',
     items: [
       {
         name: 'Fichas por protocolo',
         format: 'PDF',
-        purpose: 'Leitura completa de cada cadastro, com respostas organizadas por formulário.',
+        purpose: 'Leitura completa de cada cadastro, com respostas separadas por formulario e etapa.',
         actionLabel: 'Baixar PDF',
         action: downloadAdminSubmissionsDetailedPdf,
       },
       {
-        name: 'Base detalhada da equipe',
+        name: 'Base completa da equipe',
         format: 'XLSX',
-        purpose: 'Abas com visão geral, cadastros e respostas organizadas por tema.',
+        purpose: 'Abas com visao geral, cadastros e respostas organizadas por tema.',
         actionLabel: 'Baixar Excel',
         action: downloadAdminSubmissionsDetailedXlsx,
       },
       {
-        name: 'Base resumida de cadastros',
+        name: 'Base completa em CSV',
+        format: 'CSV',
+        purpose: 'Linhas por cadastro, etapa, campo e resposta para estudos e cruzamentos.',
+        actionLabel: 'Baixar CSV',
+        action: downloadAdminSubmissionsDetailedCsv,
+      },
+    ],
+  },
+  {
+    title: 'Operacao do dia a dia',
+    description:
+      'Arquivos mais diretos para conferencia, acompanhamento de protocolos e rotina da equipe.',
+    items: [
+      {
+        name: 'Cadastros do dia a dia',
         format: 'XLSX',
-        purpose: 'Consulta rápida por protocolo para acompanhamento do dia a dia.',
+        purpose: 'Consulta rapida por protocolo e situacao do cadastro.',
         actionLabel: 'Baixar Excel',
         action: downloadAdminSubmissionsXlsx,
       },
       {
-        name: 'Base detalhada em CSV',
+        name: 'Cadastros do dia a dia',
         format: 'CSV',
-        purpose: 'Linhas por cadastro, etapa, campo e resposta para cruzamentos internos.',
-        actionLabel: 'Baixar CSV',
-        action: downloadAdminSubmissionsDetailedCsv,
-      },
-      {
-        name: 'Base resumida em CSV',
-        format: 'CSV',
-        purpose: 'Consulta operacional rápida para revisões pontuais.',
+        purpose: 'Conferencia operacional e revisoes pontuais da base.',
         actionLabel: 'Baixar CSV',
         action: downloadAdminSubmissionsCsv,
       },
     ],
   },
   {
-    title: 'Materiais para apresentações e compartilhamentos',
-    description: 'Arquivos que a ONG organiza para reuniões, parceiros, pitchs, relatórios e apresentações.',
+    title: 'Analises, relatorios e apresentacoes',
+    description:
+      'Recortes que ajudam a ONG a montar dashboards, Power BI, reunioes, materiais externos e articulacoes.',
     items: [
       {
-        name: 'Relatório geral',
+        name: 'Relatorio geral da base',
         format: 'PDF',
-        purpose: 'Leitura visual com os principais recortes da base para reuniões e apresentações.',
+        purpose: 'Resumo visual com os principais recortes da base para reunioes e apresentacoes.',
         actionLabel: 'Baixar PDF',
         action: downloadAdminStatisticsPdf,
       },
       {
         name: 'Indicadores da base',
         format: 'XLSX',
-        purpose: 'Planilha com abas por tema para relatórios, planilhas e Power BI.',
+        purpose: 'Planilha com abas por tema para relatorios, planilhas e Power BI.',
         actionLabel: 'Baixar Excel',
         action: downloadAdminStatisticsXlsx,
       },
       {
         name: 'Indicadores em CSV',
         format: 'CSV',
-        purpose: 'Recortes gerais para cruzamentos, dashboards e materiais externos.',
+        purpose: 'Recortes gerais para cruzamentos, dashboards e materiais preparados pela ONG.',
         actionLabel: 'Baixar CSV',
         action: downloadAdminStatisticsCsv,
       },
@@ -86,29 +95,62 @@ const exportGroups = [
   },
 ] as const
 
+const deliveryGuide = [
+  {
+    file: 'Fichas por protocolo',
+    content: 'Mostram o cadastro inteiro, com respostas separadas por etapa do formulario.',
+    use: 'Revisao detalhada, atendimento, validacao e leitura institucional.',
+    sharing: 'Nao saem para fora da ONG.',
+  },
+  {
+    file: 'Base completa da equipe',
+    content: 'Reune a leitura total da base, com abas e recortes por tema.',
+    use: 'Estudos internos, cruzamentos, planejamento e construcao de indicadores.',
+    sharing: 'Sai apenas em recortes preparados pela ONG.',
+  },
+  {
+    file: 'Cadastros do dia a dia',
+    content: 'Mostram consulta rapida por protocolo, perfil e situacao.',
+    use: 'Rotina da equipe e acompanhamento operacional.',
+    sharing: 'Uso interno da equipe.',
+  },
+  {
+    file: 'Relatorio geral da base',
+    content: 'Apresenta a leitura visual dos principais numeros e recortes.',
+    use: 'Reunioes, diretorias, eventos e alinhamentos institucionais.',
+    sharing: 'Pode ser apresentado sem dados pessoais.',
+  },
+  {
+    file: 'Indicadores para Power BI e dashboards',
+    content: 'Levam recortes por tema, territorio, perfil e leitura consolidada da base.',
+    use: 'Power BI, dashboards e aprofundamento analitico.',
+    sharing: 'Pode sair em materiais sem dados pessoais.',
+  },
+] as const
+
 const exportRules = [
-  ['Uso interno da equipe', 'Fichas completas, base detalhada e consulta nominal da ONG'],
-  ['Uso em apresentações', 'Indicadores gerais, gráficos e recortes preparados pela equipe'],
-  ['Uso com parceiros', 'Material selecionado e enviado pela ONG conforme cada finalidade'],
-  ['Dados pessoais', 'Permanecem no ambiente interno e não aparecem em materiais públicos'],
+  ['Uso interno da equipe', 'Fichas completas, base detalhada, consulta nominal e revisao por protocolo.'],
+  ['Uso institucional', 'Relatorios, graficos e recortes preparados pela ONG para reunioes e apresentacoes.'],
+  ['Uso com parceiros', 'Somente materiais selecionados e enviados pela ONG, sem abrir o sistema para terceiros.'],
+  ['Dados pessoais', 'Permanecem no ambiente interno e nao aparecem em materiais publicos ou compartilhados.'],
 ] as const
 
 const handoffFlow = [
   {
     title: 'Ler a base',
-    text: 'A equipe consulta o painel interno, entende o recorte e define qual material precisa sair.',
+    text: 'A equipe consulta o painel interno, entende o recorte e decide qual material precisa sair.',
   },
   {
-    title: 'Escolher o formato',
-    text: 'A ONG decide se precisa de PDF, planilha ou CSV conforme a finalidade do uso.',
+    title: 'Escolher o arquivo',
+    text: 'A ONG define se precisa de ficha, planilha, CSV ou relatorio visual, conforme a finalidade.',
   },
   {
-    title: 'Preparar o envio',
-    text: 'O material é revisado pela equipe antes de ir para apresentações, parceiros ou reuniões.',
+    title: 'Preparar o material',
+    text: 'Os arquivos sao revisados antes de seguirem para reunioes, estudos, dashboards ou apresentacoes.',
   },
   {
-    title: 'Compartilhar com segurança',
-    text: 'A ONG envia apenas o que faz sentido para cada caso, sem abrir o sistema para terceiros.',
+    title: 'Compartilhar com seguranca',
+    text: 'A ONG envia apenas o recorte adequado, sem abrir a area interna para parceiros ou terceiros.',
   },
 ] as const
 
@@ -136,7 +178,7 @@ export default function AdminExportsPage() {
       setDownloadError(
         downloadActionError instanceof Error
           ? downloadActionError.message
-          : 'Não foi possível gerar o arquivo solicitado.',
+          : 'Nao foi possivel gerar o arquivo solicitado.',
       )
     }
   }
@@ -145,11 +187,11 @@ export default function AdminExportsPage() {
     <div className="admin-page-content">
       <header className="admin-page-header">
         <div>
-          <p className="eyebrow">Exportações</p>
-          <h2>Arquivos que saem do Banco Nacional da Dança</h2>
+          <p className="eyebrow">Exportacoes</p>
+          <h2>Arquivos que saem do Banco Nacional da Danca</h2>
           <p className="admin-page-subtitle">
-            É aqui que a ONG transforma a base em relatórios, planilhas, dashboards e materiais para
-            reuniões, apresentações e articulações externas.
+            Aqui a ONG transforma a base em leitura institucional, planilhas, dashboards, Power BI,
+            relatorios e materiais preparados para apresentacoes e parceiros.
           </p>
         </div>
       </header>
@@ -190,8 +232,8 @@ export default function AdminExportsPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Regras de saída</p>
-              <h2>Como cada arquivo deve sair da base</h2>
+              <p className="eyebrow">Leitura dos arquivos</p>
+              <h2>O que a equipe encontra em cada saida</h2>
             </div>
           </div>
 
@@ -199,7 +241,39 @@ export default function AdminExportsPage() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Situação</th>
+                  <th>Arquivo</th>
+                  <th>O que entrega</th>
+                  <th>Quando usar</th>
+                  <th>Compartilhamento</th>
+                </tr>
+              </thead>
+              <tbody>
+                {deliveryGuide.map((item) => (
+                  <tr key={item.file}>
+                    <td>{item.file}</td>
+                    <td>{item.content}</td>
+                    <td>{item.use}</td>
+                    <td>{item.sharing}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+
+        <Card className="admin-panel-card">
+          <div className="admin-panel-header">
+            <div>
+              <p className="eyebrow">Regras de saida</p>
+              <h2>Como cada material deve sair da base</h2>
+            </div>
+          </div>
+
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Situacao</th>
                   <th>Diretriz</th>
                 </tr>
               </thead>
@@ -214,12 +288,14 @@ export default function AdminExportsPage() {
             </table>
           </div>
         </Card>
+      </section>
 
+      <section className="admin-section-grid">
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Fluxo recomendado</p>
-              <h2>Da leitura da base até o envio</h2>
+              <h2>Da leitura da base ate o envio</h2>
             </div>
           </div>
 
@@ -230,6 +306,34 @@ export default function AdminExportsPage() {
                 <p>{item.text}</p>
               </div>
             ))}
+          </div>
+        </Card>
+
+        <Card className="admin-panel-card">
+          <div className="admin-panel-header">
+            <div>
+              <p className="eyebrow">Uso institucional</p>
+              <h2>Como a ONG leva essa base para fora</h2>
+            </div>
+          </div>
+
+          <div className="admin-governance-grid">
+            <div className="admin-governance-card">
+              <h3>Apresentacoes e reunioes</h3>
+              <p>Relatorios em PDF e indicadores gerais ajudam a mostrar o retrato nacional da danca.</p>
+            </div>
+            <div className="admin-governance-card">
+              <h3>Planilhas e Power BI</h3>
+              <p>Excel e CSV levam a base organizada para dashboards, cruzamentos e aprofundamento analitico.</p>
+            </div>
+            <div className="admin-governance-card">
+              <h3>Parceiros externos</h3>
+              <p>Ministerio, Funarte e outras instituicoes recebem somente recortes preparados pela ONG.</p>
+            </div>
+            <div className="admin-governance-card">
+              <h3>Dados pessoais</h3>
+              <p>Informacoes nominais continuam protegidas no ambiente interno e nao acompanham materiais publicos.</p>
+            </div>
           </div>
         </Card>
       </section>

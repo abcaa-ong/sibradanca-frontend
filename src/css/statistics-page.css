@@ -196,13 +196,15 @@
 
 .statistics-region-summary {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 18px;
   margin-top: 24px;
 }
 
 .statistics-region-card {
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .statistics-region-card h3 {
@@ -226,11 +228,21 @@
   line-height: 1.7;
 }
 
+.statistics-city-stage {
+  align-items: start;
+}
+
 .statistics-city-summary {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 18px;
   margin-top: 24px;
+}
+
+.statistics-city-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
 .statistics-city-card h3 {
@@ -252,6 +264,7 @@
   margin: 14px 0 0;
   color: var(--muted);
   line-height: 1.7;
+  overflow-wrap: anywhere;
 }
 
 .statistics-chart-grid.two-columns {

@@ -38,21 +38,21 @@ const completeDownloadRows: DownloadRow[] = [
   {
     title: 'Fichas por protocolo',
     format: 'PDF',
-    scope: 'Fichas completas com respostas organizadas por etapa do cadastro',
+    scope: 'Leitura completa de cada cadastro, com respostas separadas por etapa do formulario.',
     actionLabel: 'Baixar PDF',
     action: downloadAdminSubmissionsDetailedPdf,
   },
   {
-    title: 'Base detalhada da equipe',
+    title: 'Base completa da equipe',
     format: 'XLSX',
-    scope: 'Abas com panorama da ONG, cadastros e respostas por tema',
+    scope: 'Abas com panorama da base, cadastros e respostas organizadas por tema.',
     actionLabel: 'Baixar Excel',
     action: downloadAdminSubmissionsDetailedXlsx,
   },
   {
-    title: 'Base detalhada da equipe',
+    title: 'Base completa da equipe',
     format: 'CSV',
-    scope: 'Linhas por cadastro, etapa, campo e resposta',
+    scope: 'Linhas por cadastro, etapa, campo e resposta para leitura aprofundada.',
     actionLabel: 'Baixar CSV',
     action: downloadAdminSubmissionsDetailedCsv,
   },
@@ -60,23 +60,23 @@ const completeDownloadRows: DownloadRow[] = [
 
 const statisticsDownloadRows: DownloadRow[] = [
   {
-    title: 'Relatório geral',
+    title: 'Relatorio geral da base',
     format: 'PDF',
-    scope: 'Resumo visual para reuniões, apresentações e leitura rápida',
+    scope: 'Resumo visual para reunioes, apresentacoes e alinhamentos da ONG.',
     actionLabel: 'Baixar PDF',
     action: downloadAdminStatisticsPdf,
   },
   {
     title: 'Indicadores da base',
     format: 'XLSX',
-    scope: 'Abas por tema para a equipe, planilhas de trabalho e Power BI',
+    scope: 'Planilha com recortes por tema para relatorios, planilhas e Power BI.',
     actionLabel: 'Baixar Excel',
     action: downloadAdminStatisticsXlsx,
   },
   {
     title: 'Indicadores em CSV',
     format: 'CSV',
-    scope: 'Recortes prontos para cruzamentos, dashboards e apresentações',
+    scope: 'Recortes organizados para dashboards, cruzamentos e analises.',
     actionLabel: 'Baixar CSV',
     action: downloadAdminStatisticsCsv,
   },
@@ -84,20 +84,98 @@ const statisticsDownloadRows: DownloadRow[] = [
 
 const operationalDownloadRows: DownloadRow[] = [
   {
-    title: 'Cadastros operacionais',
+    title: 'Cadastros do dia a dia',
     format: 'XLSX',
-    scope: 'Consulta rápida por protocolo e situação do cadastro',
+    scope: 'Consulta rapida por protocolo e situacao do cadastro.',
     actionLabel: 'Baixar Excel',
     action: downloadAdminSubmissionsXlsx,
   },
   {
-    title: 'Cadastros operacionais',
+    title: 'Cadastros do dia a dia',
     format: 'CSV',
-    scope: 'Consulta rápida por protocolo e situação do cadastro',
+    scope: 'Consulta operacional rapida para conferencias e revisoes.',
     actionLabel: 'Baixar CSV',
     action: downloadAdminSubmissionsCsv,
   },
 ]
+
+const formJourneyCards = [
+  {
+    title: 'Jovens da danca',
+    description:
+      'Entram com identidade, territorio, modalidades, formacao, consumo cultural e condicoes de permanencia.',
+    outputs: 'Painel / PDF / Excel',
+  },
+  {
+    title: 'Profissionais da danca',
+    description:
+      'Entram com trajetoria, trabalho, renda, circulacao, apoio publico e temas que pedem fortalecimento.',
+    outputs: 'Painel / PDF / Excel / Power BI',
+  },
+  {
+    title: 'Instituicoes da danca',
+    description:
+      'Entram com estrutura, acao formativa, territorio, rotina de atividades, equipe e alcance institucional.',
+    outputs: 'Painel / PDF / Excel / Power BI',
+  },
+  {
+    title: 'Leitura nacional consolidada',
+    description:
+      'Cruza as tres frentes para gerar panorama da base, relatorios, dashboards e materiais da ONG.',
+    outputs: 'Painel / PDF / XLSX / CSV',
+  },
+] as const
+
+const internalFlowRows = [
+  {
+    stage: 'Cadastro recebido',
+    detail: 'A resposta chega ao sistema, entra na base e fica disponivel para consulta da equipe.',
+    use: 'Acompanhamento diario e conferencia da entrada da base.',
+  },
+  {
+    stage: 'Ficha em PDF',
+    detail: 'Cada protocolo pode ser lido de ponta a ponta, com respostas organizadas por formulario e etapa.',
+    use: 'Leitura institucional, reunioes internas e revisao detalhada.',
+  },
+  {
+    stage: 'Planilha completa',
+    detail: 'A equipe baixa abas por tema, perfis e respostas para estudos internos.',
+    use: 'Excel, relatorios, cruzamentos e acompanhamento de programas.',
+  },
+  {
+    stage: 'Base para Power BI',
+    detail: 'Recortes em XLSX e CSV saem prontos para dashboards e paineis analiticos.',
+    use: 'Power BI, visualizacoes e acompanhamento da base nacional.',
+  },
+  {
+    stage: 'Material para fora',
+    detail: 'A ONG prepara o recorte certo antes de compartilhar qualquer informacao com parceiros.',
+    use: 'Apresentacoes, reunioes e materiais externos sem abrir o sistema.',
+  },
+] as const
+
+const sharingRows = [
+  {
+    material: 'Fichas completas e dados pessoais',
+    use: 'Consulta interna da equipe e leitura por protocolo.',
+    sharing: 'Ficam no ambiente interno da ONG.',
+  },
+  {
+    material: 'Base completa em planilhas',
+    use: 'Cruzamentos, analises, estudos e montagem de relatorios internos.',
+    sharing: 'Sai apenas em recortes preparados pela ONG.',
+  },
+  {
+    material: 'Indicadores gerais',
+    use: 'Leitura institucional, diretorias, reunioes e demonstracoes do projeto.',
+    sharing: 'Pode sair em materiais sem dados pessoais.',
+  },
+  {
+    material: 'Arquivos para Power BI e dashboards',
+    use: 'Visualizacoes, paineis internos e aprofundamento analitico.',
+    sharing: 'Uso interno ou recortes preparados pela ONG.',
+  },
+] as const
 
 function getTopItem(
   items: Array<{ name: string; value: number }> | undefined,
@@ -158,7 +236,7 @@ function DownloadTable({
               <th>Arquivo</th>
               <th>Formato</th>
               <th>Uso</th>
-              <th>Ação</th>
+              <th>Acao</th>
             </tr>
           </thead>
           <tbody>
@@ -212,7 +290,7 @@ export default function AdminDataHubPage() {
         setSectorSummary(sectorData)
         setStateSummary(stateData)
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar a área de dados.')
+        setError(loadError instanceof Error ? loadError.message : 'Nao foi possivel carregar a area de dados.')
       }
     }
 
@@ -226,7 +304,7 @@ export default function AdminDataHubPage() {
       const file = await action()
       triggerDownload(file.blob, file.filename)
     } catch (downloadError) {
-      setError(downloadError instanceof Error ? downloadError.message : 'Não foi possível gerar o arquivo.')
+      setError(downloadError instanceof Error ? downloadError.message : 'Nao foi possivel gerar o arquivo.')
     }
   }
 
@@ -247,61 +325,38 @@ export default function AdminDataHubPage() {
   const dataControlRows = useMemo(
     () => [
       {
-        label: 'Cadastros disponíveis',
+        label: 'Cadastros disponiveis',
         value: overview ? formatNumber(overview.totalResponses) : '-',
-        detail: 'Base pronta para consulta, leitura interna, exportação e apresentação da ONG.',
+        detail: 'Base pronta para consulta da equipe, leitura institucional, exportacao e apresentacao da ONG.',
       },
       {
-        label: 'Presença territorial',
+        label: 'Presenca territorial',
         value: formatNumber(stateSummary.filter((item) => item.totalSubmissions > 0).length),
-        detail: 'Estados e Distrito Federal que já aparecem nesta leitura nacional da base.',
+        detail: 'Estados e Distrito Federal que ja aparecem nesta leitura nacional da base.',
       },
       {
-        label: 'Último envio recebido',
+        label: 'Ultimo envio recebido',
         value: latestRecordAt ? formatBackendDateTime(latestRecordAt) : 'Sem registro',
         detail: 'Cadastro mais recente que entrou no sistema.',
       },
       {
-        label: 'Frentes já mapeadas',
+        label: 'Frentes reunidas',
         value: sectorSummary.length ? `${sectorSummary.length}/3` : '-',
-        detail: 'Jovens, profissionais e instituições reunidos na mesma leitura nacional.',
+        detail: 'Jovens, profissionais e instituicoes lidos dentro da mesma base nacional.',
       },
     ],
     [latestRecordAt, overview, sectorSummary.length, stateSummary],
   )
-
-  const datasetLayers = [
-    {
-      title: 'Painel da equipe',
-      description: 'Leitura para coordenação, acompanhamento do dia a dia e conversa com a diretoria.',
-      outputs: 'PDF / XLSX',
-    },
-    {
-      title: 'Consulta por cadastro',
-      description: 'Protocolos e dados principais organizados para conferência, revisão e acompanhamento.',
-      outputs: 'XLSX / CSV',
-    },
-    {
-      title: 'Respostas por tema',
-      description: 'Respostas organizadas por etapa do formulário para leitura detalhada da base.',
-      outputs: 'XLSX / CSV',
-    },
-    {
-      title: 'Leitura para apresentações',
-      description: 'Arquivos organizados para relatórios, planilhas, dashboards e Power BI da ONG.',
-      outputs: 'PDF / XLSX / CSV',
-    },
-  ] as const
 
   return (
     <div className="admin-page-content">
       <header className="admin-page-header">
         <div>
           <p className="eyebrow">Dados</p>
-          <h2>Painel de dados, análises e exportações</h2>
+          <h2>Painel de dados, analises e exportacoes</h2>
           <p className="admin-page-subtitle">
-            A ONG acompanha a base nacional, monta leituras, baixa arquivos e prepara materiais para
-            planilhas, dashboards, Power BI e apresentações.
+            Aqui a ONG acompanha tudo o que chega pelos formularios, entende o retrato nacional e
+            prepara arquivos para planilhas, Power BI, relatorios e apresentacoes.
           </p>
         </div>
       </header>
@@ -312,23 +367,23 @@ export default function AdminDataHubPage() {
         <Card className="admin-metric-card">
           <span className="eyebrow">Base total</span>
           <strong>{overview?.totalResponses ?? '-'}</strong>
-          <p className="card-text">Cadastros já reunidos no Banco Nacional da Dança.</p>
+          <p className="card-text">Cadastros reunidos no Banco Nacional da Danca.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Jovens</span>
           <strong>{overview?.totalYouth ?? '-'}</strong>
-          <p className="card-text">Participações da frente jovem do cadastro nacional.</p>
+          <p className="card-text">Participacoes da frente jovem desta base nacional.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Profissionais</span>
           <strong>{overview?.totalProfessionals ?? '-'}</strong>
-          <p className="card-text">Pessoas ligadas ao trabalho, à formação e à atuação em dança.</p>
+          <p className="card-text">Pessoas ligadas ao trabalho, a formacao e a atuacao em danca.</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Instituições</span>
+          <span className="eyebrow">Instituicoes</span>
           <strong>{overview?.totalInstitutions ?? '-'}</strong>
           <p className="card-text">Escolas, grupos, companhias, projetos e coletivos da base.</p>
         </Card>
@@ -359,13 +414,13 @@ export default function AdminDataHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Arquivos</p>
-              <h2>Como a ONG encontra os dados</h2>
+              <p className="eyebrow">Entrada da base</p>
+              <h2>Como cada formulario chega para a ONG</h2>
             </div>
           </div>
 
           <div className="admin-manifest-grid">
-            {datasetLayers.map((item) => (
+            {formJourneyCards.map((item) => (
               <div key={item.title} className="admin-manifest-card">
                 <span className="admin-manifest-badge">{item.outputs}</span>
                 <h3>{item.title}</h3>
@@ -381,7 +436,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Perfis</p>
-              <h2>Distribuição por perfil</h2>
+              <h2>Distribuicao por perfil</h2>
             </div>
           </div>
 
@@ -392,7 +447,7 @@ export default function AdminDataHubPage() {
                   <th>Perfil</th>
                   <th>Total</th>
                   <th>Estados</th>
-                  <th>Último registro</th>
+                  <th>Ultimo registro</th>
                 </tr>
               </thead>
               <tbody>
@@ -412,8 +467,8 @@ export default function AdminDataHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Território</p>
-              <h2>Distribuição por estado</h2>
+              <p className="eyebrow">Territorio</p>
+              <h2>Distribuicao por estado</h2>
             </div>
           </div>
 
@@ -425,7 +480,7 @@ export default function AdminDataHubPage() {
                   <th>Total</th>
                   <th>Jovens</th>
                   <th>Profissionais</th>
-                  <th>Instituições</th>
+                  <th>Instituicoes</th>
                 </tr>
               </thead>
               <tbody>
@@ -449,7 +504,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Destaques</p>
-              <h2>O que a base já mostra para a ONG</h2>
+              <h2>O que a base ja mostra para a ONG</h2>
             </div>
           </div>
 
@@ -461,13 +516,13 @@ export default function AdminDataHubPage() {
             </div>
 
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">Faixa etária em destaque</span>
+              <span className="admin-kpi-label">Faixa etaria em destaque</span>
               <strong>{topAgeRange.label}</strong>
               <span className="admin-kpi-value">{topAgeRange.value}</span>
             </div>
 
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">Gênero em destaque</span>
+              <span className="admin-kpi-label">Genero em destaque</span>
               <strong>{topGender.label}</strong>
               <span className="admin-kpi-value">{topGender.value}</span>
             </div>
@@ -491,7 +546,7 @@ export default function AdminDataHubPage() {
 
         <DownloadTable
           eyebrow="Indicadores"
-          title="Arquivos para análises e apresentações"
+          title="Arquivos para analises e apresentacoes"
           rows={statisticsDownloadRows}
           onDownload={handleDownload}
         />
@@ -499,8 +554,8 @@ export default function AdminDataHubPage() {
 
       <section className="admin-section-stack">
         <DownloadTable
-          eyebrow="Operação"
-          title="Arquivos para conferência do dia a dia"
+          eyebrow="Operacao"
+          title="Arquivos para conferencia do dia a dia"
           rows={operationalDownloadRows}
           onDownload={handleDownload}
         />
@@ -508,8 +563,70 @@ export default function AdminDataHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Uso dos arquivos</p>
-              <h2>Onde a ONG pode trabalhar com esse material</h2>
+              <p className="eyebrow">Fluxo da equipe</p>
+              <h2>Do formulario ate o material final</h2>
+            </div>
+          </div>
+
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Etapa</th>
+                  <th>O que a ONG encontra</th>
+                  <th>Para que serve</th>
+                </tr>
+              </thead>
+              <tbody>
+                {internalFlowRows.map((item) => (
+                  <tr key={item.stage}>
+                    <td>{item.stage}</td>
+                    <td>{item.detail}</td>
+                    <td>{item.use}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </section>
+
+      <section className="admin-section-grid">
+        <Card className="admin-panel-card">
+          <div className="admin-panel-header">
+            <div>
+              <p className="eyebrow">Saida da base</p>
+              <h2>O que fica interno e o que pode sair</h2>
+            </div>
+          </div>
+
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Material</th>
+                  <th>Uso</th>
+                  <th>Compartilhamento</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sharingRows.map((item) => (
+                  <tr key={item.material}>
+                    <td>{item.material}</td>
+                    <td>{item.use}</td>
+                    <td>{item.sharing}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+
+        <Card className="admin-panel-card">
+          <div className="admin-panel-header">
+            <div>
+              <p className="eyebrow">Canais de trabalho</p>
+              <h2>Onde a equipe usa esse material</h2>
             </div>
           </div>
 
@@ -518,30 +635,30 @@ export default function AdminDataHubPage() {
               <thead>
                 <tr>
                   <th>Canal</th>
-                  <th>Situação</th>
-                  <th>Base usada</th>
+                  <th>Situacao</th>
+                  <th>Uso principal</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>Painel interno da ONG</td>
                   <td>Ativo</td>
-                  <td>Acompanhamento da equipe e leitura da base</td>
+                  <td>Acompanhamento da equipe, leitura da base e consulta diaria.</td>
                 </tr>
                 <tr>
-                  <td>Apresentações institucionais</td>
-                  <td>Disponível</td>
-                  <td>PDF, planilhas e recortes organizados pela ONG</td>
+                  <td>PDFs e relatorios</td>
+                  <td>Disponivel</td>
+                  <td>Leitura institucional, reunioes, conselhos e apresentacoes.</td>
                 </tr>
                 <tr>
-                  <td>Power BI e outros painéis</td>
-                  <td>Disponível</td>
-                  <td>XLSX e CSV com recortes para análises e dashboards</td>
+                  <td>Excel, CSV e Power BI</td>
+                  <td>Disponivel</td>
+                  <td>Cruzamentos, dashboards, recortes e aprofundamento analitico.</td>
                 </tr>
                 <tr>
-                  <td>Planilhas e estudos internos</td>
-                  <td>Disponível</td>
-                  <td>XLSX e CSV para conferência, cruzamentos e relatórios</td>
+                  <td>Materiais para parceiros</td>
+                  <td>Preparado pela ONG</td>
+                  <td>Recortes selecionados antes de qualquer envio externo.</td>
                 </tr>
               </tbody>
             </table>

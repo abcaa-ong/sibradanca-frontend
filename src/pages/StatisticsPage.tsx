@@ -60,62 +60,59 @@ type TopicCard = {
 
 const overviewCards: OverviewCard[] = [
   {
-    label: 'Cadastros neste exemplo',
+    label: 'Cadastros nesta previa',
     value: '5.240',
-    description: 'Exemplo de volume para mostrar como essa leitura nacional pode aparecer na plataforma.',
+    description: 'Volume ilustrativo para mostrar como a leitura nacional pode aparecer na plataforma.',
   },
   {
     label: 'Jovens e estudantes',
     value: '2.380',
-    description: 'Pessoas em fase de descoberta, formação e crescimento dentro da dança.',
+    description: 'Participacoes de quem esta comecando, estudando ou fortalecendo seu caminho na danca.',
   },
   {
-    label: 'Profissionais da área',
+    label: 'Profissionais da danca',
     value: '1.960',
-    description: 'Pessoas que atuam, trabalham, ensinam, criam ou vivem a dança no dia a dia.',
+    description: 'Pessoas que atuam, ensinam, criam ou sustentam sua trajetoria no setor.',
   },
   {
     label: 'Escolas, grupos e projetos',
     value: '900',
-    description: 'Escolas, grupos, companhias, projetos, coletivos e espaços dedicados ao setor.',
+    description: 'Instituicoes e iniciativas que mantem formacao, circulacao e presenca territorial.',
   },
 ]
 
 const sourceCards: SourceCard[] = [
   {
-    title: 'Jovens da dança',
-    description: 'Mostra quem está começando, estudando e criando vínculo com a dança em diferentes territórios.',
-    highlights: ['Faixa etária', 'Modalidades', 'Formação'],
+    title: 'Juventudes da danca',
+    description: 'Mostra idade, formacao, modalidades e caminhos de permanencia de quem esta chegando ao setor.',
+    highlights: ['Faixa etaria', 'Modalidades', 'Formacao'],
   },
   {
-    title: 'Profissionais da área',
-    description: 'Ajuda a entender trabalho, trajetória, circulação, renda e temas que pedem mais apoio.',
-    highlights: ['Atuação', 'Editais', 'Sustentação da carreira'],
+    title: 'Profissionais da danca',
+    description: 'Aponta trabalho, renda, editais, circulacao e temas que pedem mais apoio.',
+    highlights: ['Atuacao', 'Renda', 'Apoio publico'],
   },
   {
-    title: 'Escolas, grupos e projetos',
-    description: 'Revela presença institucional, atividade contínua, interiorização e capacidade de formação.',
-    highlights: ['Estrutura', 'Território', 'Ação formativa'],
+    title: 'Instituicoes da danca',
+    description: 'Mostra estrutura, territorio, acao formativa e capacidade de continuidade de escolas e grupos.',
+    highlights: ['Estrutura', 'Territorio', 'Acao formativa'],
   },
 ]
 
 const noteCards: NoteCard[] = [
   {
-    title: 'Leitura pública da dança',
-    description:
-      'Esta página mostra apenas números gerais e recortes amplos. Nenhum cadastro individual aparece aqui.',
+    title: 'Visao publica da base',
+    description: 'Aqui aparecem somente numeros gerais e recortes amplos. Nenhum cadastro individual e exibido.',
     icon: ShieldCheck,
   },
   {
-    title: 'Como os números podem aparecer',
-    description:
-      'Os números desta tela foram organizados para mostrar como esse acompanhamento pode aparecer quando a base crescer.',
+    title: 'Leitura clara do movimento',
+    description: 'Os numeros foram organizados para mostrar como a base pode ser acompanhada de forma simples.',
     icon: Database,
   },
   {
-    title: 'Presença da dança pelo Brasil',
-    description:
-      'A ideia é mostrar presença, diversidade e alcance da dança no Brasil de maneira simples e clara.',
+    title: 'Retrato nacional da danca',
+    description: 'A proposta e mostrar alcance, diversidade e presenca da danca no Brasil com leitura acessivel.',
     icon: Globe2,
   },
 ]
@@ -124,27 +121,27 @@ const regionCards: RegionCard[] = [
   {
     title: 'Norte',
     value: '655',
-    description: 'Participações distribuídas entre capitais, interior e redes locais da região.',
+    description: 'Participacoes distribuidas entre capitais, interior e redes locais da regiao.',
   },
   {
     title: 'Nordeste',
     value: '1.325',
-    description: 'Uma das maiores concentrações desta prévia, com forte presença territorial.',
+    description: 'Uma das maiores concentracoes desta previa, com forte presenca territorial.',
   },
   {
     title: 'Centro-Oeste',
     value: '710',
-    description: 'Participações ligadas a formação, grupos e articulação regional.',
+    description: 'Participacoes ligadas a formacao, grupos e articulacao regional.',
   },
   {
     title: 'Sudeste',
     value: '1.710',
-    description: 'Maior volume da demonstração, reunindo capitais, interior e polos culturais.',
+    description: 'Maior volume desta leitura, reunindo capitais, interior e polos culturais.',
   },
   {
     title: 'Sul',
     value: '840',
-    description: 'Participações de escolas, grupos, profissionais e ações ligadas à dança.',
+    description: 'Participacoes de escolas, grupos, profissionais e acoes continuas na danca.',
   },
 ]
 
@@ -152,34 +149,39 @@ const cityCards: CityCard[] = [
   {
     title: 'Salvador',
     value: '210',
-    description: 'Presença forte em formação, grupos, festivais e ações ligadas à dança.',
+    description: 'Presenca forte em formacao, grupos, festivais e acoes ligadas a danca.',
   },
   {
     title: 'Recife',
     value: '185',
-    description: 'Cidade com movimento importante em escolas, coletivos e circulação cultural.',
+    description: 'Cidade com movimento importante em escolas, coletivos e circulacao cultural.',
   },
   {
     title: 'Belo Horizonte',
     value: '172',
-    description: 'Participações ligadas a formação, criação, companhias e projetos.',
+    description: 'Participacoes ligadas a criacao, companhias, estudos e projetos.',
   },
   {
     title: 'Rio de Janeiro',
     value: '168',
-    description: 'Presença de profissionais, instituições e iniciativas de diferentes perfis.',
+    description: 'Presenca de profissionais, instituicoes e iniciativas de diferentes perfis.',
   },
   {
-    title: 'São Paulo',
+    title: 'Sao Paulo',
     value: '160',
-    description: 'Concentração relevante de práticas, formação e articulação do setor.',
+    description: 'Concentracao relevante de praticas, formacao e articulacao do setor.',
+  },
+  {
+    title: 'Belem',
+    value: '132',
+    description: 'Leitura importante da regiao Norte, com escolas, grupos e articulacoes locais.',
   },
 ]
 
 const sectorDistribution: ChartItem[] = [
   { name: 'Jovens', value: 2380 },
   { name: 'Profissionais', value: 1960 },
-  { name: 'Instituições', value: 900 },
+  { name: 'Instituicoes', value: 900 },
 ]
 
 const regionDistribution: ChartItem[] = [
@@ -191,12 +193,12 @@ const regionDistribution: ChartItem[] = [
 ]
 
 const stateDistribution: ChartItem[] = [
-  { name: 'SP', value: 620 },
-  { name: 'BA', value: 510 },
-  { name: 'PE', value: 470 },
-  { name: 'RJ', value: 455 },
-  { name: 'MG', value: 430 },
-  { name: 'DF', value: 285 },
+  { name: 'Sao Paulo', value: 620 },
+  { name: 'Bahia', value: 510 },
+  { name: 'Pernambuco', value: 470 },
+  { name: 'Rio de Janeiro', value: 455 },
+  { name: 'Minas Gerais', value: 430 },
+  { name: 'Distrito Federal', value: 285 },
 ]
 
 const cityDistribution: ChartItem[] = [
@@ -204,109 +206,109 @@ const cityDistribution: ChartItem[] = [
   { name: 'Recife', value: 185 },
   { name: 'Belo Horizonte', value: 172 },
   { name: 'Rio de Janeiro', value: 168 },
-  { name: 'São Paulo', value: 160 },
-  { name: 'Belém', value: 132 },
+  { name: 'Sao Paulo', value: 160 },
+  { name: 'Belem', value: 132 },
 ]
 
 const ageDistribution: ChartItem[] = [
-  { name: 'Até 17', value: 2290 },
-  { name: '18 a 24', value: 980 },
-  { name: '25 a 34', value: 1135 },
-  { name: '35 a 49', value: 610 },
-  { name: '50+', value: 225 },
+  { name: 'Ate 17 anos', value: 2290 },
+  { name: '18 a 24 anos', value: 980 },
+  { name: '25 a 34 anos', value: 1135 },
+  { name: '35 a 49 anos', value: 610 },
+  { name: '50 anos ou mais', value: 225 },
 ]
 
 const genderDistribution: ChartItem[] = [
   { name: 'Mulheres', value: 2810 },
   { name: 'Homens', value: 1710 },
-  { name: 'Não binário', value: 290 },
-  { name: 'Outro / NI', value: 430 },
+  { name: 'Nao binario', value: 290 },
+  { name: 'Outro ou nao informado', value: 430 },
 ]
 
 const modalityDistribution: ChartItem[] = [
-  { name: 'Ballet clássico', value: 960 },
-  { name: 'Danças urbanas', value: 890 },
-  { name: 'Contemporânea', value: 780 },
-  { name: 'Danças populares', value: 710 },
+  { name: 'Ballet classico', value: 960 },
+  { name: 'Dancas urbanas', value: 890 },
+  { name: 'Danca contemporanea', value: 780 },
+  { name: 'Dancas populares', value: 710 },
   { name: 'Jazz', value: 655 },
-  { name: 'Salão', value: 520 },
+  { name: 'Danca de salao', value: 520 },
 ]
 
 const trainingDistribution: ChartItem[] = [
   { name: 'Estudam atualmente', value: 1430 },
   { name: 'Autodidatas', value: 860 },
-  { name: 'Formação técnica', value: 720 },
-  { name: 'Graduação', value: 480 },
-  { name: 'Pós-graduação', value: 170 },
+  { name: 'Formacao tecnica', value: 720 },
+  { name: 'Graduacao', value: 480 },
+  { name: 'Pos-graduacao', value: 170 },
 ]
 
 const institutionalDistribution: ChartItem[] = [
-  { name: 'Com ação formativa', value: 620 },
-  { name: 'Com programação anual', value: 540 },
+  { name: 'Com acao formativa', value: 620 },
+  { name: 'Com programacao anual', value: 540 },
   { name: 'Com CNPJ', value: 510 },
-  { name: 'Com bolsas', value: 290 },
+  { name: 'Com bolsas e apoios', value: 290 },
   { name: 'No interior e periferias', value: 455 },
 ]
 
 const policyDistribution: ChartItem[] = [
-  { name: 'Já participou de edital', value: 710 },
+  { name: 'Ja participou de edital', value: 710 },
   { name: 'Foi contemplado', value: 295 },
   { name: 'Busca apoio para escrita', value: 890 },
-  { name: 'Busca orientação jurídica', value: 540 },
-  { name: 'Busca formação em gestão', value: 760 },
+  { name: 'Busca orientacao juridica', value: 540 },
+  { name: 'Busca formacao em gestao', value: 760 },
 ]
 
 const financingDistribution: ChartItem[] = [
-  { name: 'Família', value: 980 },
-  { name: 'Trabalho próprio', value: 910 },
-  { name: 'Instituições', value: 540 },
+  { name: 'Familia', value: 980 },
+  { name: 'Trabalho proprio', value: 910 },
+  { name: 'Instituicoes', value: 540 },
   { name: 'Bolsas e apoios', value: 420 },
-  { name: 'Patrocínios', value: 210 },
+  { name: 'Patrocinios', value: 210 },
 ]
 
 const contentInterestDistribution: ChartItem[] = [
-  { name: 'Cursos e formação', value: 940 },
+  { name: 'Cursos e formacao', value: 940 },
   { name: 'Festivais e eventos', value: 860 },
   { name: 'Editais e oportunidades', value: 790 },
-  { name: 'Conteúdo digital', value: 650 },
-  { name: 'Gestão e carreira', value: 520 },
+  { name: 'Conteudo digital', value: 650 },
+  { name: 'Gestao e carreira', value: 520 },
 ]
 
 const demoTopicCards: TopicCard[] = [
   {
-    title: 'Aprendizagem e trajetória',
-    description: 'Mostra como as pessoas entram na dança, seguem estudando e constroem permanência no setor.',
+    title: 'Aprendizagem e trajetoria',
+    description: 'Mostra como as pessoas entram na danca, seguem estudando e constroem permanencia no setor.',
   },
   {
-    title: 'Território e presença',
-    description: 'Ajuda a visualizar onde a dança está mais presente e como ela se espalha pelo país.',
+    title: 'Territorio e presenca',
+    description: 'Ajuda a visualizar onde a danca esta mais presente e como ela se espalha pelo pais.',
   },
   {
     title: 'Estrutura e apoio',
-    description: 'Revela as condições de funcionamento, sustentação e fortalecimento das iniciativas.',
+    description: 'Revela condicoes de funcionamento, sustentacao e fortalecimento das iniciativas.',
   },
 ]
 
 const highlightMetrics = [
   {
-    label: 'Presença fora do eixo Rio-São Paulo',
+    label: 'Presenca fora do eixo Rio-Sao Paulo',
     percent: '72%',
-    detail: 'A maior parte dos registros de exemplo está distribuída em outros estados e regiões do país.',
+    detail: 'A maior parte dos registros desta previa esta distribuida em outros estados e regioes do pais.',
   },
   {
-    label: 'Ligação com formação',
+    label: 'Ligacao com formacao',
     percent: '68%',
-    detail: 'Boa parte das participações de exemplo passa por escolas, grupos de estudo e processos de aprendizagem.',
+    detail: 'Boa parte das participacoes passa por escolas, grupos de estudo e processos de aprendizagem.',
   },
   {
-    label: 'Atividade contínua',
+    label: 'Atividade continua',
     percent: '61%',
-    detail: 'Muitas instituições de exemplo mantêm aulas, ensaios, temporadas, circulação ou ação territorial.',
+    detail: 'Muitas instituicoes mantem aulas, ensaios, temporadas, circulacao ou acao territorial.',
   },
   {
     label: 'Temas que mais aparecem',
     percent: '45%',
-    detail: 'Editais, gestão e financiamento aparecem com frequência entre os temas mais citados.',
+    detail: 'Editais, gestao e financiamento aparecem com frequencia entre os assuntos mais citados.',
   },
 ]
 
@@ -319,13 +321,13 @@ export default function StatisticsPage() {
         <div className="container header-inner">
           <div className="brand-mini">
             <div className="brand-mini-icon">
-              <img src={logo} alt="Logo SIBRADANÇA" />
+              <img src={logo} alt="Logo SIBRADANCA" />
             </div>
           </div>
 
           <nav className="desktop-nav">
-            <Link to="/">Página inicial</Link>
-            <Link to="/">Formulários</Link>
+            <Link to="/">Pagina inicial</Link>
+            <Link to="/">Formularios</Link>
             <a
               href="https://www.instagram.com/sibradanca"
               target="_blank"
@@ -353,12 +355,12 @@ export default function StatisticsPage() {
           <div className="mobile-menu">
             <Link to="/" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
               <House size={18} />
-              <span>Página inicial</span>
+              <span>Pagina inicial</span>
             </Link>
 
             <Link to="/" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
               <ClipboardList size={18} />
-              <span>Formulários</span>
+              <span>Formularios</span>
             </Link>
 
             <a
@@ -379,18 +381,18 @@ export default function StatisticsPage() {
         <section className="statistics-hero section-space">
           <div className="container">
             <div className="statistics-hero-copy">
-              <Badge dark>Estatísticas nacionais</Badge>
-              <h1>Um retrato de como o Banco Nacional da Dança pode aparecer no Brasil</h1>
+              <Badge dark>Estatisticas nacionais</Badge>
+              <h1>Um retrato de como o Banco Nacional da Danca pode aparecer no Brasil</h1>
               <p className="statistics-hero-description">
-                Esta página mostra como os números do Banco Nacional da Dança podem aparecer ao
-                público, reunindo dados gerais sem expor informações pessoais.
+                Aqui aparece uma visao publica do Banco Nacional da Danca, com numeros gerais que
+                ajudam a mostrar alcance, presenca e diversidade sem expor informacoes pessoais.
               </p>
             </div>
 
             <div className="statistics-hero-actions">
               <Link to="/" className="btn btn-primary btn-large">
                 <ArrowLeft size={18} />
-                Voltar para os formulários
+                Voltar para os formularios
               </Link>
             </div>
 
@@ -415,9 +417,9 @@ export default function StatisticsPage() {
         <section className="section-space">
           <div className="container">
             <SectionTitle
-              badge="Visão geral"
-              title="Um exemplo de como esse retrato nacional pode ganhar forma"
-              description="Os números abaixo foram organizados para mostrar, de maneira simples, como esse painel pode ser apresentado em uma demonstração pública."
+              badge="Visao geral"
+              title="Um exemplo de como essa leitura nacional pode ganhar forma"
+              description="Os numeros abaixo ajudam a visualizar como o Banco Nacional da Danca pode ser apresentado ao publico."
             />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
@@ -452,9 +454,9 @@ export default function StatisticsPage() {
         <section className="section-space">
           <div className="container">
             <SectionTitle
-              badge="Leitura dos formulários"
-              title="O que esta demonstração pode mostrar sobre a base"
-              description="A proposta é reunir, em um mesmo painel, as três frentes do cadastro nacional: jovens, profissionais e instituições."
+              badge="Leitura dos formularios"
+              title="O que esta visao publica pode mostrar sobre a base"
+              description="A proposta e reunir, em um mesmo painel, as tres frentes do cadastro nacional: jovens, profissionais e instituicoes."
             />
 
             <div className="statistics-source-grid">
@@ -477,7 +479,7 @@ export default function StatisticsPage() {
             <div className="statistics-source-grid statistics-source-grid-topics">
               {demoTopicCards.map((item) => (
                 <article key={item.title} className="card statistics-source-card">
-                  <span className="eyebrow">Tema que aparece aqui</span>
+                  <span className="eyebrow">Tema desta leitura</span>
                   <h3>{item.title}</h3>
                   <p>{item.description}</p>
                 </article>
@@ -489,29 +491,29 @@ export default function StatisticsPage() {
         <section className="section-space">
           <div className="container">
             <SectionTitle
-              badge="Território"
-              title="Como a dança pode ser vista por região, estado e município"
-              description="Uma leitura pública para mostrar alcance, presença e distribuição da iniciativa pelo país."
+              badge="Territorio"
+              title="Como a danca pode ser vista por regiao, estado e municipio"
+              description="Uma leitura publica para mostrar alcance, presenca e distribuicao da iniciativa pelo pais."
             />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
-                title="Presença por região"
+                title="Presenca por regiao"
                 data={regionDistribution}
-                eyebrowLabel="Regiões"
+                eyebrowLabel="Regioes"
                 summaryItems={5}
               />
               <ChartPanel
-                title="Estados com maior presença"
+                title="Estados com maior presenca"
                 data={stateDistribution}
                 eyebrowLabel="Estados"
                 summaryItems={6}
               />
               <ChartPanel
-                title="Peso de cada região no total"
+                title="Peso de cada regiao no total"
                 data={regionDistribution}
                 type="pie"
-                eyebrowLabel="Regiões"
+                eyebrowLabel="Regioes"
                 summaryItems={5}
               />
             </div>
@@ -519,7 +521,7 @@ export default function StatisticsPage() {
             <div className="statistics-region-summary">
               {regionCards.map((item) => (
                 <article key={item.title} className="card statistics-region-card">
-                  <span className="eyebrow">Região</span>
+                  <span className="eyebrow">Regiao</span>
                   <h3>{item.title}</h3>
                   <strong>{item.value}</strong>
                   <p>{item.description}</p>
@@ -527,17 +529,17 @@ export default function StatisticsPage() {
               ))}
             </div>
 
-            <div className="statistics-chart-grid two-columns">
+            <div className="statistics-chart-grid two-columns statistics-city-stage">
               <ChartPanel
-                title="Municípios em destaque"
+                title="Municipios em destaque"
                 data={cityDistribution}
-                eyebrowLabel="Municípios"
+                eyebrowLabel="Municipios"
                 summaryItems={6}
               />
               <div className="statistics-city-summary">
                 {cityCards.map((item) => (
                   <article key={item.title} className="card statistics-city-card">
-                    <span className="eyebrow">Município</span>
+                    <span className="eyebrow">Municipio</span>
                     <h3>{item.title}</h3>
                     <strong>{item.value}</strong>
                     <p>{item.description}</p>
@@ -551,9 +553,9 @@ export default function StatisticsPage() {
         <section className="section-space">
           <div className="container">
             <SectionTitle
-              badge="Perfis da dança"
-              title="Quem aparece nesse retrato nacional da dança"
-              description="Faixa etária, gênero e modalidades ajudam a mostrar diversidade, alcance e presença no setor."
+              badge="Perfis da danca"
+              title="Quem aparece nesse retrato nacional da danca"
+              description="Faixa etaria, genero e modalidades ajudam a mostrar diversidade, alcance e presenca no setor."
             />
 
             <div className="statistics-chart-grid three-columns">
@@ -561,14 +563,14 @@ export default function StatisticsPage() {
                 title="Idades mais presentes"
                 data={ageDistribution}
                 type="pie"
-                eyebrowLabel="Faixas etárias"
+                eyebrowLabel="Faixas etarias"
                 summaryItems={5}
               />
               <ChartPanel
                 title="Como as pessoas se identificam"
                 data={genderDistribution}
                 type="pie"
-                eyebrowLabel="Gênero"
+                eyebrowLabel="Genero"
                 summaryItems={4}
               />
               <ChartPanel
@@ -584,22 +586,22 @@ export default function StatisticsPage() {
         <section className="section-space">
           <div className="container">
             <SectionTitle
-              badge="Formação e estrutura"
-              title="Sinais de formação, continuidade e organização da dança"
-              description="Uma leitura sobre formação em dança, presença das instituições e temas que pedem mais apoio."
+              badge="Formacao e estrutura"
+              title="Sinais de formacao, continuidade e organizacao da danca"
+              description="Uma leitura sobre formacao em danca, presenca das instituicoes e temas que pedem mais apoio."
             />
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
-                title="Caminhos de formação"
+                title="Caminhos de formacao"
                 data={trainingDistribution}
-                eyebrowLabel="Formação"
+                eyebrowLabel="Formacao"
                 summaryItems={5}
               />
               <ChartPanel
                 title="Como escolas e grupos se estruturam"
                 data={institutionalDistribution}
-                eyebrowLabel="Instituições"
+                eyebrowLabel="Instituicoes"
                 summaryItems={5}
               />
               <ChartPanel
@@ -610,11 +612,11 @@ export default function StatisticsPage() {
               />
               <div className="statistics-callout">
                 <div className="card statistics-callout-card">
-                  <span className="eyebrow">Apresentação</span>
-                  <h3>Uma forma de apresentar o movimento da dança no país</h3>
+                  <span className="eyebrow">Visao publica</span>
+                  <h3>Uma leitura nacional para mostrar presenca, diversidade e alcance</h3>
                   <p>
-                    Esta prévia mostra crescimento, distribuição, modalidades e retratos do setor
-                    sem expor informações pessoais. A leitura completa continua reservada à ONG.
+                    Esta previa apresenta crescimento, distribuicao, modalidades e retratos do
+                    setor. A leitura completa da base segue no painel interno da ONG.
                   </p>
                 </div>
               </div>
@@ -637,14 +639,14 @@ export default function StatisticsPage() {
         <section className="section-space">
           <div className="container">
             <SectionTitle
-              badge="Sustentação e circulação"
+              badge="Sustentacao e circulacao"
               title="Temas que ajudam a entender continuidade, apoio e desenvolvimento"
-              description="Esta parte amplia a leitura da demonstração com recortes sobre sustentação da prática, busca por conteúdo e caminhos de fortalecimento da dança."
+              description="Esta parte amplia a leitura com recortes sobre sustentacao da pratica, busca por conteudo e caminhos de fortalecimento da danca."
             />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
-                title="Quem ajuda a sustentar a prática"
+                title="Quem ajuda a sustentar a pratica"
                 data={financingDistribution}
                 eyebrowLabel="Apoio"
                 summaryItems={5}
@@ -670,20 +672,20 @@ export default function StatisticsPage() {
       <footer className="site-footer">
         <div className="container footer-inner">
           <div className="footer-brand">
-            <img src={logo} alt="Logo SIBRADANÇA" />
+            <img src={logo} alt="Logo SIBRADANCA" />
             <p>
-              <strong>SIBRADANÇA – Sistema Brasileiro de Evidências da Dança</strong>
+              <strong>SIBRADANCA - Sistema Brasileiro de Evidencias da Danca</strong>
             </p>
           </div>
 
           <div className="footer-links">
-            <Link to="/">Formulários</Link>
-            <Link to="/estatisticas-nacionais">Estatísticas nacionais</Link>
+            <Link to="/">Formularios</Link>
+            <Link to="/estatisticas-nacionais">Estatisticas nacionais</Link>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} SIBRADANÇA · Todos os direitos reservados</p>
+          <p>© {new Date().getFullYear()} SIBRADANCA · Todos os direitos reservados</p>
         </div>
       </footer>
     </div>
