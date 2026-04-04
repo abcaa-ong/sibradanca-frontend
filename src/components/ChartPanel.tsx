@@ -23,6 +23,7 @@ type ChartPanelProps = {
   className?: string
   isLoading?: boolean
   emptyMessage?: string
+  eyebrowLabel?: string
 }
 
 const colors = {
@@ -41,6 +42,7 @@ export function ChartPanel({
   className = '',
   isLoading = false,
   emptyMessage = 'Carregando...',
+  eyebrowLabel = 'Painel',
 }: ChartPanelProps) {
   const palette = [
     colors.yellow,
@@ -58,7 +60,7 @@ export function ChartPanel({
     <div className={`card chart-panel statistics-chart-panel ${className}`.trim()}>
       <div className="panel-top">
         <div>
-          <span className="eyebrow">Painel</span>
+          <span className="eyebrow">{eyebrowLabel}</span>
           <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800 }}>{title}</h3>
         </div>
       </div>
