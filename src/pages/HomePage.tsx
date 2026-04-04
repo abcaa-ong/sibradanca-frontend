@@ -93,7 +93,7 @@ const floatingShapes = [
   { className: 'shape yellow square s1', duration: 7 },
   { className: 'shape blue square s2', duration: 8 },
   { className: 'shape purple square s3', duration: 6 },
-  { className: 'shape green square s4', duration: 7.5 },
+  { className: 'shape orange circle s4', duration: 7.5 },
   { className: 'shape pink circle s5', duration: 5.5 },
   { className: 'shape cyan circle s6', duration: 6.2 },
 ]
