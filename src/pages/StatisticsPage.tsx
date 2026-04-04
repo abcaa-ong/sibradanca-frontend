@@ -35,26 +35,32 @@ type NoteCard = {
   icon: typeof Globe2
 }
 
+type RegionCard = {
+  title: string
+  value: string
+  description: string
+}
+
 const overviewCards: OverviewCard[] = [
   {
-    label: 'Participações apresentadas',
+    label: 'Total de participações',
     value: '5.240',
-    description: 'Uma amostra ilustrativa para mostrar como o painel pode aparecer em escala nacional.',
+    description: 'Número usado para mostrar como o retrato nacional pode aparecer na apresentação.',
   },
   {
     label: 'Jovens da dança',
     value: '2.380',
-    description: 'Participações de quem está começando, estudando ou crescendo na dança.',
+    description: 'Pessoas em fase de formação, descoberta e crescimento dentro da dança.',
   },
   {
     label: 'Profissionais da dança',
     value: '1.960',
-    description: 'Participações de quem atua, trabalha ou desenvolve sua trajetória na área.',
+    description: 'Pessoas que atuam, trabalham, ensinam, criam ou vivem a dança no dia a dia.',
   },
   {
     label: 'Instituições da dança',
     value: '900',
-    description: 'Escolas, grupos, companhias, projetos, coletivos e espaços dedicados à dança.',
+    description: 'Escolas, grupos, companhias, projetos, coletivos e espaços dedicados ao setor.',
   },
 ]
 
@@ -62,7 +68,7 @@ const noteCards: NoteCard[] = [
   {
     title: 'Informações gerais',
     description:
-      'Esta página mostra apenas números amplos e visões de conjunto. Nenhum cadastro individual aparece aqui.',
+      'Esta página mostra apenas números gerais e recortes amplos. Nenhum cadastro individual aparece aqui.',
     icon: ShieldCheck,
   },
   {
@@ -74,8 +80,36 @@ const noteCards: NoteCard[] = [
   {
     title: 'Olhar nacional',
     description:
-      'A ideia é mostrar presença, diversidade e alcance da dança no Brasil de forma simples e clara.',
+      'A ideia é mostrar presença, diversidade e alcance da dança no Brasil de maneira simples e clara.',
     icon: Globe2,
+  },
+]
+
+const regionCards: RegionCard[] = [
+  {
+    title: 'Norte',
+    value: '655',
+    description: 'Participações distribuídas entre capitais, interior e redes locais da região.',
+  },
+  {
+    title: 'Nordeste',
+    value: '1.325',
+    description: 'Uma das maiores concentrações desta prévia, com forte presença territorial.',
+  },
+  {
+    title: 'Centro-Oeste',
+    value: '710',
+    description: 'Participações ligadas a formação, grupos e articulação regional.',
+  },
+  {
+    title: 'Sudeste',
+    value: '1.710',
+    description: 'Maior volume da demonstração, reunindo capitais, interior e polos culturais.',
+  },
+  {
+    title: 'Sul',
+    value: '840',
+    description: 'Participações de escolas, grupos, profissionais e ações ligadas à dança.',
   },
 ]
 
@@ -143,7 +177,7 @@ const institutionalDistribution: ChartItem[] = [
 ]
 
 const policyDistribution: ChartItem[] = [
-  { name: 'Já acessou edital', value: 710 },
+  { name: 'Já participou de edital', value: 710 },
   { name: 'Foi contemplado', value: 295 },
   { name: 'Busca apoio para escrita', value: 890 },
   { name: 'Busca orientação jurídica', value: 540 },
@@ -280,7 +314,7 @@ export default function StatisticsPage() {
             <SectionTitle
               badge="Visão geral"
               title="Um exemplo de como essa leitura nacional pode ganhar forma"
-              description="Os números abaixo foram organizados para mostrar de maneira clara o potencial do projeto."
+              description="Os números abaixo foram organizados para mostrar, de maneira simples, como esse painel pode ser apresentado ao público."
             />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
@@ -296,7 +330,7 @@ export default function StatisticsPage() {
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel title="Quem está participando" data={sectorDistribution} eyebrowLabel="Brasil" />
-              <ChartPanel title="Participação total" data={sectorDistribution} type="pie" eyebrowLabel="Brasil" />
+              <ChartPanel title="Distribuição geral" data={sectorDistribution} type="pie" eyebrowLabel="Brasil" />
             </div>
           </div>
         </section>
@@ -310,9 +344,20 @@ export default function StatisticsPage() {
             />
 
             <div className="statistics-chart-grid three-columns">
-              <ChartPanel title="Onde o movimento aparece" data={regionDistribution} eyebrowLabel="Mapa" />
+              <ChartPanel title="Participações por região" data={regionDistribution} eyebrowLabel="Mapa" />
               <ChartPanel title="Estados com mais cadastros" data={stateDistribution} eyebrowLabel="Mapa" />
-              <ChartPanel title="Retrato por região" data={regionDistribution} type="pie" eyebrowLabel="Mapa" />
+              <ChartPanel title="Regiões do Brasil" data={regionDistribution} type="pie" eyebrowLabel="Mapa" />
+            </div>
+
+            <div className="statistics-region-summary">
+              {regionCards.map((item) => (
+                <article key={item.title} className="card statistics-region-card">
+                  <span className="eyebrow">Região</span>
+                  <h3>{item.title}</h3>
+                  <strong>{item.value}</strong>
+                  <p>{item.description}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
@@ -326,9 +371,9 @@ export default function StatisticsPage() {
             />
 
             <div className="statistics-chart-grid three-columns">
-              <ChartPanel title="Idades" data={ageDistribution} type="pie" eyebrowLabel="Perfis" />
-              <ChartPanel title="Como as pessoas se identificam" data={genderDistribution} type="pie" eyebrowLabel="Perfis" />
-              <ChartPanel title="Práticas que mais aparecem" data={modalityDistribution} eyebrowLabel="Perfis" />
+              <ChartPanel title="Faixas etárias" data={ageDistribution} type="pie" eyebrowLabel="Perfis" />
+              <ChartPanel title="Gênero" data={genderDistribution} type="pie" eyebrowLabel="Perfis" />
+              <ChartPanel title="Modalidades mais citadas" data={modalityDistribution} eyebrowLabel="Perfis" />
             </div>
           </div>
         </section>
@@ -338,13 +383,13 @@ export default function StatisticsPage() {
             <SectionTitle
               badge="Formação e estrutura"
               title="Sinais de formação, continuidade e organização da dança"
-              description="Uma leitura sobre aprendizagem, permanência, organizações e necessidades apontadas pelo setor."
+              description="Uma leitura sobre formação em dança, presença das instituições e temas que pedem mais apoio."
             />
 
             <div className="statistics-chart-grid two-columns">
-              <ChartPanel title="Caminhos de formação" data={trainingDistribution} eyebrowLabel="Leitura" />
+              <ChartPanel title="Formação em dança" data={trainingDistribution} eyebrowLabel="Leitura" />
               <ChartPanel title="Como as instituições se organizam" data={institutionalDistribution} eyebrowLabel="Leitura" />
-              <ChartPanel title="Assuntos que mais pedem apoio" data={policyDistribution} eyebrowLabel="Leitura" />
+              <ChartPanel title="Temas que mais pedem apoio" data={policyDistribution} eyebrowLabel="Leitura" />
               <div className="statistics-callout">
                 <div className="card statistics-callout-card">
                   <span className="eyebrow">Apresentação pública</span>

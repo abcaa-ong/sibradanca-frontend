@@ -20,27 +20,27 @@ import { formatBackendDateTime } from '../utils/backend-date'
 const workAreas = [
   {
     title: 'Cadastros',
-    audience: 'Base nominal',
-    description: 'Protocolos, fichas por camada e leitura individual de cada envio.',
+    audience: 'Cadastros da base',
+    description: 'Protocolos, fichas completas e acompanhamento individual de cada envio.',
     route: '/painel-interno/cadastros',
     actionLabel: 'Abrir módulo',
-    outputs: ['Protocolo', 'Ficha detalhada', 'Histórico'],
+    outputs: ['Protocolo', 'Ficha completa', 'Histórico'],
   },
   {
     title: 'Dados',
-    audience: 'Analítico',
-    description: 'Indicadores nacionais, arquivos executivos e integração com BI.',
+    audience: 'Leitura e relatórios',
+    description: 'Números da base, arquivos para a equipe e visão geral do movimento nacional.',
     route: '/painel-interno/dados',
     actionLabel: 'Abrir módulo',
-    outputs: ['Dashboard', 'PDF/XLSX/CSV', 'Camadas'],
+    outputs: ['Painel', 'PDF/XLSX/CSV', 'Respostas organizadas'],
   },
   {
     title: 'Acessos',
-    audience: 'Segurança',
-    description: 'Contas internas, autorização de uso e trilha de auditoria.',
+    audience: 'Contas da equipe',
+    description: 'Contas internas, permissões de uso e histórico de acessos.',
     route: '/painel-interno/acessos',
     actionLabel: 'Abrir módulo',
-    outputs: ['Contas', 'Permissões', 'Auditoria'],
+    outputs: ['Contas', 'Permissões', 'Histórico'],
   },
 ] as const
 
@@ -185,22 +185,22 @@ export default function AdminWorkspacePage() {
 
     return [
       {
-        label: 'Cobertura territorial',
+        label: 'Estados com registros',
         value: `${formatNumber(activeStates.length)} UFs`,
-        detail: `${formatPercent(activeStates.length, 27)} da cobertura potencial de estados e DF.`,
+        detail: `${formatPercent(activeStates.length, 27)} da presença possível entre estados e DF.`,
       },
       {
-        label: 'Perfis ativos',
+        label: 'Perfis com registros',
         value: `${sectorDistribution.filter((item) => item.value > 0).length}/3`,
-        detail: 'Monitoramento simultâneo de jovens, profissionais e instituições.',
+        detail: 'Jovens, profissionais e instituições acompanhados pela equipe.',
       },
       {
-        label: 'Último movimento',
+        label: 'Último cadastro',
         value: latestSubmission ? formatBackendDateTime(latestSubmission) : 'Sem registro',
-        detail: 'Horário mais recente identificado entre os registros consolidados.',
+        detail: 'Horário mais recente encontrado entre os registros da base.',
       },
       {
-        label: 'UF líder',
+        label: 'Estado com mais registros',
         value: topState ? `${topState.stateCode} (${formatNumber(topState.totalSubmissions)})` : 'Sem registro',
         detail: `${formatNumber(totalResponses)} cadastros acumulados no banco nacional até o momento.`,
       },
@@ -215,24 +215,24 @@ export default function AdminWorkspacePage() {
 
     return [
       {
-        label: 'Faixa etária líder',
+        label: 'Faixa etária mais frequente',
         value: ageLeader ? `${ageLeader.name} (${formatNumber(ageLeader.value)})` : 'Sem leitura',
-        detail: 'Recorte etário dominante na base consolidada.',
+        detail: 'Faixa etária que mais aparece entre os registros atuais.',
       },
       {
-        label: 'Gênero líder',
+        label: 'Gênero mais frequente',
         value: genderLeader ? `${genderLeader.name} (${formatNumber(genderLeader.value)})` : 'Sem leitura',
-        detail: 'Maior concentração declarada entre os perfis ativos.',
+        detail: 'Identificação que mais aparece entre os perfis ativos.',
       },
       {
-        label: 'Modalidade líder',
+        label: 'Modalidade mais citada',
         value: modalityLeader ? `${modalityLeader.name} (${formatNumber(modalityLeader.value)})` : 'Sem leitura',
-        detail: 'Modalidade mais recorrente no recorte atual.',
+        detail: 'Prática de dança mais citada no recorte atual.',
       },
       {
-        label: 'Editais',
+        label: 'Tema ligado a editais',
         value: callLeader ? `${callLeader.name} (${formatNumber(callLeader.value)})` : 'Sem leitura',
-        detail: 'Leitura mais forte da participação em chamadas e editais.',
+        detail: 'Leitura mais forte sobre participação em editais e chamadas.',
       },
     ]
   }, [dashboard])
@@ -244,7 +244,7 @@ export default function AdminWorkspacePage() {
           <p className="eyebrow">Central da ONG</p>
           <h2>Painel interno</h2>
           <p className="admin-page-subtitle">
-            Operação nacional da base, leitura executiva dos cadastros e comandos centrais da plataforma.
+            Acompanhamento da base nacional, dos cadastros e dos principais números da plataforma.
           </p>
         </div>
       </header>
@@ -255,19 +255,19 @@ export default function AdminWorkspacePage() {
         <Card className="admin-metric-card">
           <span className="eyebrow">Base total</span>
           <strong>{overview?.totalResponses ?? '-'}</strong>
-          <p className="card-text">Registros consolidados no banco principal.</p>
+          <p className="card-text">Cadastros reunidos na base nacional.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Jovens</span>
           <strong>{overview?.totalYouth ?? '-'}</strong>
-          <p className="card-text">Cadastros com recorte jovem ativos na base.</p>
+          <p className="card-text">Participações da frente jovem da dança.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Profissionais</span>
           <strong>{overview?.totalProfessionals ?? '-'}</strong>
-          <p className="card-text">Pessoas ligadas ao trabalho e renda em dança.</p>
+          <p className="card-text">Pessoas ligadas ao trabalho e à atuação em dança.</p>
         </Card>
 
         <Card className="admin-metric-card">
@@ -282,7 +282,7 @@ export default function AdminWorkspacePage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Operação</p>
-              <h2>Situação da base nacional</h2>
+              <h2>Resumo da base nacional</h2>
             </div>
           </div>
 
@@ -302,8 +302,8 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Leitura executiva</p>
-              <h2>Síntese para decisão</h2>
+              <p className="eyebrow">Destaques</p>
+              <h2>Leitura rápida da base</h2>
             </div>
           </div>
 
@@ -325,8 +325,8 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Sistema</p>
-              <h2>Módulos centrais da operação</h2>
+              <p className="eyebrow">Módulos</p>
+              <h2>Áreas de trabalho da equipe</h2>
             </div>
           </div>
 
@@ -334,8 +334,8 @@ export default function AdminWorkspacePage() {
             {workAreas.map((area) => (
               <div key={area.title} className="admin-module-card admin-module-card-system">
                 <div className="admin-module-head">
-                  <p className="admin-module-audience">{area.audience}</p>
-                  <span className="admin-status-chip">Ativo</span>
+                <p className="admin-module-audience">{area.audience}</p>
+                <span className="admin-status-chip">Ativo</span>
                 </div>
                 <h3>{area.title}</h3>
                 <p>{area.description}</p>
@@ -409,8 +409,8 @@ export default function AdminWorkspacePage() {
           <Card className="admin-panel-card admin-panel-card-full">
             <div className="admin-panel-header">
               <div>
-                <p className="eyebrow">Indicadores</p>
-                <h2>Recortes estratégicos da operação</h2>
+              <p className="eyebrow">Indicadores</p>
+              <h2>Destaques para a equipe</h2>
               </div>
             </div>
 
@@ -432,8 +432,8 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Comandos</p>
-              <h2>Acesso operacional rápido</h2>
+              <p className="eyebrow">Atalhos</p>
+              <h2>Acesso rápido da equipe</h2>
             </div>
           </div>
 

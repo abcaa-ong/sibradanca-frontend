@@ -108,14 +108,14 @@ const completeDownloadRows: DownloadRow[] = [
     action: downloadAdminSubmissionsDetailedPdf,
   },
   {
-    title: 'Base interna em camadas',
+    title: 'Base detalhada da equipe',
     format: 'XLSX',
     scope: 'Abas com visão da ONG, cadastros e respostas organizadas',
     actionLabel: 'Baixar Excel',
     action: downloadAdminSubmissionsDetailedXlsx,
   },
   {
-    title: 'Base interna em camadas',
+    title: 'Base detalhada da equipe',
     format: 'CSV',
     scope: 'Linhas por protocolo, bloco, campo e resposta',
     actionLabel: 'Baixar CSV',
@@ -125,21 +125,21 @@ const completeDownloadRows: DownloadRow[] = [
 
 const statisticsDownloadRows: DownloadRow[] = [
   {
-    title: 'Relatório analítico',
+    title: 'Relatório geral',
     format: 'PDF',
-    scope: 'Resumo executivo com indicadores por tema',
+    scope: 'Resumo visual com indicadores por tema',
     actionLabel: 'Baixar PDF',
     action: downloadAdminStatisticsPdf,
   },
   {
-    title: 'Indicadores analíticos',
+    title: 'Indicadores da base',
     format: 'XLSX',
-    scope: 'Leitura executiva com abas temáticas',
+    scope: 'Leitura da base com abas temáticas',
     actionLabel: 'Baixar Excel',
     action: downloadAdminStatisticsXlsx,
   },
   {
-    title: 'Base estatística BI',
+    title: 'Indicadores em CSV',
     format: 'CSV',
     scope: 'Indicadores e recortes para cruzamentos e relatórios',
     actionLabel: 'Baixar CSV',
@@ -364,10 +364,10 @@ export default function AdminDataHubPage() {
 
   const dataControlRows = useMemo(
     () => [
-      {
-        label: 'Registros consolidados',
-        value: overview ? formatNumber(overview.totalResponses) : '-',
-        detail: 'Cadastros consolidados e prontos para consulta da equipe.',
+    {
+      label: 'Registros consolidados',
+      value: overview ? formatNumber(overview.totalResponses) : '-',
+      detail: 'Cadastros consolidados e prontos para consulta da equipe.',
       },
       {
         label: 'UFs com presença',
@@ -377,7 +377,7 @@ export default function AdminDataHubPage() {
       {
         label: 'Último registro',
         value: latestRecordAt ? formatBackendDateTime(latestRecordAt) : 'Sem registro',
-        detail: 'Movimento mais recente encontrado entre os cadastros.',
+        detail: 'Cadastro mais recente encontrado entre os registros da base.',
       },
       {
         label: 'Perfis monitorados',
@@ -395,18 +395,18 @@ export default function AdminDataHubPage() {
       outputs: 'PDF / XLSX',
     },
     {
-      title: 'Consulta nominal',
+      title: 'Consulta por cadastro',
       description: 'Protocolos e dados principais organizados para conferência e acompanhamento.',
       outputs: 'XLSX / CSV',
     },
     {
-      title: 'Leitura por formulário',
+      title: 'Respostas por formulário',
       description: 'Respostas organizadas por bloco do formulário para revisão detalhada.',
       outputs: 'XLSX / CSV',
     },
     {
       title: 'Indicadores consolidados',
-      description: 'Arquivos sintéticos para relatórios, planilhas e leitura analítica.',
+      description: 'Arquivos organizados para relatórios, planilhas e leitura dos números da base.',
       outputs: 'PDF / XLSX / CSV',
     },
   ] as const
@@ -419,9 +419,9 @@ export default function AdminDataHubPage() {
       <header className="admin-page-header">
         <div>
           <p className="eyebrow">Dados</p>
-          <h2>Central analítica e de exportação</h2>
+          <h2>Área de dados e arquivos</h2>
           <p className="admin-page-subtitle">
-            Governança da base, recortes estatísticos e arquivos organizados para operação e BI.
+            Consulta da base, números gerais e arquivos organizados para o trabalho da equipe.
           </p>
         </div>
       </header>
@@ -476,7 +476,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Camadas</p>
-              <h2>Arquitetura dos arquivos</h2>
+              <h2>Como os arquivos estão organizados</h2>
             </div>
           </div>
 
@@ -564,8 +564,8 @@ export default function AdminDataHubPage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Mesa analítica</p>
-              <h2>Destaques para gestão e BI</h2>
+              <p className="eyebrow">Destaques</p>
+              <h2>Leitura rápida dos números</h2>
             </div>
           </div>
 
@@ -599,7 +599,7 @@ export default function AdminDataHubPage() {
 
       <section className="admin-section-stack">
         <DownloadTable
-          eyebrow="Base interna"
+          eyebrow="Base completa"
           title="Arquivos completos da base"
           rows={completeDownloadRows}
           onDownload={handleDownload}
@@ -607,7 +607,7 @@ export default function AdminDataHubPage() {
 
         <DownloadTable
           eyebrow="Indicadores"
-          title="Arquivos estatísticos"
+          title="Arquivos de leitura geral"
           rows={statisticsDownloadRows}
           onDownload={handleDownload}
         />
@@ -625,7 +625,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Integrações</p>
-              <h2>Canais de leitura e consumo</h2>
+              <h2>Onde esses arquivos podem ser usados</h2>
             </div>
           </div>
 
@@ -642,12 +642,12 @@ export default function AdminDataHubPage() {
                 <tr>
                   <td>Dashboard interno</td>
                   <td>Ativo</td>
-                  <td>Leitura executiva e operacional</td>
+                  <td>Acompanhamento da equipe</td>
                 </tr>
                 <tr>
                   <td>Power BI</td>
                   <td>Disponível</td>
-                  <td>CSV estatístico e base em camadas</td>
+                  <td>CSV de indicadores e base detalhada</td>
                 </tr>
                 <tr>
                   <td>Planilhas internas</td>

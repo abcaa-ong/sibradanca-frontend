@@ -148,6 +148,38 @@
   margin-top: 24px;
 }
 
+.statistics-region-summary {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.statistics-region-card {
+  min-height: 100%;
+}
+
+.statistics-region-card h3 {
+  margin: 14px 0 0;
+  font-size: 1.15rem;
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+.statistics-region-card strong {
+  display: block;
+  margin-top: 14px;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.statistics-region-card p {
+  margin: 14px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 .statistics-chart-grid.two-columns {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -224,6 +256,10 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .statistics-region-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .statistics-metric-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -239,6 +275,7 @@
 @media (max-width: 1100px) {
   .statistics-note-grid,
   .statistics-kpi-grid--four,
+  .statistics-region-summary,
   .statistics-chart-grid.two-columns,
   .statistics-chart-grid.three-columns,
   .statistics-metric-grid,
