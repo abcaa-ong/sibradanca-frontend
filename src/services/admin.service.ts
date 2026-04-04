@@ -13,6 +13,7 @@ import type {
 import { clearAdminCredentials, getAdminAuthHeader } from './admin-auth.service'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
+const ADMIN_CACHE_TTL_MS = 30_000
 
 type AdminFilters = {
   sector?: string
@@ -22,10 +23,17 @@ type AdminFilters = {
   limit?: number
 }
 
+type CacheEntry<T> = {
+  expiresAt: number
+  promise: Promise<T>
+}
+
 export type AdminDownloadResponse = {
   blob: Blob
   filename: string | null
 }
+
+const adminResponseCache = new Map<string, CacheEntry<unknown>>()
 
 function buildUrl(path: string) {
   return `${API_BASE_URL}${path}`
@@ -44,12 +52,17 @@ function buildQuery(filters: AdminFilters = {}) {
   return query ? `?${query}` : ''
 }
 
+function getCacheKey(path: string, varyByAuth = true) {
+  const authKey = varyByAuth ? getAdminAuthHeader() ?? 'anonymous' : 'public'
+  return `${authKey}:${path}`
+}
+
 async function performAdminRequest(input: RequestInfo | URL, init?: RequestInit) {
   const authorization = getAdminAuthHeader()
 
   if (!authorization) {
-    throw new Error('Faça login no painel interno para continuar.')
-    }
+    throw new Error('Faca login no painel interno para continuar.')
+  }
 
   try {
     const response = await fetch(input, {
@@ -62,7 +75,7 @@ async function performAdminRequest(input: RequestInfo | URL, init?: RequestInit)
 
     if (response.status === 401 || response.status === 403) {
       clearAdminCredentials()
-      throw new Error('Sua sessão interna expirou ou não possui permissão.')
+      throw new Error('Sua sessao interna expirou ou nao possui permissao.')
     }
 
     return response
@@ -71,7 +84,7 @@ async function performAdminRequest(input: RequestInfo | URL, init?: RequestInit)
       throw error
     }
 
-    throw new Error('Não foi possível conectar ao painel interno no momento.')
+    throw new Error('Nao foi possivel conectar ao painel interno no momento.')
   }
 }
 
@@ -91,6 +104,32 @@ async function parseAdminResponse<T>(response: Response, fallbackMessage: string
   return (json as ApiResponse<T>).data
 }
 
+async function adminGet<T>(path: string, fallbackMessage: string) {
+  const response = await performAdminRequest(buildUrl(path))
+  return parseAdminResponse<T>(response, fallbackMessage)
+}
+
+function cachedAdminGet<T>(path: string, fallbackMessage: string, ttlMs = ADMIN_CACHE_TTL_MS) {
+  const cacheKey = getCacheKey(path)
+  const cachedEntry = adminResponseCache.get(cacheKey)
+
+  if (cachedEntry && cachedEntry.expiresAt > Date.now()) {
+    return cachedEntry.promise as Promise<T>
+  }
+
+  const promise = adminGet<T>(path, fallbackMessage).catch((error) => {
+    adminResponseCache.delete(cacheKey)
+    throw error
+  })
+
+  adminResponseCache.set(cacheKey, {
+    expiresAt: Date.now() + ttlMs,
+    promise,
+  })
+
+  return promise
+}
+
 function getFilenameFromDisposition(headerValue: string | null) {
   if (!headerValue) {
     return null
@@ -105,16 +144,11 @@ function getFilenameFromDisposition(headerValue: string | null) {
   return fallbackMatch?.[1] ?? null
 }
 
-async function adminGet<T>(path: string, fallbackMessage: string) {
-  const response = await performAdminRequest(buildUrl(path))
-  return parseAdminResponse<T>(response, fallbackMessage)
-}
-
 async function adminDownload(path: string) {
   const response = await performAdminRequest(buildUrl(path))
 
   if (!response.ok) {
-    throw new Error('Não foi possível gerar o arquivo solicitado.')
+    throw new Error('Nao foi possivel gerar o arquivo solicitado.')
   }
 
   return {
@@ -124,60 +158,60 @@ async function adminDownload(path: string) {
 }
 
 export function getAdminOverview() {
-  return adminGet<AdminInsightsOverviewResponse>(
+  return cachedAdminGet<AdminInsightsOverviewResponse>(
     '/api/admin/insights/overview',
-    'Não foi possível carregar a visão geral do painel.'
+    'Nao foi possivel carregar a visao geral do painel.'
   )
 }
 
 export function getAdminDashboard() {
-  return adminGet<AdminInsightsDashboardResponse>(
+  return cachedAdminGet<AdminInsightsDashboardResponse>(
     '/api/admin/insights/dashboard',
-    'Não foi possível carregar o painel interno.'
+    'Nao foi possivel carregar o painel interno.'
   )
 }
 
 export function getAdminSubmissions(filters?: AdminFilters) {
   return adminGet<AdminSubmissionSummaryResponse[]>(
     `/api/admin/submissions${buildQuery(filters)}`,
-    'Não foi possível carregar os cadastros.'
+    'Nao foi possivel carregar os cadastros.'
   )
 }
 
 export function getAdminSubmissionDetail(protocol: string) {
   return adminGet<AdminSubmissionDetailResponse>(
     `/api/admin/submissions/${encodeURIComponent(protocol)}/detail`,
-    'Não foi possível carregar a ficha do cadastro.'
+    'Nao foi possivel carregar a ficha do cadastro.'
   )
 }
 
 export function getAdminAudit(protocol?: string) {
   const query = protocol ? `?protocol=${encodeURIComponent(protocol)}` : ''
 
-  return adminGet<AdminAuditLogResponse[]>(
+  return cachedAdminGet<AdminAuditLogResponse[]>(
     `/api/admin/submissions/audit${query}`,
-    'Não foi possível carregar a auditoria.'
+    'Nao foi possivel carregar a auditoria.'
   )
 }
 
 export function getAdminSectorSummary() {
-  return adminGet<AdminBiSectorSummaryResponse[]>(
+  return cachedAdminGet<AdminBiSectorSummaryResponse[]>(
     '/api/admin/bi/sector-summary',
-    'Não foi possível carregar o resumo por setor.'
+    'Nao foi possivel carregar o resumo por setor.'
   )
 }
 
 export function getAdminStateSummary() {
-  return adminGet<AdminBiStateSummaryResponse[]>(
+  return cachedAdminGet<AdminBiStateSummaryResponse[]>(
     '/api/admin/bi/state-summary',
-    'Não foi possível carregar o resumo por estado.'
+    'Nao foi possivel carregar o resumo por estado.'
   )
 }
 
 export function getAdminSubmissionDataset(filters?: AdminFilters) {
   return adminGet<AdminBiSubmissionRowResponse[]>(
     `/api/admin/bi/submissions${buildQuery(filters)}`,
-    'Não foi possível carregar a base interna.'
+    'Nao foi possivel carregar a base interna.'
   )
 }
 
@@ -213,23 +247,43 @@ export function downloadAdminSubmissionsDetailedPdf() {
   return adminDownload('/api/admin/exports/submissions-detailed.pdf')
 }
 
-export async function getBackendHealthStatus() {
-  try {
-    const response = await fetch(buildUrl('/actuator/health'))
-    let payload: BackendHealthStatusResponse | null = null
+export function getBackendHealthStatus() {
+  const path = '/actuator/health'
+  const cacheKey = getCacheKey(path, false)
+  const cachedEntry = adminResponseCache.get(cacheKey)
 
+  if (cachedEntry && cachedEntry.expiresAt > Date.now()) {
+    return cachedEntry.promise as Promise<BackendHealthStatusResponse>
+  }
+
+  const promise = (async () => {
     try {
-      payload = (await response.json()) as BackendHealthStatusResponse
+      const response = await fetch(buildUrl(path))
+      let payload: BackendHealthStatusResponse | null = null
+
+      try {
+        payload = (await response.json()) as BackendHealthStatusResponse
+      } catch {
+        payload = null
+      }
+
+      if (!payload?.status) {
+        throw new Error('Nao foi possivel carregar a saude do ambiente interno.')
+      }
+
+      return payload
     } catch {
-      payload = null
+      throw new Error('Nao foi possivel consultar o ambiente interno.')
     }
+  })().catch((error) => {
+    adminResponseCache.delete(cacheKey)
+    throw error
+  })
 
-    if (!payload?.status) {
-    throw new Error('Não foi possível carregar a saúde do ambiente interno.')
-  }
+  adminResponseCache.set(cacheKey, {
+    expiresAt: Date.now() + ADMIN_CACHE_TTL_MS,
+    promise,
+  })
 
-    return payload
-  } catch {
-    throw new Error('Nao foi possivel consultar o ambiente interno.')
-  }
+  return promise
 }
