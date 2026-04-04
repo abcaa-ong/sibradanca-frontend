@@ -1,10 +1,10 @@
 import { Card } from '../components/Card'
 
 const accessMatrix = [
-  ['Gestor', 'Visao geral e relatorios', 'Ativo'],
-  ['Operacao', 'Cadastros e protocolos', 'Ativo'],
-  ['Auditoria', 'Historico e conformidade', 'Ativo'],
-  ['Equipe de dados', 'Bases e exportacoes', 'Ativo'],
+  ['Gestor', 'Visão geral e relatórios', 'Ativo'],
+  ['Operação', 'Cadastros e protocolos', 'Ativo'],
+  ['Auditoria', 'Histórico e conformidade', 'Ativo'],
+  ['Equipe de dados', 'Bases e exportações', 'Ativo'],
   ['Administrador', 'Acessos e sistema', 'Ativo'],
 ] as const
 
@@ -14,24 +14,24 @@ const accountRoutines = [
     text: 'Cadastro das pessoas que entram no ambiente interno.',
   },
   {
-    title: 'Permissoes',
-    text: 'Definicao do que cada equipe pode ver, baixar ou alterar.',
+    title: 'Permissões',
+    text: 'Definição do que cada equipe pode ver, baixar ou alterar.',
   },
   {
     title: 'Senha',
-    text: 'Troca de senha, recuperacao de acesso e bloqueio quando necessario.',
+    text: 'Troca de senha, recuperação de acesso e bloqueio quando necessário.',
   },
   {
-    title: 'Notificacoes',
+    title: 'Notificações',
     text: 'Mensagens internas, alertas e avisos de uso do sistema.',
   },
 ] as const
 
 const accountStatus = [
   ['Contas internas', '5 perfis previstos'],
-  ['Recuperacao de acesso', 'Disponivel'],
-  ['Politica de senha', 'Ativa'],
-  ['Alertas internos', 'Configuraveis'],
+  ['Recuperação de acesso', 'Disponível'],
+  ['Política de senha', 'Ativa'],
+  ['Alertas internos', 'Configuráveis'],
 ] as const
 
 export default function AdminUsersPage() {
@@ -39,10 +39,10 @@ export default function AdminUsersPage() {
     <div className="admin-page-content">
       <header className="admin-page-header">
         <div>
-          <p className="eyebrow">Usuarios</p>
+          <p className="eyebrow">Usuários</p>
           <h2>Contas e acessos internos</h2>
           <p className="admin-page-subtitle">
-            Esta area organiza quem entra no sistema e o que cada equipe pode fazer.
+            Esta área organiza quem entra no sistema e o que cada equipe pode fazer.
           </p>
         </div>
       </header>
@@ -61,7 +61,7 @@ export default function AdminUsersPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Rotinas</p>
-              <h2>O que esta area concentra</h2>
+              <h2>O que esta área concentra</h2>
             </div>
           </div>
 
@@ -79,15 +79,15 @@ export default function AdminUsersPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Fluxos</p>
-              <h2>Operacoes esperadas</h2>
+              <h2>Operações esperadas</h2>
             </div>
           </div>
 
           <ul className="admin-purpose-list">
             <li>Criar ou desativar acessos internos.</li>
-            <li>Definir perfil e permissao por equipe.</li>
+            <li>Definir perfil e permissão por equipe.</li>
             <li>Recuperar acesso quando a conta for perdida.</li>
-            <li>Centralizar avisos e notificacoes do ambiente.</li>
+            <li>Centralizar avisos e notificações do ambiente.</li>
           </ul>
         </Card>
       </section>

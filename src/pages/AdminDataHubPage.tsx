@@ -101,7 +101,7 @@ const operationalDownloadRows: DownloadRow[] = [
 
 function getTopItem(
   items: Array<{ name: string; value: number }> | undefined,
-  fallbackLabel: string
+  fallbackLabel: string,
 ) {
   if (!items?.length) {
     return { label: fallbackLabel, value: '-' }

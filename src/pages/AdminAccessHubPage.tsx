@@ -5,18 +5,18 @@ import type { AdminAuditLogResponse, BackendHealthStatusResponse } from '../type
 import { formatBackendDateTime } from '../utils/backend-date'
 
 const roles = [
-  ['Gestao', 'Indicadores e relatorios'],
-  ['Operacao', 'Cadastros e protocolos'],
-  ['Auditoria', 'Historico e conferencia'],
+  ['Gestão', 'Indicadores e relatórios'],
+  ['Operação', 'Cadastros e protocolos'],
+  ['Auditoria', 'Histórico e conferência'],
   ['Dados', 'Planilhas e cruzamentos'],
-  ['Administracao', 'Contas e permissoes'],
+  ['Administração', 'Contas e permissões'],
 ] as const
 
 const controls = [
-  ['Autenticacao', 'Ativa'],
+  ['Autenticação', 'Ativa'],
   ['Auditoria', 'Ativa'],
-  ['Permissoes', 'Restritas'],
-  ['Recuperacao', 'Em configuracao'],
+  ['Permissões', 'Restritas'],
+  ['Recuperação', 'Em configuração'],
 ] as const
 
 export default function AdminAccessHubPage() {
@@ -38,7 +38,7 @@ export default function AdminAccessHubPage() {
         setError(
           loadError instanceof Error
             ? loadError.message
-            : 'Nao foi possivel carregar a area de acessos.',
+            : 'Não foi possível carregar a área de acessos.',
         )
       }
 
@@ -58,9 +58,9 @@ export default function AdminAccessHubPage() {
       <header className="admin-page-header admin-page-header-compact">
         <div>
           <p className="eyebrow">Acessos</p>
-          <h2>Seguranca e auditoria</h2>
+          <h2>Segurança e auditoria</h2>
           <p className="admin-page-subtitle">
-            Contas internas, permissoes e historico operacional.
+            Contas internas, permissões e histórico operacional.
           </p>
         </div>
       </header>
@@ -79,7 +79,7 @@ export default function AdminAccessHubPage() {
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Ultimo registro</span>
+          <span className="eyebrow">Último registro</span>
           <strong>{formatBackendDateTime(lastAudit)}</strong>
         </Card>
 
@@ -152,7 +152,7 @@ export default function AdminAccessHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Auditoria</p>
-              <h2>Historico recente</h2>
+              <h2>Histórico recente</h2>
             </div>
           </div>
 
@@ -160,7 +160,7 @@ export default function AdminAccessHubPage() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Acao</th>
+                  <th>Ação</th>
                   <th>Ator</th>
                   <th>Alvo</th>
                   <th>Detalhe</th>

@@ -302,7 +302,7 @@ function calculateAge(birthDate: Date) {
 
 function resolveAgeRangeForSector(sector: string, age: number) {
   if (sector === 'YOUTH') {
-    if (age <= 10) return 'Ate 10 anos'
+    if (age <= 10) return 'Até 10 anos'
     if (age <= 13) return '11 a 13 anos'
     if (age <= 15) return '14 a 15 anos'
     if (age <= 17) return '16 a 17 anos'

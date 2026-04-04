@@ -12,12 +12,12 @@ import {
 
 const exportGroups = [
   {
-    title: 'Relatorios executivos',
+    title: 'Relatórios executivos',
     items: [
       {
-        name: 'Relatorio institucional',
+        name: 'Relatório institucional',
         format: 'PDF',
-        purpose: 'Diretoria, parceiros e prestacao de contas',
+        purpose: 'Diretoria, parceiros e prestação de contas',
         actionLabel: 'Baixar PDF',
         action: downloadAdminStatisticsPdf,
       },
@@ -27,30 +27,30 @@ const exportGroups = [
     title: 'Planilhas de trabalho',
     items: [
       {
-        name: 'Base estatistica consolidada',
+        name: 'Base estatística consolidada',
         format: 'XLSX',
-        purpose: 'Equipe de dados, analise e consolidacao',
+        purpose: 'Equipe de dados, análise e consolidação',
         actionLabel: 'Baixar Excel',
         action: downloadAdminStatisticsXlsx,
       },
       {
         name: 'Base administrativa de cadastros',
         format: 'XLSX',
-        purpose: 'Operacao, atendimento e conferencia',
+        purpose: 'Operação, atendimento e conferência',
         actionLabel: 'Baixar Excel',
         action: downloadAdminSubmissionsXlsx,
       },
       {
-        name: 'Base estatistica alternativa',
+        name: 'Base estatística alternativa',
         format: 'CSV',
-        purpose: 'Importacao rapida e integracoes',
+        purpose: 'Importação rápida e integrações',
         actionLabel: 'Baixar CSV',
         action: downloadAdminStatisticsCsv,
       },
       {
-        name: 'Cadastros para importacao rapida',
+        name: 'Cadastros para importação rápida',
         format: 'CSV',
-        purpose: 'Sistemas legados e conferencias pontuais',
+        purpose: 'Sistemas legados e conferências pontuais',
         actionLabel: 'Baixar CSV',
         action: downloadAdminSubmissionsCsv,
       },
@@ -65,19 +65,19 @@ const integrationCards = [
   },
   {
     title: 'Excel',
-    text: 'Apoia filtros, tratamento de base, cruzamentos e revisoes operacionais.',
+    text: 'Apoia filtros, tratamento de base, cruzamentos e revisões operacionais.',
   },
   {
     title: 'PDF',
-    text: 'Entrega leitura executiva pronta para reunioes, conselho e auditoria.',
+    text: 'Entrega leitura executiva pronta para reuniões, conselho e auditoria.',
   },
 ] as const
 
 const fileMatrix = [
   ['PDF institucional', 'Diretoria e auditoria', 'Leitura executiva'],
-  ['Excel estatistico', 'Equipe de dados', 'Tratamento e cruzamento'],
-  ['Excel de cadastros', 'Operacao', 'Conferencia e atendimento'],
-  ['CSV', 'Integracoes', 'Carga em outras ferramentas'],
+  ['Excel estatístico', 'Equipe de dados', 'Tratamento e cruzamento'],
+  ['Excel de cadastros', 'Operação', 'Conferência e atendimento'],
+  ['CSV', 'Integrações', 'Carga em outras ferramentas'],
 ] as const
 
 function triggerDownload(blob: Blob, filename: string | null) {
@@ -104,7 +104,7 @@ export default function AdminExportsPage() {
       setDownloadError(
         downloadActionError instanceof Error
           ? downloadActionError.message
-          : 'Nao foi possivel gerar o arquivo solicitado.'
+          : 'Não foi possível gerar o arquivo solicitado.',
       )
     }
   }
@@ -113,10 +113,11 @@ export default function AdminExportsPage() {
     <div className="admin-page-content">
       <header className="admin-page-header">
         <div>
-          <p className="eyebrow">Relatorios</p>
+          <p className="eyebrow">Relatórios</p>
           <h2>Arquivos e bases internas</h2>
           <p className="admin-page-subtitle">
-            Cada arquivo atende uma rotina diferente da equipe. A leitura executiva, a operacao e a analise de dados nao ficam mais misturadas.
+            Cada arquivo atende uma rotina diferente da equipe. A leitura executiva, a operação e a
+            análise de dados não ficam mais misturadas.
           </p>
         </div>
       </header>

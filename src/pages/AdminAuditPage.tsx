@@ -5,9 +5,9 @@ import type { AdminAuditLogResponse } from '../types/admin'
 import { formatBackendDateTime } from '../utils/backend-date'
 
 const auditFocus = [
-  'Historico de movimentacoes internas da base',
-  'Trilha de consulta para conferencias e revisoes',
-  'Registro de eventos associados a protocolos e operacao',
+  'Histórico de movimentações internas da base',
+  'Trilha de consulta para conferências e revisões',
+  'Registro de eventos associados a protocolos e operação',
   'Base de apoio para controle institucional e conformidade',
 ] as const
 
@@ -23,7 +23,7 @@ export default function AdminAuditPage() {
         const auditData = await getAdminAudit()
         setAuditLogs(auditData)
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : 'Nao foi possivel carregar a auditoria.')
+        setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar a auditoria.')
       }
     }
 
@@ -35,9 +35,9 @@ export default function AdminAuditPage() {
       <header className="admin-page-header">
         <div>
           <p className="eyebrow">Auditoria e conformidade</p>
-          <h2>Historico e rastreabilidade da base</h2>
+          <h2>Histórico e rastreabilidade da base</h2>
           <p className="admin-page-subtitle">
-            Area reservada para trilhas de verificacao, acompanhamento institucional e controle de movimentacoes da operacao interna.
+            Área reservada para trilhas de verificação, acompanhamento institucional e controle de movimentações da operação interna.
           </p>
         </div>
       </header>
@@ -49,7 +49,7 @@ export default function AdminAuditPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Finalidade</p>
-              <h2>O que esta area acompanha</h2>
+              <h2>O que esta área acompanha</h2>
             </div>
           </div>
 
@@ -69,10 +69,10 @@ export default function AdminAuditPage() {
           </div>
 
           <ul className="admin-purpose-list">
-            <li><strong>Auditoria:</strong> rastreabilidade e verificacao de historicos.</li>
-            <li><strong>Coordenacao:</strong> acompanhamento institucional e governanca.</li>
-            <li><strong>Operacao:</strong> conferencia de eventos ligados aos registros.</li>
-            <li><strong>Suporte:</strong> apoio na investigacao de ocorrencias e inconsistencias.</li>
+            <li><strong>Auditoria:</strong> rastreabilidade e verificação de históricos.</li>
+            <li><strong>Coordenação:</strong> acompanhamento institucional e governança.</li>
+            <li><strong>Operação:</strong> conferência de eventos ligados aos registros.</li>
+            <li><strong>Suporte:</strong> apoio na investigação de ocorrências e inconsistências.</li>
           </ul>
         </Card>
       </section>
@@ -81,7 +81,7 @@ export default function AdminAuditPage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Historico recente</p>
+              <p className="eyebrow">Histórico recente</p>
               <h2>Eventos acompanhados no ambiente interno</h2>
             </div>
           </div>
@@ -90,7 +90,7 @@ export default function AdminAuditPage() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Acao</th>
+                  <th>Ação</th>
                   <th>Ator</th>
                   <th>Alvo</th>
                   <th>Detalhe</th>

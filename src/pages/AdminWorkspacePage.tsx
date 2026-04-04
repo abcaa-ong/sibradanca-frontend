@@ -19,14 +19,14 @@ const workAreas = [
   {
     title: 'Dados',
     audience: 'Indicadores',
-    description: 'Dashboard, relatorios e exportacoes.',
+    description: 'Dashboard, relatórios e exportações.',
     route: '/painel-interno/dados',
     actionLabel: 'Abrir',
   },
   {
     title: 'Acessos',
-    audience: 'Seguranca',
-    description: 'Contas internas, permissoes e auditoria.',
+    audience: 'Segurança',
+    description: 'Contas internas, permissões e auditoria.',
     route: '/painel-interno/acessos',
     actionLabel: 'Abrir',
   },
@@ -69,7 +69,7 @@ export default function AdminWorkspacePage() {
         setError(
           loadError instanceof Error
             ? loadError.message
-            : 'Nao foi possivel carregar o painel interno.',
+            : 'Não foi possível carregar o painel interno.',
         )
       }
     }
@@ -112,7 +112,7 @@ export default function AdminWorkspacePage() {
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Instituicoes</span>
+          <span className="eyebrow">Instituições</span>
           <strong>{overview?.totalInstitutions ?? '-'}</strong>
         </Card>
       </section>
@@ -121,8 +121,8 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Navegacao</p>
-              <h2>Modulos</h2>
+              <p className="eyebrow">Navegação</p>
+              <h2>Módulos</h2>
             </div>
           </div>
 
@@ -145,7 +145,7 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Leitura rapida</p>
+              <p className="eyebrow">Leitura rápida</p>
               <h2>Indicadores atuais</h2>
             </div>
           </div>
@@ -158,13 +158,13 @@ export default function AdminWorkspacePage() {
             </div>
 
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">Faixa etaria</span>
+              <span className="admin-kpi-label">Faixa etária</span>
               <strong>{topAgeRange.label}</strong>
               <span className="admin-kpi-value">{topAgeRange.value}</span>
             </div>
 
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">Genero</span>
+              <span className="admin-kpi-label">Gênero</span>
               <strong>{topGender.label}</strong>
               <span className="admin-kpi-value">{topGender.value}</span>
             </div>
@@ -174,8 +174,8 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Acoes</p>
-              <h2>Acesso rapido</h2>
+              <p className="eyebrow">Ações</p>
+              <h2>Acesso rápido</h2>
             </div>
           </div>
 

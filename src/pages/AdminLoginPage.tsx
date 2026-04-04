@@ -37,7 +37,7 @@ export default function AdminLoginPage() {
       setError(
         submitError instanceof Error
           ? submitError.message
-          : 'Nao foi possivel entrar na central administrativa.',
+          : 'Não foi possível entrar na central administrativa.',
       )
     } finally {
       setIsSubmitting(false)
@@ -52,12 +52,12 @@ export default function AdminLoginPage() {
             <LockKeyhole size={24} />
           </div>
           <p className="eyebrow">Central administrativa</p>
-          <h1>Area restrita da ONG</h1>
-          <p className="card-text">Entrar na area interna.</p>
+          <h1>Área restrita da ONG</h1>
+          <p className="card-text">Entrar na área interna.</p>
 
           <form className="admin-login-form" onSubmit={handleSubmit}>
             <label className="admin-field">
-              <span>Usuario</span>
+              <span>Usuário</span>
               <input value={username} onChange={(event) => setUsername(event.target.value)} />
             </label>
 

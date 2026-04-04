@@ -5,28 +5,28 @@ import type { AdminInsightsOverviewResponse, BackendHealthStatusResponse } from 
 
 const serviceStatus = [
   ['Backend', 'Ativo', 'API principal do sistema'],
-  ['Banco de dados', 'Conectado', 'Base unica do projeto'],
-  ['Exportacoes', 'Disponiveis', 'PDF, CSV e Excel'],
+  ['Banco de dados', 'Conectado', 'Base única do projeto'],
+  ['Exportações', 'Disponíveis', 'PDF, CSV e Excel'],
   ['Credenciais', 'Controladas', 'Acesso interno por perfil'],
-  ['Analise de dados', 'Disponivel', 'Base pronta para BI'],
+  ['Análise de dados', 'Disponível', 'Base pronta para BI'],
 ] as const
 
 const adminModules = [
   {
     title: 'Ambiente',
-    text: 'Saude do backend, banco e rotinas do sistema.',
+    text: 'Saúde do backend, banco e rotinas do sistema.',
   },
   {
-    title: 'Seguranca',
-    text: 'Permissoes, credenciais e uso do ambiente interno.',
+    title: 'Segurança',
+    text: 'Permissões, credenciais e uso do ambiente interno.',
   },
   {
     title: 'Suporte',
-    text: 'Incidentes, manutencao e apoio para a equipe.',
+    text: 'Incidentes, manutenção e apoio para a equipe.',
   },
   {
-    title: 'Integracoes',
-    text: 'Arquivos, BI e conexoes com outras ferramentas.',
+    title: 'Integrações',
+    text: 'Arquivos, BI e conexões com outras ferramentas.',
   },
 ] as const
 
@@ -44,7 +44,7 @@ export default function AdminGovernancePage() {
 
         setOverview(overviewData)
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : 'Nao foi possivel carregar a administracao.')
+        setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar a administração.')
       }
 
       try {
@@ -62,10 +62,10 @@ export default function AdminGovernancePage() {
     <div className="admin-page-content">
       <header className="admin-page-header">
         <div>
-          <p className="eyebrow">Administracao</p>
+          <p className="eyebrow">Administração</p>
           <h2>Sistema, suporte e ambiente</h2>
           <p className="admin-page-subtitle">
-            Esta area acompanha o funcionamento do sistema e o apoio interno da ONG.
+            Esta área acompanha o funcionamento do sistema e o apoio interno da ONG.
           </p>
         </div>
       </header>
@@ -99,8 +99,8 @@ export default function AdminGovernancePage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Modulos</p>
-              <h2>Frentes da administracao</h2>
+              <p className="eyebrow">Módulos</p>
+              <h2>Frentes da administração</h2>
             </div>
           </div>
 
@@ -118,15 +118,15 @@ export default function AdminGovernancePage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Rotina</p>
-              <h2>Uso esperado desta area</h2>
+              <h2>Uso esperado desta área</h2>
             </div>
           </div>
 
           <ul className="admin-purpose-list">
-            <li>Controlar acessos internos e permissoes.</li>
-            <li>Acompanhar a saude do sistema.</li>
-            <li>Organizar suporte e manutencao.</li>
-            <li>Garantir que as exportacoes e integracoes estejam disponiveis.</li>
+            <li>Controlar acessos internos e permissões.</li>
+            <li>Acompanhar a saúde do sistema.</li>
+            <li>Organizar suporte e manutenção.</li>
+            <li>Garantir que as exportações e integrações estejam disponíveis.</li>
           </ul>
         </Card>
       </section>
@@ -135,8 +135,8 @@ export default function AdminGovernancePage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Servicos</p>
-              <h2>Situcao atual do ambiente</h2>
+              <p className="eyebrow">Serviços</p>
+              <h2>Situação atual do ambiente</h2>
             </div>
           </div>
 
@@ -144,8 +144,8 @@ export default function AdminGovernancePage() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Servico</th>
-                  <th>Situacao</th>
+                  <th>Serviço</th>
+                  <th>Situação</th>
                   <th>Uso</th>
                 </tr>
               </thead>

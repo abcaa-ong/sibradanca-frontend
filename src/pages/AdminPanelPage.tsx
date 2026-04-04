@@ -42,7 +42,7 @@ export default function AdminPanelPage() {
         setSectorSummary(sectorData)
         setStateSummary(stateData)
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : 'Nao foi possivel carregar o dashboard.')
+        setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar o dashboard.')
       } finally {
         setIsLoading(false)
       }
@@ -55,8 +55,8 @@ export default function AdminPanelPage() {
     <div className="admin-page-content">
       <header className="admin-page-header">
         <div>
-          <p className="eyebrow">Gestao</p>
-          <h2>Visao geral da base</h2>
+          <p className="eyebrow">Gestão</p>
+          <h2>Visão geral da base</h2>
           <p className="admin-page-subtitle">Indicadores centrais para a equipe gestora.</p>
         </div>
       </header>
@@ -67,21 +67,21 @@ export default function AdminPanelPage() {
         <Card className="admin-summary-card admin-summary-card-highlight">
           <p className="eyebrow">Painel executivo</p>
           <h2>Acompanhamento central</h2>
-          <p className="card-text">Totais, distribuicao por perfil e leitura territorial.</p>
+          <p className="card-text">Totais, distribuição por perfil e leitura territorial.</p>
         </Card>
 
         <Card className="admin-summary-card">
-          <p className="eyebrow">Atualizacao</p>
+          <p className="eyebrow">Atualização</p>
           <strong>{isLoading ? 'Carregando' : 'Sincronizado'}</strong>
           <p className="card-text">Conectado ao banco principal do projeto.</p>
         </Card>
 
-          <Card className="admin-summary-card">
-            <p className="eyebrow">Abrangencia</p>
-            <strong>{stateSummary.length}</strong>
-            <p className="card-text">Estados com registros visiveis para acompanhamento.</p>
-          </Card>
-        </section>
+        <Card className="admin-summary-card">
+          <p className="eyebrow">Abrangência</p>
+          <strong>{stateSummary.length}</strong>
+          <p className="card-text">Estados com registros visíveis para acompanhamento.</p>
+        </Card>
+      </section>
 
       <section className="admin-grid">
         <Card className="admin-metric-card">
@@ -99,11 +99,11 @@ export default function AdminPanelPage() {
         <Card className="admin-metric-card">
           <span className="eyebrow">Profissionais</span>
           <strong>{overview?.totalProfessionals ?? '-'}</strong>
-          <p className="card-text">Pessoas adultas ligadas a danca.</p>
+          <p className="card-text">Pessoas adultas ligadas à dança.</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Instituicoes</span>
+          <span className="eyebrow">Instituições</span>
           <strong>{overview?.totalInstitutions ?? '-'}</strong>
           <p className="card-text">Escolas, grupos, companhias e projetos.</p>
         </Card>
@@ -113,7 +113,7 @@ export default function AdminPanelPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Distribuicao por perfil</p>
+              <p className="eyebrow">Distribuição por perfil</p>
               <h2>Resumo por setor</h2>
             </div>
           </div>
@@ -125,7 +125,7 @@ export default function AdminPanelPage() {
                   <th>Setor</th>
                   <th>Total</th>
                   <th>Estados</th>
-                  <th>Ultimo registro</th>
+                  <th>Último registro</th>
                 </tr>
               </thead>
               <tbody>
@@ -146,7 +146,7 @@ export default function AdminPanelPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Leitura territorial</p>
-              <h2>Distribuicao por estado</h2>
+              <h2>Distribuição por estado</h2>
             </div>
           </div>
 
@@ -158,7 +158,7 @@ export default function AdminPanelPage() {
                   <th>Total</th>
                   <th>Jovens</th>
                   <th>Profissionais</th>
-                  <th>Instituicoes</th>
+                  <th>Instituições</th>
                 </tr>
               </thead>
               <tbody>
@@ -181,9 +181,10 @@ export default function AdminPanelPage() {
         <Card className="admin-panel-card admin-dashboard-note">
           <p className="eyebrow">Panorama atual</p>
           <p className="card-text">
-            Neste momento, a base interna registra {dashboard.overview.totalResponses} cadastros, distribuidos entre{' '}
-            {dashboard.overview.totalYouth} jovens, {dashboard.overview.totalProfessionals} profissionais e{' '}
-            {dashboard.overview.totalInstitutions} instituicoes.
+            Neste momento, a base interna registra {dashboard.overview.totalResponses} cadastros,
+            distribuídos entre {dashboard.overview.totalYouth} jovens,{' '}
+            {dashboard.overview.totalProfessionals} profissionais e{' '}
+            {dashboard.overview.totalInstitutions} instituições.
           </p>
         </Card>
       ) : null}
