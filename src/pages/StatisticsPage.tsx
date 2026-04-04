@@ -47,6 +47,12 @@ type CityCard = {
   description: string
 }
 
+type SourceCard = {
+  title: string
+  description: string
+  highlights: string[]
+}
+
 const overviewCards: OverviewCard[] = [
   {
     label: 'Cadastros neste exemplo',
@@ -67,6 +73,24 @@ const overviewCards: OverviewCard[] = [
     label: 'Escolas, grupos e projetos',
     value: '900',
     description: 'Escolas, grupos, companhias, projetos, coletivos e espaços dedicados ao setor.',
+  },
+]
+
+const sourceCards: SourceCard[] = [
+  {
+    title: 'Jovens da dança',
+    description: 'Mostra quem está começando, estudando e criando vínculo com a dança em diferentes territórios.',
+    highlights: ['Faixa etária', 'Modalidades', 'Formação'],
+  },
+  {
+    title: 'Profissionais da área',
+    description: 'Ajuda a entender trabalho, trajetória, circulação, renda e temas que pedem mais apoio.',
+    highlights: ['Atuação', 'Editais', 'Sustentação da carreira'],
+  },
+  {
+    title: 'Escolas, grupos e projetos',
+    description: 'Revela presença institucional, atividade contínua, interiorização e capacidade de formação.',
+    highlights: ['Estrutura', 'Território', 'Ação formativa'],
   },
 ]
 
@@ -385,6 +409,33 @@ export default function StatisticsPage() {
                 eyebrowLabel="Retrato"
                 summaryItems={3}
               />
+            </div>
+          </div>
+        </section>
+
+        <section className="section-space">
+          <div className="container">
+            <SectionTitle
+              badge="Leitura dos formulários"
+              title="O que esta demonstração consegue revelar sobre a base"
+              description="A proposta é reunir, em um mesmo painel, as três frentes do cadastro nacional: jovens, profissionais e instituições."
+            />
+
+            <div className="statistics-source-grid">
+              {sourceCards.map((item) => (
+                <article key={item.title} className="card statistics-source-card">
+                  <span className="eyebrow">Frente de leitura</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                  <div className="statistics-source-tags">
+                    {item.highlights.map((highlight) => (
+                      <span key={`${item.title}-${highlight}`} className="statistics-source-tag">
+                        {highlight}
+                      </span>
+                    ))}
+                  </div>
+                </article>
+              ))}
             </div>
           </div>
         </section>

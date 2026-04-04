@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import AdminLayout from '../components/AdminLayout'
 import AdminAccessHubPage from '../pages/AdminAccessHubPage'
 import AdminDataHubPage from '../pages/AdminDataHubPage'
+import AdminExportsPage from '../pages/AdminExportsPage'
 import AdminLoginPage from '../pages/AdminLoginPage'
 import AdminSubmissionDetailPage from '../pages/AdminSubmissionDetailPage'
 import AdminSubmissionsPage from '../pages/AdminSubmissionsPage'
@@ -24,13 +25,14 @@ export default function AppRoutes() {
         <Route path="cadastros" element={<AdminSubmissionsPage />} />
         <Route path="cadastros/:protocol" element={<AdminSubmissionDetailPage />} />
         <Route path="dados" element={<AdminDataHubPage />} />
+        <Route path="exportacoes" element={<AdminExportsPage />} />
         <Route path="acessos" element={<AdminAccessHubPage />} />
-        <Route path="gestao" element={<Navigate to="../dados" replace />} />
+        <Route path="gestao" element={<Navigate to="../dashboard" replace />} />
         <Route path="usuarios" element={<Navigate to="../acessos" replace />} />
         <Route path="auditoria" element={<Navigate to="../acessos" replace />} />
-        <Route path="relatorios" element={<Navigate to="../dados" replace />} />
+        <Route path="relatorios" element={<Navigate to="../exportacoes" replace />} />
         <Route path="administracao" element={<Navigate to="../acessos" replace />} />
-        <Route path="sistema" element={<Navigate to="../acessos" replace />} />
+        <Route path="sistema" element={<Navigate to="../dashboard" replace />} />
       </Route>
     </Routes>
   )

@@ -1,36 +1,36 @@
+import { BarChart3, Download, FileSpreadsheet, Home, LogOut, ShieldCheck } from 'lucide-react'
 import { NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom'
-import { Database, Home, KeyRound, ListChecks, LogOut } from 'lucide-react'
 import { Button } from './Button'
 import { clearAdminCredentials, hasAdminSession } from '../services/admin-auth.service'
 
 const navSections = [
   {
-    title: 'Painel',
+    title: 'Banco nacional da dança',
     items: [
       {
         to: '/painel-interno/dashboard',
-        label: 'Início',
+        label: 'Visão geral',
         icon: Home,
       },
-    ],
-  },
-  {
-    title: 'Operação',
-    items: [
       {
         to: '/painel-interno/cadastros',
         label: 'Cadastros',
-        icon: ListChecks,
+        icon: FileSpreadsheet,
       },
       {
         to: '/painel-interno/dados',
-        label: 'Dados',
-        icon: Database,
+        label: 'Dados e análises',
+        icon: BarChart3,
+      },
+      {
+        to: '/painel-interno/exportacoes',
+        label: 'Exportações',
+        icon: Download,
       },
       {
         to: '/painel-interno/acessos',
-        label: 'Acessos',
-        icon: KeyRound,
+        label: 'Segurança e LGPD',
+        icon: ShieldCheck,
       },
     ],
   },
@@ -53,8 +53,10 @@ export default function AdminLayout() {
       <aside className="admin-sidebar">
         <div className="admin-sidebar-brand">
           <p className="eyebrow">SIBRADANÇA</p>
-          <h1>Central administrativa</h1>
-          <p className="admin-sidebar-text">Acesso interno.</p>
+          <h1>Painel interno da ONG</h1>
+          <p className="admin-sidebar-text">
+            Base nacional, análises, exportações e segurança em um único ambiente.
+          </p>
         </div>
 
         <nav className="admin-sidebar-nav" aria-label="Navegação do painel interno">
@@ -83,7 +85,7 @@ export default function AdminLayout() {
         </nav>
 
         <div className="admin-sidebar-footer">
-          <p className="admin-sidebar-footnote">Uso restrito.</p>
+          <p className="admin-sidebar-footnote">Uso exclusivo da equipe da ONG.</p>
 
           <Button variant="outline" onClick={handleLogout}>
             <LogOut size={16} /> Sair

@@ -447,10 +447,13 @@ export default function AdminWorkspacePage() {
           <div className="admin-quick-actions admin-quick-actions-inline">
             <Button onClick={() => navigate('/painel-interno/cadastros')}>Abrir cadastros</Button>
             <Button variant="outline" onClick={() => navigate('/painel-interno/dados')}>
-              Abrir dados
+              Abrir dados e análises
+            </Button>
+            <Button variant="outline" onClick={() => navigate('/painel-interno/exportacoes')}>
+              Abrir exportações
             </Button>
             <Button variant="outline" onClick={() => navigate('/painel-interno/acessos')}>
-              Abrir acessos
+              Abrir segurança e LGPD
             </Button>
           </div>
         </Card>
