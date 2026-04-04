@@ -42,7 +42,7 @@ const highlights = [
   {
     title: 'Coleta organizada',
     description:
-      'Os formulários foram organizados para facilitar o preenchimento de jovens, profissionais e instituições.',
+      'Os formulários foram desenhados para reunir respostas de jovens, profissionais e instituições com leitura clara e objetiva.',
     icon: ClipboardList,
     color: colors.blue,
   },
@@ -56,7 +56,7 @@ const highlights = [
   {
     title: 'Experiência acessível',
     description:
-      'A navegação foi pensada para que cada perfil encontre rapidamente o formulário certo.',
+      'A navegação foi organizada para facilitar o acesso aos formulários e manter a leitura pública direta e objetiva.',
     icon: Sparkles,
     color: colors.pink,
   },
@@ -289,12 +289,8 @@ export default function HomePage() {
               </motion.p>
 
               <motion.div variants={itemVariants} className="hero-actions">
-                <Button large onClick={scrollToForms}>
-                  Participar <ArrowRight size={18} />
-                </Button>
-
                 <Button large variant="outline" onClick={scrollToAbout}>
-                  Conhecer mais <ArrowRight size={18} />
+                  Saiba mais <ArrowRight size={18} />
                 </Button>
               </motion.div>
             </motion.div>
