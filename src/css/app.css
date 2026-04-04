@@ -666,13 +666,13 @@ button:focus-visible {
   position: absolute;
   left: 56px;
   bottom: 44px;
-  width: 88px;
-  height: 88px;
+  width: 72px;
+  height: 72px;
   border-radius: 999px;
   background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.35), rgba(239, 47, 141, 0) 45%),
     rgba(239, 47, 141, 0.7);
   box-shadow: 0 18px 40px rgba(239, 47, 141, 0.18);
-  opacity: 0.9;
+  opacity: 0.72;
   pointer-events: none;
   z-index: 0;
 }
@@ -681,9 +681,9 @@ button:focus-visible {
   position: relative;
   padding: 22px 0 18px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, auto) minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 28px;
+  gap: 20px 28px;
 }
 
 .footer-inner::before,
@@ -696,23 +696,25 @@ button:focus-visible {
 }
 
 .footer-inner::before {
-  right: 86px;
-  top: -8px;
-  width: 92px;
-  height: 92px;
-  border-radius: 30px;
+  right: 96px;
+  top: 8px;
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
   background: linear-gradient(180deg, rgba(72, 169, 230, 0.82), rgba(72, 169, 230, 0.66));
   box-shadow: 0 18px 40px rgba(72, 169, 230, 0.16);
+  opacity: 0.7;
 }
 
 .footer-inner::after {
   left: 148px;
-  bottom: -18px;
-  width: 26px;
-  height: 26px;
+  bottom: -6px;
+  width: 18px;
+  height: 18px;
   border-radius: 999px;
   background: rgba(244, 235, 0, 0.95);
   box-shadow: 0 12px 24px rgba(244, 235, 0, 0.28);
+  opacity: 0.76;
 }
 
 .footer-inner > * {
@@ -766,6 +768,8 @@ button:focus-visible {
 
 .footer-brand-centered {
   flex-direction: column;
+  width: 100%;
+  max-width: 720px;
   justify-self: center;
   align-items: center;
   gap: 10px;
@@ -773,6 +777,7 @@ button:focus-visible {
 }
 
 .footer-brand-centered p {
+  max-width: 680px;
   font-size: 1rem;
 }
 
@@ -865,10 +870,28 @@ a:focus-visible {
 /* ============================================================
    SHARED RESPONSIVE RULES
    ============================================================ */
-@media (max-width: 1280px) {
+@media (max-width: 1180px) {
   .footer-inner {
-    grid-template-columns: minmax(0, 1fr) minmax(280px, auto) minmax(0, 1fr);
+    grid-template-columns: 1fr;
+    justify-items: center;
     gap: 18px;
+  }
+
+  .footer-brand,
+  .footer-links {
+    width: 100%;
+  }
+
+  .footer-links-left,
+  .footer-links-right,
+  .footer-brand-centered {
+    justify-self: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .footer-brand-centered {
+    max-width: 640px;
   }
 }
 

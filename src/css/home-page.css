@@ -781,8 +781,28 @@
 }
 
 @media (max-width: 720px) {
+  .hero-section {
+    padding: 44px 0 36px;
+  }
+
   .hero-grid {
-    gap: 28px;
+    gap: 22px;
+  }
+
+  .hero-copy h1 {
+    max-width: 13.8ch;
+    font-size: clamp(1.74rem, 6.1vw, 2rem);
+    line-height: 1.07;
+  }
+
+  .hero-description {
+    max-width: 34ch;
+    font-size: 0.93rem;
+    line-height: 1.64;
+  }
+
+  .hero-actions {
+    margin-top: 24px;
   }
 
   .stats-grid .card {
@@ -847,8 +867,8 @@
 
 @media (max-width: 480px) {
   .hero-description {
-    font-size: 0.94rem;
-    max-width: none;
+    font-size: 0.92rem;
+    max-width: 32ch;
   }
 
   .hero-artwork {
@@ -856,9 +876,9 @@
   }
 
   .hero-copy h1 {
-    max-width: none;
-    font-size: clamp(1.68rem, 7.6vw, 1.96rem);
-    line-height: 1.05;
+    max-width: 13.6ch;
+    font-size: clamp(1.62rem, 7.2vw, 1.9rem);
+    line-height: 1.06;
   }
 
   .brand-card {
