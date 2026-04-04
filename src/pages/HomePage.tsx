@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   ArrowRight,
+  BarChart3,
   BookOpen,
   ClipboardList,
   Database,
@@ -180,9 +181,6 @@ export default function HomePage() {
   const scrollToForms = () => {
     document.getElementById('formularios')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
-  const scrollToAbout = () => {
-    document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
 
   return (
     <div className="page-shell">
@@ -252,6 +250,18 @@ export default function HomePage() {
               className="mobile-menu-link mobile-menu-action"
               onClick={() => {
                 setMobileMenuOpen(false)
+                navigate('/estatisticas-nacionais')
+              }}
+            >
+              <BarChart3 size={18} />
+              <span>Indicadores</span>
+            </button>
+
+            <button
+              type="button"
+              className="mobile-menu-link mobile-menu-action"
+              onClick={() => {
+                setMobileMenuOpen(false)
                 scrollToForms()
               }}
             >
@@ -288,8 +298,12 @@ export default function HomePage() {
               </motion.p>
 
               <motion.div variants={itemVariants} className="hero-actions">
-                <Button large onClick={scrollToAbout}>
-                  Saiba mais <ArrowRight size={18} />
+                <Button large onClick={scrollToForms}>
+                  Participar <ArrowRight size={18} />
+                </Button>
+
+                <Button large variant="outline" onClick={() => navigate('/estatisticas-nacionais')}>
+                  Ver indicadores <BarChart3 size={18} />
                 </Button>
               </motion.div>
             </motion.div>
@@ -361,6 +375,21 @@ export default function HomePage() {
                 )
               })}
 
+              <Card className="access-card access-card--highlight" hover>
+                <div className="access-card-header">
+                  <Badge>Indicadores</Badge>
+                  <div className="icon-wrap access-icon" style={{ backgroundColor: colors.green }}>
+                    <BarChart3 size={22} />
+                  </div>
+                </div>
+                <h3>Estatísticas nacionais</h3>
+                <p className="card-text">
+                  Acompanhe leituras públicas, recortes analíticos e exportações organizadas da base nacional da dança.
+                </p>
+                <Button variant="outline" onClick={() => navigate('/estatisticas-nacionais')}>
+                  Abrir indicadores <ArrowRight size={16} />
+                </Button>
+              </Card>
             </div>
           </div>
         </section>
@@ -413,6 +442,7 @@ export default function HomePage() {
 
           <div className="footer-links">
             <a href="#formularios">Formulários</a>
+            <a href="/estatisticas-nacionais">Estatísticas nacionais</a>
             <a href="#">Política de privacidade</a>
           </div>
         </div>

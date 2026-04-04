@@ -8,11 +8,13 @@ import AdminSubmissionsPage from '../pages/AdminSubmissionsPage'
 import AdminWorkspacePage from '../pages/AdminWorkspacePage'
 import HomePage from '../pages/HomePage'
 import SectorFormPage from '../pages/SectorFormPage'
+import StatisticsPage from '../pages/StatisticsPage'
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/estatisticas-nacionais" element={<StatisticsPage />} />
       <Route path="/formulario/:sector" element={<SectorFormPage />} />
       <Route path="/painel-interno/acesso" element={<AdminLoginPage />} />
       <Route path="/painel-interno" element={<AdminLayout />}>
