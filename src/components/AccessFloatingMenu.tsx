@@ -684,6 +684,11 @@ function mapFlowValidationError(
     flow === 'adult-flow'
       ? [
           {
+            step: 2,
+            fields: ['age'],
+            message: 'Revise a idade informada. O cadastro profissional é para maiores de 18 anos.',
+          },
+          {
             step: 4,
             fields: ['totalIncome', 'danceIncome'],
             message: 'Revise os valores de renda. Use números válidos, sem letras, e até 9 dígitos.',
@@ -709,10 +714,10 @@ function mapFlowValidationError(
         ]
       : flow === 'institution-flow'
         ? [
-            {
-              step: 4,
-              fields: ['monthlyFee'],
-              message: 'Revise a mensalidade média. Use um valor válido e dentro do limite permitido.',
+          {
+            step: 4,
+            fields: ['monthlyFee'],
+            message: 'Revise a mensalidade média. Use um valor válido e dentro do limite permitido.',
             },
             {
               step: 5,
@@ -722,6 +727,11 @@ function mapFlowValidationError(
             },
           ]
         : [
+            {
+              step: 2,
+              fields: ['age'],
+              message: 'Revise a idade informada. O cadastro de jovens aceita idades até 17 anos.',
+            },
             {
               step: 3,
               fields: [
@@ -1322,6 +1332,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
+    if (currentStep === 2 && Number(minorForm.age) > 17) {
+      setStepError('O cadastro de jovens aceita idades até 17 anos.')
+      return false
+    }
+
     if (currentStep === 3 && !minorForm.familyIncome) {
       setStepError('Selecione a faixa de renda familiar.')
       return false
@@ -1412,6 +1427,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       setStepError(
         'Preencha renda da casa, renda total, renda com dança, renda principal e outra renda.'
       )
+      return false
+    }
+
+    if (currentStep === 2 && Number(adultForm.age) < 18) {
+      setStepError('O cadastro profissional é destinado a maiores de 18 anos.')
       return false
     }
 
@@ -2167,8 +2187,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <span>Idade *</span>
               <input
                 type="number"
-                min="10"
-                max="99"
+                min="0"
+                max="17"
                 value={minorForm.age}
                 onChange={(e) => updateMinorField('age', e.target.value)}
               />
@@ -2427,7 +2447,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
             <label className="access-field">
               <span>Idade *</span>
-              <input type="number" min="10" max="99" value={adultForm.age} onChange={(e) => updateAdultField('age', e.target.value)} />
+              <input type="number" min="18" max="99" value={adultForm.age} onChange={(e) => updateAdultField('age', e.target.value)} />
             </label>
             <label className="access-field">
               <span>Gênero (opcional)</span>
