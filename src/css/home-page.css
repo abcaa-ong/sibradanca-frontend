@@ -34,6 +34,7 @@
 
 .hero-copy {
   min-width: 0;
+  width: 100%;
 }
 
 .hero-copy h1 {
@@ -642,8 +643,12 @@
     grid-template-columns: 1fr;
   }
 
+  .hero-copy {
+    max-width: 760px;
+  }
+
   .hero-copy h1 {
-    max-width: 12.5ch;
+    max-width: 14.8ch;
   }
 
   .stats-grid {
@@ -677,12 +682,13 @@
   }
 
   .hero-copy h1 {
-    max-width: 12ch;
-    font-size: clamp(2rem, 4.8vw, 2.85rem);
+    max-width: 14.5ch;
+    font-size: clamp(1.92rem, 4.9vw, 2.7rem);
+    line-height: 1.06;
   }
 
   .hero-description {
-    max-width: 56ch;
+    max-width: 44ch;
   }
 }
 
@@ -718,9 +724,9 @@
   }
 
   .hero-copy h1 {
-    max-width: 12.4ch;
-    font-size: clamp(1.85rem, 6.2vw, 2.2rem);
-    line-height: 1.04;
+    max-width: 14.8ch;
+    font-size: clamp(1.8rem, 5.8vw, 2.08rem);
+    line-height: 1.05;
   }
 
   .hero-description,
@@ -790,15 +796,15 @@
   }
 
   .hero-copy h1 {
-    max-width: 13.8ch;
-    font-size: clamp(1.74rem, 6.1vw, 2rem);
-    line-height: 1.07;
+    max-width: 15.4ch;
+    font-size: clamp(1.68rem, 5.7vw, 1.94rem);
+    line-height: 1.08;
   }
 
   .hero-description {
-    max-width: 34ch;
-    font-size: 0.93rem;
-    line-height: 1.64;
+    max-width: 38ch;
+    font-size: 0.92rem;
+    line-height: 1.6;
   }
 
   .hero-actions {
@@ -876,9 +882,9 @@
   }
 
   .hero-copy h1 {
-    max-width: 13.6ch;
-    font-size: clamp(1.62rem, 7.2vw, 1.9rem);
-    line-height: 1.06;
+    max-width: 14.5ch;
+    font-size: clamp(1.58rem, 7vw, 1.84rem);
+    line-height: 1.07;
   }
 
   .brand-card {
