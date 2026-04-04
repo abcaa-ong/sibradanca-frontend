@@ -62,7 +62,7 @@ const overviewCards: OverviewCard[] = [
   {
     label: 'Cadastros neste exemplo',
     value: '5.240',
-    description: 'Volume usado para mostrar como o retrato nacional pode ganhar forma em uma apresentação.',
+    description: 'Exemplo de volume para mostrar como essa leitura nacional pode aparecer na plataforma.',
   },
   {
     label: 'Jovens e estudantes',
@@ -101,19 +101,19 @@ const sourceCards: SourceCard[] = [
 
 const noteCards: NoteCard[] = [
   {
-    title: 'Números em visão pública',
+    title: 'Leitura pública da dança',
     description:
       'Esta página mostra apenas números gerais e recortes amplos. Nenhum cadastro individual aparece aqui.',
     icon: ShieldCheck,
   },
   {
-    title: 'Prévia para apresentações',
+    title: 'Como os números podem aparecer',
     description:
-      'Os números desta tela foram montados para mostrar como esse acompanhamento pode aparecer quando a base crescer.',
+      'Os números desta tela foram organizados para mostrar como esse acompanhamento pode aparecer quando a base crescer.',
     icon: Database,
   },
   {
-    title: 'Alcance nacional da iniciativa',
+    title: 'Presença da dança pelo Brasil',
     description:
       'A ideia é mostrar presença, diversidade e alcance da dança no Brasil de maneira simples e clara.',
     icon: Globe2,
@@ -379,11 +379,11 @@ export default function StatisticsPage() {
         <section className="statistics-hero section-space">
           <div className="container">
             <div className="statistics-hero-copy">
-              <Badge dark>Demonstração pública</Badge>
-              <h1>Uma demonstração de como o Banco Nacional da Dança pode ser visto no Brasil</h1>
+              <Badge dark>Estatísticas nacionais</Badge>
+              <h1>Um retrato de como o Banco Nacional da Dança pode aparecer no Brasil</h1>
               <p className="statistics-hero-description">
-                Esta página foi pensada para pitchs, eventos e apresentações do projeto. Ela mostra
-                um retrato amplo da iniciativa, sem expor informações pessoais.
+                Esta página mostra como os números do Banco Nacional da Dança podem aparecer ao
+                público, reunindo dados gerais sem expor informações pessoais.
               </p>
             </div>
 

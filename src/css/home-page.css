@@ -218,6 +218,46 @@
   gap: 18px;
 }
 
+#sobre .section-title,
+#formularios .section-title,
+#parceiros .section-title {
+  max-width: 920px;
+  margin: 0;
+  justify-items: start;
+  text-align: left;
+  padding-inline: 0;
+}
+
+#sobre .section-title::after,
+#formularios .section-title::after,
+#parceiros .section-title::after {
+  margin-left: 0;
+}
+
+#sobre .section-title h2,
+#formularios .section-title h2,
+#parceiros .section-title h2 {
+  max-width: 22ch;
+  margin-top: 22px;
+}
+
+#sobre .section-title p,
+#formularios .section-title p,
+#parceiros .section-title p {
+  max-width: 72ch;
+  margin-top: 20px;
+}
+
+#formularios .section-title h2 {
+  max-width: 16ch;
+}
+
+#sobre .stats-grid,
+#formularios .access-grid,
+#parceiros .partners-grid {
+  margin-top: 38px;
+}
+
 .stats-grid > *:nth-child(1) .card {
   background: linear-gradient(180deg, rgba(244, 235, 0, 0.06), #fff 32%);
 }
@@ -656,6 +696,34 @@
   .section-title p,
   .section-paragraph {
     font-size: 0.98rem;
+  }
+
+  #sobre .section-title,
+  #formularios .section-title,
+  #parceiros .section-title {
+    max-width: 760px;
+    margin: 0 auto;
+    justify-items: center;
+    text-align: center;
+    padding-inline: 18px;
+  }
+
+  #sobre .section-title::after,
+  #formularios .section-title::after,
+  #parceiros .section-title::after {
+    margin-left: auto;
+  }
+
+  #sobre .section-title h2,
+  #formularios .section-title h2,
+  #parceiros .section-title h2 {
+    max-width: 15ch;
+  }
+
+  #sobre .section-title p,
+  #formularios .section-title p,
+  #parceiros .section-title p {
+    max-width: 62ch;
   }
 
   .hero-actions {
