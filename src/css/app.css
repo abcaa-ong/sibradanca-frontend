@@ -667,17 +667,17 @@ button:focus-visible {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 4% 34%, rgba(239, 47, 141, 0.22) 0 28px, transparent 29px),
-    radial-gradient(circle at 16% 82%, rgba(244, 235, 0, 0.72) 0 8px, transparent 9px),
-    radial-gradient(circle at 86% 42%, rgba(72, 169, 230, 0.22) 0 28px, transparent 29px),
-    radial-gradient(circle at 96% 16%, rgba(123, 227, 61, 0.18) 0 38px, transparent 39px),
-    radial-gradient(circle at 1.5% 12%, rgba(179, 108, 230, 0.16) 0 18px, transparent 19px);
+    radial-gradient(circle at 3% 18%, rgba(239, 47, 141, 0.2) 0 22px, transparent 23px),
+    radial-gradient(circle at 14% 92%, rgba(244, 235, 0, 0.68) 0 8px, transparent 9px),
+    radial-gradient(circle at 88% 26%, rgba(72, 169, 230, 0.2) 0 24px, transparent 25px),
+    radial-gradient(circle at 98% 12%, rgba(123, 227, 61, 0.16) 0 34px, transparent 35px),
+    radial-gradient(circle at 2% 4%, rgba(179, 108, 230, 0.14) 0 15px, transparent 16px);
 }
 
 .footer-inner {
   position: relative;
   z-index: 1;
-  padding: 10px 0;
+  padding: 18px 0 12px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -746,10 +746,11 @@ button:focus-visible {
   text-align: center;
   font-size: 0.85rem;
   color: var(--muted);
+  padding-bottom: 8px;
 }
 
 .footer-bottom p {
-  margin: 6px;
+  margin: 10px 6px 0;
 }
 
 /* ============================================================
@@ -879,11 +880,11 @@ a:focus-visible {
 
   .site-footer::after {
     background:
-      radial-gradient(circle at 4% 34%, rgba(239, 47, 141, 0.2) 0 18px, transparent 19px),
-      radial-gradient(circle at 16% 78%, rgba(244, 235, 0, 0.68) 0 7px, transparent 8px),
-      radial-gradient(circle at 90% 38%, rgba(72, 169, 230, 0.2) 0 20px, transparent 21px),
-      radial-gradient(circle at 96% 18%, rgba(123, 227, 61, 0.18) 0 26px, transparent 27px),
-      radial-gradient(circle at 2% 12%, rgba(179, 108, 230, 0.16) 0 14px, transparent 15px);
+      radial-gradient(circle at 3% 18%, rgba(239, 47, 141, 0.18) 0 14px, transparent 15px),
+      radial-gradient(circle at 16% 90%, rgba(244, 235, 0, 0.62) 0 6px, transparent 7px),
+      radial-gradient(circle at 92% 24%, rgba(72, 169, 230, 0.18) 0 16px, transparent 17px),
+      radial-gradient(circle at 98% 12%, rgba(123, 227, 61, 0.16) 0 22px, transparent 23px),
+      radial-gradient(circle at 2% 4%, rgba(179, 108, 230, 0.14) 0 12px, transparent 13px);
   }
 }
 

@@ -312,8 +312,8 @@ export default function HomePage() {
           <div className="container">
             <SectionTitle
               badge="Sobre o SIBRADANÇA"
-              title="Uma plataforma nacional voltada à participação de jovens, profissionais e instituições da dança"
-              description="Conheça o projeto e entenda como participar."
+              title="Uma plataforma nacional para jovens, profissionais e instituições da dança"
+              description="Conheça o projeto e veja como participar."
             />
 
             <motion.div
@@ -379,8 +379,8 @@ export default function HomePage() {
           <div className="container">
             <SectionTitle
               badge="Rede institucional"
-              title="Parceiros e apoiadores que fortalecem o ecossistema da dança"
-              description="O SIBRADANÇA é desenvolvido em colaboração com instituições acadêmicas, organizações culturais e redes de pesquisa que contribuem para a produção de evidências, o desenvolvimento metodológico e a ampliação do conhecimento sobre a dança no Brasil."
+              title="Parceiros e apoiadores da dança no Brasil"
+              description="Instituições, redes e organizações que fortalecem o projeto."
             />
 
             <div className="partners-grid">
