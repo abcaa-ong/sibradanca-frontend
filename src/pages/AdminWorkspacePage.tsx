@@ -28,19 +28,19 @@ const workAreas = [
   },
   {
     title: 'Dados',
-    audience: 'Indicadores e arquivos',
-    description: 'Números da base, materiais para apresentação e arquivos de trabalho da equipe.',
+    audience: 'Análises e exportações',
+    description: 'Indicadores, relatórios, arquivos da base e materiais para planilhas, dashboards e Power BI.',
     route: '/painel-interno/dados',
     actionLabel: 'Abrir módulo',
-    outputs: ['Painel', 'PDF/XLSX/CSV', 'Respostas organizadas'],
+    outputs: ['Dashboard', 'PDF/XLSX/CSV', 'Power BI'],
   },
   {
     title: 'Acessos',
-    audience: 'Equipe da ONG',
-    description: 'Contas internas, permissões de uso e histórico de acessos da equipe.',
+    audience: 'Segurança do ambiente',
+    description: 'Contas internas, permissões de uso, regras de compartilhamento e histórico da equipe.',
     route: '/painel-interno/acessos',
     actionLabel: 'Abrir módulo',
-    outputs: ['Contas', 'Permissões', 'Histórico'],
+    outputs: ['Contas', 'LGPD', 'Histórico'],
   },
 ] as const
 
@@ -215,24 +215,24 @@ export default function AdminWorkspacePage() {
 
     return [
       {
-        label: 'Faixa etária mais frequente',
+        label: 'Faixa etária em destaque',
         value: ageLeader ? `${ageLeader.name} (${formatNumber(ageLeader.value)})` : 'Sem leitura',
         detail: 'Faixa etária que mais aparece entre os registros atuais.',
       },
       {
-        label: 'Gênero mais frequente',
+        label: 'Gênero em destaque',
         value: genderLeader ? `${genderLeader.name} (${formatNumber(genderLeader.value)})` : 'Sem leitura',
         detail: 'Identificação que mais aparece entre os perfis ativos.',
       },
       {
-        label: 'Modalidade mais citada',
+        label: 'Modalidade em destaque',
         value: modalityLeader ? `${modalityLeader.name} (${formatNumber(modalityLeader.value)})` : 'Sem leitura',
         detail: 'Prática de dança mais citada no recorte atual.',
       },
       {
-        label: 'Tema ligado a editais',
+        label: 'Tema em destaque',
         value: callLeader ? `${callLeader.name} (${formatNumber(callLeader.value)})` : 'Sem leitura',
-        detail: 'Tema que mais aparece quando a base fala de editais e chamadas públicas.',
+        detail: 'Assunto que mais aparece quando a base fala de editais e chamadas públicas.',
       },
     ]
   }, [dashboard])
@@ -242,9 +242,10 @@ export default function AdminWorkspacePage() {
       <header className="admin-page-header admin-page-header-compact">
         <div>
           <p className="eyebrow">Central da ONG</p>
-          <h2>Painel interno</h2>
+          <h2>Painel interno do Banco Nacional da Dança</h2>
           <p className="admin-page-subtitle">
-            Acompanhe os cadastros, consulte os indicadores e organize os materiais da equipe.
+            A ONG acompanha os cadastros, entende o retrato da base e prepara análises, exportações
+            e decisões a partir deste ambiente.
           </p>
         </div>
       </header>
@@ -255,7 +256,7 @@ export default function AdminWorkspacePage() {
         <Card className="admin-metric-card">
           <span className="eyebrow">Base total</span>
           <strong>{overview?.totalResponses ?? '-'}</strong>
-          <p className="card-text">Cadastros reunidos na base nacional.</p>
+          <p className="card-text">Cadastros reunidos no Banco Nacional da Dança.</p>
         </Card>
 
         <Card className="admin-metric-card">
@@ -267,13 +268,13 @@ export default function AdminWorkspacePage() {
         <Card className="admin-metric-card">
           <span className="eyebrow">Profissionais</span>
           <strong>{overview?.totalProfessionals ?? '-'}</strong>
-          <p className="card-text">Pessoas ligadas ao trabalho e à atuação em dança.</p>
+          <p className="card-text">Pessoas ligadas ao trabalho, à criação e à atuação em dança.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Instituições</span>
           <strong>{overview?.totalInstitutions ?? '-'}</strong>
-          <p className="card-text">Escolas, grupos, companhias, projetos e coletivos.</p>
+          <p className="card-text">Escolas, grupos, companhias, projetos e coletivos da base.</p>
         </Card>
       </section>
 
@@ -282,7 +283,7 @@ export default function AdminWorkspacePage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Operação</p>
-              <h2>Resumo da base nacional</h2>
+              <h2>Panorama da base nacional</h2>
             </div>
           </div>
 
@@ -303,7 +304,7 @@ export default function AdminWorkspacePage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Destaques</p>
-              <h2>Leitura rápida da base</h2>
+              <h2>O que esta base já mostra para a ONG</h2>
             </div>
           </div>
 
@@ -326,7 +327,7 @@ export default function AdminWorkspacePage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Módulos</p>
-              <h2>Áreas de trabalho da equipe</h2>
+              <h2>Áreas de trabalho da equipe da ONG</h2>
             </div>
           </div>
 
@@ -440,7 +441,7 @@ export default function AdminWorkspacePage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Atalhos</p>
-              <h2>Acesso rápido da equipe</h2>
+              <h2>Fluxo rápido da equipe</h2>
             </div>
           </div>
 

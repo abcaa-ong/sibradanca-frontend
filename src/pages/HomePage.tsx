@@ -5,12 +5,12 @@ import {
   BookOpen,
   ClipboardList,
   Database,
+  HeartHandshake,
   House,
   Instagram,
   Landmark,
   MapPinned,
   Menu,
-  Sparkles,
   Users,
   X,
 } from 'lucide-react'
@@ -33,31 +33,31 @@ const colors = {
 
 const highlights = [
   {
-    title: 'Mapeamento nacional',
+    title: 'Retrato nacional da dança',
     description:
-      'Uma estrutura visual criada para conectar território, escuta e participação em torno da dança no Brasil.',
+      'Uma leitura ampla para mostrar quem dança, onde está e como o setor se movimenta pelo Brasil.',
     icon: MapPinned,
     color: colors.yellow,
   },
   {
-    title: 'Coleta organizada',
+    title: 'Participação guiada',
     description:
       'Os formulários foram organizados para facilitar o preenchimento de jovens, profissionais e instituições.',
     icon: ClipboardList,
     color: colors.blue,
   },
   {
-    title: 'Base para políticas públicas',
+    title: 'Leitura para decisões',
     description:
-      'O projeto apoia diagnósticos, editais, pesquisas e ações institucionais com uma estrutura preparada para crescimento.',
+      'A base ajuda a orientar diagnósticos, relatórios, ações institucionais e decisões futuras para o setor.',
     icon: Landmark,
     color: colors.green,
   },
   {
-    title: 'Experiência acessível',
+    title: 'Navegação acolhedora',
     description:
-      'A navegação foi pensada para que cada perfil encontre rapidamente o formulário certo.',
-    icon: Sparkles,
+      'Cada perfil encontra rapidamente o formulário certo, com uma navegação clara e direta.',
+    icon: HeartHandshake,
     color: colors.pink,
   },
 ]

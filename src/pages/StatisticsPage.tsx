@@ -53,6 +53,11 @@ type SourceCard = {
   highlights: string[]
 }
 
+type TopicCard = {
+  title: string
+  description: string
+}
+
 const overviewCards: OverviewCard[] = [
   {
     label: 'Cadastros neste exemplo',
@@ -251,6 +256,37 @@ const policyDistribution: ChartItem[] = [
   { name: 'Busca formação em gestão', value: 760 },
 ]
 
+const financingDistribution: ChartItem[] = [
+  { name: 'Família', value: 980 },
+  { name: 'Trabalho próprio', value: 910 },
+  { name: 'Instituições', value: 540 },
+  { name: 'Bolsas e apoios', value: 420 },
+  { name: 'Patrocínios', value: 210 },
+]
+
+const contentInterestDistribution: ChartItem[] = [
+  { name: 'Cursos e formação', value: 940 },
+  { name: 'Festivais e eventos', value: 860 },
+  { name: 'Editais e oportunidades', value: 790 },
+  { name: 'Conteúdo digital', value: 650 },
+  { name: 'Gestão e carreira', value: 520 },
+]
+
+const demoTopicCards: TopicCard[] = [
+  {
+    title: 'Aprendizagem e trajetória',
+    description: 'Mostra como as pessoas entram na dança, seguem estudando e constroem permanência no setor.',
+  },
+  {
+    title: 'Território e presença',
+    description: 'Ajuda a visualizar onde a dança está mais presente e como ela se espalha pelo país.',
+  },
+  {
+    title: 'Estrutura e apoio',
+    description: 'Revela as condições de funcionamento, sustentação e fortalecimento das iniciativas.',
+  },
+]
+
 const highlightMetrics = [
   {
     label: 'Presença fora do eixo Rio-São Paulo',
@@ -343,11 +379,11 @@ export default function StatisticsPage() {
         <section className="statistics-hero section-space">
           <div className="container">
             <div className="statistics-hero-copy">
-              <Badge dark>Acompanhamento nacional</Badge>
-              <h1>Uma prévia de como o Banco Nacional da Dança pode ser apresentado no Brasil</h1>
+              <Badge dark>Demonstração pública</Badge>
+              <h1>Uma demonstração de como o Banco Nacional da Dança pode ser visto no Brasil</h1>
               <p className="statistics-hero-description">
-                Esta página foi pensada para apresentações e divulgação do projeto. Ela mostra um
-                retrato amplo da iniciativa, sem expor informações pessoais.
+                Esta página foi pensada para pitchs, eventos e apresentações do projeto. Ela mostra
+                um retrato amplo da iniciativa, sem expor informações pessoais.
               </p>
             </div>
 
@@ -380,14 +416,14 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Visão geral"
-              title="Um exemplo de como essa leitura nacional pode ganhar forma"
-              description="Os números abaixo foram organizados para mostrar, de maneira simples, como esse painel pode ser apresentado ao público."
+              title="Um exemplo de como esse retrato nacional pode ganhar forma"
+              description="Os números abaixo foram organizados para mostrar, de maneira simples, como esse painel pode ser apresentado em uma demonstração pública."
             />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
               {overviewCards.map((item) => (
                 <article key={item.label} className="card statistics-kpi-card">
-                  <span className="eyebrow">Resumo</span>
+                  <span className="eyebrow">Panorama</span>
                   <h3 className="statistics-kpi-title">{item.label}</h3>
                   <strong className="statistics-kpi-value">{item.value}</strong>
                   <p className="card-text">{item.description}</p>
@@ -399,14 +435,14 @@ export default function StatisticsPage() {
               <ChartPanel
                 title="Quem aparece nesta leitura"
                 data={sectorDistribution}
-                eyebrowLabel="Retrato"
+                eyebrowLabel="Perfis"
                 summaryItems={3}
               />
               <ChartPanel
                 title="Como os perfis se distribuem"
                 data={sectorDistribution}
                 type="pie"
-                eyebrowLabel="Retrato"
+                eyebrowLabel="Perfis"
                 summaryItems={3}
               />
             </div>
@@ -417,14 +453,14 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Leitura dos formulários"
-              title="O que esta demonstração consegue revelar sobre a base"
+              title="O que esta demonstração pode mostrar sobre a base"
               description="A proposta é reunir, em um mesmo painel, as três frentes do cadastro nacional: jovens, profissionais e instituições."
             />
 
             <div className="statistics-source-grid">
               {sourceCards.map((item) => (
                 <article key={item.title} className="card statistics-source-card">
-                  <span className="eyebrow">Frente de leitura</span>
+                  <span className="eyebrow">Parte do cadastro</span>
                   <h3>{item.title}</h3>
                   <p>{item.description}</p>
                   <div className="statistics-source-tags">
@@ -434,6 +470,16 @@ export default function StatisticsPage() {
                       </span>
                     ))}
                   </div>
+                </article>
+              ))}
+            </div>
+
+            <div className="statistics-source-grid statistics-source-grid-topics">
+              {demoTopicCards.map((item) => (
+                <article key={item.title} className="card statistics-source-card">
+                  <span className="eyebrow">Tema que aparece aqui</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
                 </article>
               ))}
             </div>
@@ -452,20 +498,20 @@ export default function StatisticsPage() {
               <ChartPanel
                 title="Presença por região"
                 data={regionDistribution}
-                eyebrowLabel="Território"
+                eyebrowLabel="Regiões"
                 summaryItems={5}
               />
               <ChartPanel
                 title="Estados com maior presença"
                 data={stateDistribution}
-                eyebrowLabel="Território"
+                eyebrowLabel="Estados"
                 summaryItems={6}
               />
               <ChartPanel
                 title="Peso de cada região no total"
                 data={regionDistribution}
                 type="pie"
-                eyebrowLabel="Território"
+                eyebrowLabel="Regiões"
                 summaryItems={5}
               />
             </div>
@@ -515,20 +561,20 @@ export default function StatisticsPage() {
                 title="Idades mais presentes"
                 data={ageDistribution}
                 type="pie"
-                eyebrowLabel="Pessoas"
+                eyebrowLabel="Faixas etárias"
                 summaryItems={5}
               />
               <ChartPanel
                 title="Como as pessoas se identificam"
                 data={genderDistribution}
                 type="pie"
-                eyebrowLabel="Pessoas"
+                eyebrowLabel="Gênero"
                 summaryItems={4}
               />
               <ChartPanel
                 title="Modalidades mais presentes"
                 data={modalityDistribution}
-                eyebrowLabel="Pessoas"
+                eyebrowLabel="Modalidades"
                 summaryItems={6}
               />
             </div>
@@ -553,13 +599,13 @@ export default function StatisticsPage() {
               <ChartPanel
                 title="Como escolas e grupos se estruturam"
                 data={institutionalDistribution}
-                eyebrowLabel="Estrutura"
+                eyebrowLabel="Instituições"
                 summaryItems={5}
               />
               <ChartPanel
                 title="Assuntos que mais pedem apoio"
                 data={policyDistribution}
-                eyebrowLabel="Apoio"
+                eyebrowLabel="Temas"
                 summaryItems={5}
               />
               <div className="statistics-callout">
@@ -584,6 +630,38 @@ export default function StatisticsPage() {
                   eyebrowLabel="Destaque"
                 />
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section-space">
+          <div className="container">
+            <SectionTitle
+              badge="Sustentação e circulação"
+              title="Temas que ajudam a entender continuidade, apoio e desenvolvimento"
+              description="Esta parte amplia a leitura da demonstração com recortes sobre sustentação da prática, busca por conteúdo e caminhos de fortalecimento da dança."
+            />
+
+            <div className="statistics-chart-grid three-columns">
+              <ChartPanel
+                title="Quem ajuda a sustentar a prática"
+                data={financingDistribution}
+                eyebrowLabel="Apoio"
+                summaryItems={5}
+              />
+              <ChartPanel
+                title="O que as pessoas mais buscam"
+                data={contentInterestDistribution}
+                eyebrowLabel="Interesses"
+                summaryItems={5}
+              />
+              <ChartPanel
+                title="Temas mais citados sobre apoio"
+                data={policyDistribution}
+                type="pie"
+                eyebrowLabel="Fortalecimento"
+                summaryItems={5}
+              />
             </div>
           </div>
         </section>

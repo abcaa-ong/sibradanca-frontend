@@ -5,7 +5,7 @@ type MetricCardProps = {
   eyebrowLabel?: string
 }
 
-export function MetricCard({ label, percent, detail, eyebrowLabel = 'Indicador' }: MetricCardProps) {
+export function MetricCard({ label, percent, detail, eyebrowLabel = 'Destaque' }: MetricCardProps) {
   return (
     <div className="card statistics-metric-card">
       <span className="eyebrow">{eyebrowLabel}</span>

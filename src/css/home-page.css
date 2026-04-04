@@ -38,7 +38,7 @@
   line-height: 1.06;
   letter-spacing: -0.04em;
   font-weight: 900;
-  max-inline-size: 10.5ch;
+  max-inline-size: 12.8ch;
   background: linear-gradient(90deg, #101828 0%, #1d2939 40%, #2f3f58 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -48,7 +48,7 @@
 
 .hero-description {
   margin-top: 24px;
-  max-width: 58ch;
+  max-width: 60ch;
   font-size: 1.1rem;
   line-height: 1.8;
   color: var(--muted);

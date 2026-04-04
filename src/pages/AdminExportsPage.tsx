@@ -17,8 +17,8 @@ type DownloadAction = () => Promise<{ blob: Blob; filename: string | null }>
 
 const exportGroups = [
   {
-    title: 'Uso interno da ONG',
-    description: 'Arquivos completos para consulta, conferência e trabalho da equipe.',
+    title: 'Base interna da ONG',
+    description: 'Arquivos completos para consulta, conferência, leitura e trabalho do dia a dia da equipe.',
     items: [
       {
         name: 'Fichas por protocolo',
@@ -30,7 +30,7 @@ const exportGroups = [
       {
         name: 'Base detalhada da equipe',
         format: 'XLSX',
-        purpose: 'Abas com visão da ONG, cadastros e respostas organizadas.',
+        purpose: 'Abas com visão geral, cadastros e respostas organizadas por tema.',
         actionLabel: 'Baixar Excel',
         action: downloadAdminSubmissionsDetailedXlsx,
       },
@@ -44,7 +44,7 @@ const exportGroups = [
       {
         name: 'Base detalhada em CSV',
         format: 'CSV',
-        purpose: 'Linhas por protocolo, bloco, campo e resposta para cruzamentos internos.',
+        purpose: 'Linhas por cadastro, etapa, campo e resposta para cruzamentos internos.',
         actionLabel: 'Baixar CSV',
         action: downloadAdminSubmissionsDetailedCsv,
       },
@@ -58,8 +58,8 @@ const exportGroups = [
     ],
   },
   {
-    title: 'Apresentações e relatórios externos',
-    description: 'Arquivos adequados para leitura geral, apresentações e compartilhamentos mediados pela ONG.',
+    title: 'Materiais para apresentações e compartilhamentos',
+    description: 'Arquivos que a ONG organiza para reuniões, parceiros, pitchs, relatórios e apresentações.',
     items: [
       {
         name: 'Relatório geral',
@@ -71,14 +71,14 @@ const exportGroups = [
       {
         name: 'Indicadores da base',
         format: 'XLSX',
-        purpose: 'Planilha com abas temáticas para construir relatórios e apresentações.',
+        purpose: 'Planilha com abas por tema para relatórios, planilhas e Power BI.',
         actionLabel: 'Baixar Excel',
         action: downloadAdminStatisticsXlsx,
       },
       {
         name: 'Indicadores em CSV',
         format: 'CSV',
-        purpose: 'Recortes estatísticos para cruzamentos, painéis e materiais externos.',
+        purpose: 'Recortes gerais para cruzamentos, dashboards e materiais externos.',
         actionLabel: 'Baixar CSV',
         action: downloadAdminStatisticsCsv,
       },
@@ -87,10 +87,10 @@ const exportGroups = [
 ] as const
 
 const exportRules = [
-  ['Uso interno', 'Fichas completas, base detalhada e consulta nominal da equipe'],
-  ['Uso em apresentações', 'Indicadores gerais, gráficos e recortes estatísticos'],
-  ['Uso com parceiros', 'Material preparado pela ONG conforme a finalidade do compartilhamento'],
-  ['Dados pessoais', 'Permanecem no ambiente interno e não saem em painéis públicos'],
+  ['Uso interno da equipe', 'Fichas completas, base detalhada e consulta nominal da ONG'],
+  ['Uso em apresentações', 'Indicadores gerais, gráficos e recortes preparados pela equipe'],
+  ['Uso com parceiros', 'Material selecionado e enviado pela ONG conforme cada finalidade'],
+  ['Dados pessoais', 'Permanecem no ambiente interno e não aparecem em materiais públicos'],
 ] as const
 
 const handoffFlow = [
@@ -148,8 +148,8 @@ export default function AdminExportsPage() {
           <p className="eyebrow">Exportações</p>
           <h2>Arquivos que saem do Banco Nacional da Dança</h2>
           <p className="admin-page-subtitle">
-            A ONG consulta a base, escolhe o formato certo e decide o que será levado para fora em
-            reuniões, apresentações e articulações.
+            É aqui que a ONG transforma a base em relatórios, planilhas, dashboards e materiais para
+            reuniões, apresentações e articulações externas.
           </p>
         </div>
       </header>
@@ -191,7 +191,7 @@ export default function AdminExportsPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Regras de saída</p>
-              <h2>Como a ONG deve usar cada exportação</h2>
+              <h2>Como cada arquivo deve sair da base</h2>
             </div>
           </div>
 
@@ -219,7 +219,7 @@ export default function AdminExportsPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Fluxo recomendado</p>
-              <h2>Do painel interno para o mundo externo</h2>
+              <h2>Da leitura da base até o envio</h2>
             </div>
           </div>
 
