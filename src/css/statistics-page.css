@@ -6,6 +6,15 @@
   position: relative;
 }
 
+.statistics-page .section-space {
+  padding: 24px 0 42px;
+}
+
+.statistics-hero.section-space {
+  padding-top: 28px;
+  padding-bottom: 30px;
+}
+
 .statistics-hero-copy h1 {
   margin: 18px 0 0;
   font-size: clamp(2.55rem, 4.7vw, 4.2rem);
@@ -29,6 +38,38 @@
   flex-wrap: wrap;
   gap: 14px;
   margin-top: 20px;
+}
+
+.statistics-status-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.statistics-status-card {
+  min-height: 144px;
+  padding: 20px;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.statistics-status-card .eyebrow {
+  margin-top: 0;
+}
+
+.statistics-status-value {
+  font-size: 1.55rem;
+  line-height: 1.05;
+  font-weight: 900;
+}
+
+.statistics-status-detail {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 0.94rem;
 }
 
 .statistics-note-grid {
@@ -424,6 +465,7 @@
 }
 
 @media (max-width: 1280px) {
+  .statistics-status-strip,
   .statistics-note-grid,
   .statistics-kpi-grid--four {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -458,6 +500,7 @@
    STATISTICS PAGE — RESPONSIVE
    ============================================================ */
 @media (max-width: 1100px) {
+  .statistics-status-strip,
   .statistics-note-grid,
   .statistics-kpi-grid--four,
   .statistics-chart-grid.two-columns,
@@ -483,6 +526,7 @@
 }
 
 @media (max-width: 860px) {
+  .statistics-status-strip,
   .statistics-note-grid,
   .statistics-kpi-grid--four,
   .statistics-region-summary,
@@ -507,7 +551,8 @@
 
   .statistics-chart-panel,
   .statistics-kpi-card,
-  .statistics-metric-card {
+  .statistics-metric-card,
+  .statistics-status-card {
     min-height: auto;
   }
 

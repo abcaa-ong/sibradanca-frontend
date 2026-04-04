@@ -17,11 +17,24 @@ type OverviewCard = {
   value: string
 }
 
+type StatusCard = {
+  label: string
+  value: string
+  detail: string
+}
+
 const overviewCards: OverviewCard[] = [
   { label: 'Cadastros totais', value: '5.240' },
   { label: 'Jovens', value: '2.380' },
   { label: 'Profissionais', value: '1.960' },
   { label: 'Instituições', value: '900' },
+]
+
+const statusCards: StatusCard[] = [
+  { label: 'Cobertura', value: '27 UFs', detail: 'Presença nas cinco regiões' },
+  { label: 'Formulários', value: '3 frentes', detail: 'Jovens, profissionais e instituições' },
+  { label: 'Captação', value: '5.240 registros', detail: 'Leitura pública da base nacional' },
+  { label: 'Painel', value: 'Atualizado', detail: 'Visão geral da dança no Brasil' },
 ]
 
 const profileDistribution: ChartItem[] = [
@@ -177,6 +190,16 @@ export default function StatisticsPage() {
                 <ArrowLeft size={18} />
                 Voltar para os formulários
               </Link>
+            </div>
+
+            <div className="statistics-status-strip">
+              {statusCards.map((item) => (
+                <article key={item.label} className="card statistics-status-card">
+                  <span className="eyebrow">{item.label}</span>
+                  <strong className="statistics-status-value">{item.value}</strong>
+                  <p className="statistics-status-detail">{item.detail}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
