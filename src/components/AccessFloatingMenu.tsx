@@ -768,6 +768,14 @@ function resolveSubmissionError(flow: ActiveFlow, error: unknown, fallbackStep: 
 }
 
 function formatMinorSubmissionError(message: string) {
+  if (message.includes('seguranca') || message.includes('segurança') || message.includes('captcha')) {
+    return 'Confirme a verificacao de seguranca e tente novamente.'
+  }
+
+  if (message.includes('Aguarde alguns segundos')) {
+    return 'Aguarde alguns segundos antes de enviar o formulario.'
+  }
+
   if (message.includes('Cidade')) {
     return 'Selecione uma cidade valida na lista.'
   }
