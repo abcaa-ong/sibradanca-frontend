@@ -15,34 +15,44 @@ import type {
   AdminInsightsOverviewResponse,
 } from '../types/admin'
 import type { ChartItem } from '../types/statistics'
+import { formatBackendDateTime } from '../utils/backend-date'
 
 const workAreas = [
   {
     title: 'Cadastros',
-    audience: 'Base',
-    description: 'Protocolos, fichas e registros.',
+    audience: 'Base nominal',
+    description: 'Protocolos, fichas por camada e leitura individual de cada envio.',
     route: '/painel-interno/cadastros',
-    actionLabel: 'Abrir',
+    actionLabel: 'Abrir módulo',
+    outputs: ['Protocolo', 'Ficha detalhada', 'Histórico'],
   },
   {
     title: 'Dados',
-    audience: 'Indicadores',
-    description: 'Dashboard, relatórios e exportações.',
+    audience: 'Analítico',
+    description: 'Indicadores nacionais, arquivos executivos e integração com BI.',
     route: '/painel-interno/dados',
-    actionLabel: 'Abrir',
+    actionLabel: 'Abrir módulo',
+    outputs: ['Dashboard', 'PDF/XLSX/CSV', 'Camadas'],
   },
   {
     title: 'Acessos',
     audience: 'Segurança',
-    description: 'Contas internas, permissões e auditoria.',
+    description: 'Contas internas, autorização de uso e trilha de auditoria.',
     route: '/painel-interno/acessos',
-    actionLabel: 'Abrir',
+    actionLabel: 'Abrir módulo',
+    outputs: ['Contas', 'Permissões', 'Auditoria'],
   },
 ] as const
 
 type MetricCardItem = {
   label: string
   percent: string
+  detail: string
+}
+
+type SystemRow = {
+  label: string
+  value: string
   detail: string
 }
 
@@ -72,6 +82,14 @@ function buildMetricCard(label: string, value: number, total: number, subject: s
     percent: formatPercent(value, total),
     detail: `${formatNumber(value)} de ${formatNumber(total)} ${subject}.`,
   }
+}
+
+function getTopChartItem(items: ChartItem[] | undefined) {
+  if (!items?.length) {
+    return null
+  }
+
+  return [...items].sort((left, right) => right.value - left.value)[0]
 }
 
 export default function AdminWorkspacePage() {
@@ -122,7 +140,8 @@ export default function AdminWorkspacePage() {
 
   const topStates = useMemo<ChartItem[]>(
     () =>
-      stateSummary
+      [...stateSummary]
+        .sort((left, right) => right.totalSubmissions - left.totalSubmissions)
         .slice(0, 6)
         .map((item) => ({
           name: item.stateCode,
@@ -155,6 +174,69 @@ export default function AdminWorkspacePage() {
     ]
   }, [dashboard, overview])
 
+  const operationalRows = useMemo<SystemRow[]>(() => {
+    const totalResponses = overview?.totalResponses ?? 0
+    const activeStates = stateSummary.filter((item) => item.totalSubmissions > 0)
+    const topState = [...activeStates].sort((left, right) => right.totalSubmissions - left.totalSubmissions)[0]
+    const latestSubmission = [...activeStates]
+      .map((item) => item.lastSubmissionAt)
+      .filter((value): value is string => Boolean(value))
+      .sort((left, right) => new Date(right).getTime() - new Date(left).getTime())[0]
+
+    return [
+      {
+        label: 'Cobertura territorial',
+        value: `${formatNumber(activeStates.length)} UFs`,
+        detail: `${formatPercent(activeStates.length, 27)} da cobertura potencial de estados e DF.`,
+      },
+      {
+        label: 'Perfis ativos',
+        value: `${sectorDistribution.filter((item) => item.value > 0).length}/3`,
+        detail: 'Monitoramento simultâneo de jovens, profissionais e instituições.',
+      },
+      {
+        label: 'Último movimento',
+        value: latestSubmission ? formatBackendDateTime(latestSubmission) : 'Sem registro',
+        detail: 'Horário mais recente identificado entre os registros consolidados.',
+      },
+      {
+        label: 'UF líder',
+        value: topState ? `${topState.stateCode} (${formatNumber(topState.totalSubmissions)})` : 'Sem registro',
+        detail: `${formatNumber(totalResponses)} cadastros acumulados no banco nacional até o momento.`,
+      },
+    ]
+  }, [overview, sectorDistribution, stateSummary])
+
+  const executiveRows = useMemo<SystemRow[]>(() => {
+    const ageLeader = getTopChartItem(dashboard?.profile.ageDistribution)
+    const genderLeader = getTopChartItem(dashboard?.profile.genderDistribution)
+    const modalityLeader = getTopChartItem(dashboard?.details.modalities)
+    const callLeader = getTopChartItem(dashboard?.details.publicCallsParticipation)
+
+    return [
+      {
+        label: 'Faixa etária líder',
+        value: ageLeader ? `${ageLeader.name} (${formatNumber(ageLeader.value)})` : 'Sem leitura',
+        detail: 'Recorte etário dominante na base consolidada.',
+      },
+      {
+        label: 'Gênero líder',
+        value: genderLeader ? `${genderLeader.name} (${formatNumber(genderLeader.value)})` : 'Sem leitura',
+        detail: 'Maior concentração declarada entre os perfis ativos.',
+      },
+      {
+        label: 'Modalidade líder',
+        value: modalityLeader ? `${modalityLeader.name} (${formatNumber(modalityLeader.value)})` : 'Sem leitura',
+        detail: 'Modalidade mais recorrente no recorte atual.',
+      },
+      {
+        label: 'Editais',
+        value: callLeader ? `${callLeader.name} (${formatNumber(callLeader.value)})` : 'Sem leitura',
+        detail: 'Leitura mais forte da participação em chamadas e editais.',
+      },
+    ]
+  }, [dashboard])
+
   return (
     <div className="admin-page-content">
       <header className="admin-page-header admin-page-header-compact">
@@ -162,7 +244,7 @@ export default function AdminWorkspacePage() {
           <p className="eyebrow">Central da ONG</p>
           <h2>Painel interno</h2>
           <p className="admin-page-subtitle">
-            Acompanhamento da base, dos cadastros, das exportações e da leitura nacional dos dados.
+            Operação nacional da base, leitura executiva dos cadastros e comandos centrais da plataforma.
           </p>
         </div>
       </header>
@@ -173,25 +255,69 @@ export default function AdminWorkspacePage() {
         <Card className="admin-metric-card">
           <span className="eyebrow">Base total</span>
           <strong>{overview?.totalResponses ?? '-'}</strong>
-          <p className="card-text">Cadastros consolidados no banco principal.</p>
+          <p className="card-text">Registros consolidados no banco principal.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Jovens</span>
           <strong>{overview?.totalYouth ?? '-'}</strong>
-          <p className="card-text">Participantes com recorte jovem na base.</p>
+          <p className="card-text">Cadastros com recorte jovem ativos na base.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Profissionais</span>
           <strong>{overview?.totalProfessionals ?? '-'}</strong>
-          <p className="card-text">Pessoas adultas ligadas ao trabalho em dança.</p>
+          <p className="card-text">Pessoas ligadas ao trabalho e renda em dança.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Instituições</span>
           <strong>{overview?.totalInstitutions ?? '-'}</strong>
-          <p className="card-text">Escolas, grupos, companhias e projetos.</p>
+          <p className="card-text">Escolas, grupos, companhias, projetos e coletivos.</p>
+        </Card>
+      </section>
+
+      <section className="admin-section-grid">
+        <Card className="admin-panel-card">
+          <div className="admin-panel-header">
+            <div>
+              <p className="eyebrow">Operação</p>
+              <h2>Situação da base nacional</h2>
+            </div>
+          </div>
+
+          <div className="admin-system-list">
+            {operationalRows.map((item) => (
+              <div key={item.label} className="admin-system-row">
+                <div>
+                  <span className="admin-system-label">{item.label}</span>
+                  <p className="admin-system-detail">{item.detail}</p>
+                </div>
+                <strong className="admin-system-value">{item.value}</strong>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="admin-panel-card">
+          <div className="admin-panel-header">
+            <div>
+              <p className="eyebrow">Leitura executiva</p>
+              <h2>Síntese para decisão</h2>
+            </div>
+          </div>
+
+          <div className="admin-system-list">
+            {executiveRows.map((item) => (
+              <div key={item.label} className="admin-system-row">
+                <div>
+                  <span className="admin-system-label">{item.label}</span>
+                  <p className="admin-system-detail">{item.detail}</p>
+                </div>
+                <strong className="admin-system-value">{item.value}</strong>
+              </div>
+            ))}
+          </div>
         </Card>
       </section>
 
@@ -199,17 +325,27 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Navegação</p>
-              <h2>Módulos da operação</h2>
+              <p className="eyebrow">Sistema</p>
+              <h2>Módulos centrais da operação</h2>
             </div>
           </div>
 
           <div className="admin-module-grid">
             {workAreas.map((area) => (
-              <div key={area.title} className="admin-module-card">
-                <p className="admin-module-audience">{area.audience}</p>
+              <div key={area.title} className="admin-module-card admin-module-card-system">
+                <div className="admin-module-head">
+                  <p className="admin-module-audience">{area.audience}</p>
+                  <span className="admin-status-chip">Ativo</span>
+                </div>
                 <h3>{area.title}</h3>
                 <p>{area.description}</p>
+                <div className="admin-pill-list">
+                  {area.outputs.map((item) => (
+                    <span key={`${area.title}-${item}`} className="admin-pill">
+                      {item}
+                    </span>
+                  ))}
+                </div>
                 <div className="admin-card-action">
                   <Button onClick={() => navigate(area.route)}>{area.actionLabel}</Button>
                 </div>
@@ -269,15 +405,26 @@ export default function AdminWorkspacePage() {
       </section>
 
       {strategicMetrics.length ? (
-        <section className="statistics-metric-grid">
-          {strategicMetrics.map((item) => (
-            <MetricCard
-              key={item.label}
-              label={item.label}
-              percent={item.percent}
-              detail={item.detail}
-            />
-          ))}
+        <section className="admin-section-grid">
+          <Card className="admin-panel-card admin-panel-card-full">
+            <div className="admin-panel-header">
+              <div>
+                <p className="eyebrow">Indicadores</p>
+                <h2>Recortes estratégicos da operação</h2>
+              </div>
+            </div>
+
+            <section className="statistics-metric-grid">
+              {strategicMetrics.map((item) => (
+                <MetricCard
+                  key={item.label}
+                  label={item.label}
+                  percent={item.percent}
+                  detail={item.detail}
+                />
+              ))}
+            </section>
+          </Card>
         </section>
       ) : null}
 
@@ -285,12 +432,12 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Leitura rápida</p>
-              <h2>Encaminhamento operacional</h2>
+              <p className="eyebrow">Comandos</p>
+              <h2>Acesso operacional rápido</h2>
             </div>
           </div>
 
-          <div className="admin-quick-actions">
+          <div className="admin-quick-actions admin-quick-actions-inline">
             <Button onClick={() => navigate('/painel-interno/cadastros')}>Abrir cadastros</Button>
             <Button variant="outline" onClick={() => navigate('/painel-interno/dados')}>
               Abrir dados

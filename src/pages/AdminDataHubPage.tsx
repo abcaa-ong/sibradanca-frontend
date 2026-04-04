@@ -125,6 +125,10 @@ function triggerDownload(blob: Blob, filename: string | null) {
   URL.revokeObjectURL(url)
 }
 
+function formatNumber(value: number) {
+  return new Intl.NumberFormat('pt-BR').format(value)
+}
+
 function DownloadTable({
   title,
   eyebrow,
@@ -186,7 +190,10 @@ export default function AdminDataHubPage() {
   const [stateSummary, setStateSummary] = useState<AdminBiStateSummaryResponse[]>([])
   const [error, setError] = useState('')
 
-  const stateTopList = useMemo(() => stateSummary.slice(0, 8), [stateSummary])
+  const stateTopList = useMemo(
+    () => [...stateSummary].sort((left, right) => right.totalSubmissions - left.totalSubmissions).slice(0, 8),
+    [stateSummary],
+  )
 
   useEffect(() => {
     async function loadData() {
@@ -228,13 +235,73 @@ export default function AdminDataHubPage() {
   const topGender = getTopItem(dashboard?.profile.genderDistribution, 'Sem registros')
   const topPublicCall = getTopItem(dashboard?.details.publicCallsParticipation, 'Sem registros')
 
+  const latestRecordAt = useMemo(
+    () =>
+      [...stateSummary]
+        .map((item) => item.lastSubmissionAt)
+        .filter((value): value is string => Boolean(value))
+        .sort((left, right) => new Date(right).getTime() - new Date(left).getTime())[0] ?? null,
+    [stateSummary],
+  )
+
+  const dataControlRows = useMemo(
+    () => [
+      {
+        label: 'Registros consolidados',
+        value: overview ? formatNumber(overview.totalResponses) : '-',
+        detail: 'Volume nominal já validado pelo backend e disponível para consulta interna.',
+      },
+      {
+        label: 'UFs com presença',
+        value: formatNumber(stateSummary.filter((item) => item.totalSubmissions > 0).length),
+        detail: 'Cobertura territorial rastreada pela camada estatística.',
+      },
+      {
+        label: 'Último registro',
+        value: latestRecordAt ? formatBackendDateTime(latestRecordAt) : 'Sem registro',
+        detail: 'Horário mais recente encontrado nos resumos territoriais.',
+      },
+      {
+        label: 'Perfis monitorados',
+        value: sectorSummary.length ? `${sectorSummary.length}/3` : '-',
+        detail: 'Jovens, profissionais e instituições acompanhados na leitura interna.',
+      },
+    ],
+    [latestRecordAt, overview, sectorSummary.length, stateSummary],
+  )
+
+  const datasetLayers = [
+    {
+      title: 'Visão ONG',
+      description: 'Camada executiva para coordenação, leitura rápida e acompanhamento institucional.',
+      outputs: 'PDF / XLSX',
+    },
+    {
+      title: 'Base nominal',
+      description: 'Protocolos e identificação organizada para consulta operacional e auditoria.',
+      outputs: 'XLSX / CSV',
+    },
+    {
+      title: 'Base em camadas',
+      description: 'Seção, campo e valor separados por estrutura do formulário para BI e revisão.',
+      outputs: 'XLSX / CSV',
+    },
+    {
+      title: 'Indicadores BI',
+      description: 'Recortes analíticos prontos para Power BI, planilhas internas e leitura estatística.',
+      outputs: 'PDF / XLSX / CSV',
+    },
+  ] as const
+
   return (
     <div className="admin-page-content">
       <header className="admin-page-header">
         <div>
           <p className="eyebrow">Dados</p>
-          <h2>Painel estatístico</h2>
-          <p className="admin-page-subtitle">Indicadores, relatórios e exportações da base.</p>
+          <h2>Central analítica e de exportação</h2>
+          <p className="admin-page-subtitle">
+            Governança da base, recortes estatísticos e arquivos organizados para operação e BI.
+          </p>
         </div>
       </header>
 
@@ -259,6 +326,48 @@ export default function AdminDataHubPage() {
         <Card className="admin-metric-card">
           <span className="eyebrow">Instituições</span>
           <strong>{overview?.totalInstitutions ?? '-'}</strong>
+        </Card>
+      </section>
+
+      <section className="admin-section-grid">
+        <Card className="admin-panel-card">
+          <div className="admin-panel-header">
+            <div>
+              <p className="eyebrow">Governança</p>
+              <h2>Controle da base</h2>
+            </div>
+          </div>
+
+          <div className="admin-system-list">
+            {dataControlRows.map((item) => (
+              <div key={item.label} className="admin-system-row">
+                <div>
+                  <span className="admin-system-label">{item.label}</span>
+                  <p className="admin-system-detail">{item.detail}</p>
+                </div>
+                <strong className="admin-system-value">{item.value}</strong>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="admin-panel-card">
+          <div className="admin-panel-header">
+            <div>
+              <p className="eyebrow">Camadas</p>
+              <h2>Arquitetura dos arquivos</h2>
+            </div>
+          </div>
+
+          <div className="admin-manifest-grid">
+            {datasetLayers.map((item) => (
+              <div key={item.title} className="admin-manifest-card">
+                <span className="admin-manifest-badge">{item.outputs}</span>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </div>
+            ))}
+          </div>
         </Card>
       </section>
 
@@ -334,8 +443,8 @@ export default function AdminDataHubPage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Destaques</p>
-              <h2>Leitura atual da base</h2>
+              <p className="eyebrow">Mesa analítica</p>
+              <h2>Destaques para gestão e BI</h2>
             </div>
           </div>
 
@@ -370,7 +479,7 @@ export default function AdminDataHubPage() {
       <section className="admin-section-stack">
         <DownloadTable
           eyebrow="Base interna"
-          title="Arquivos completos"
+          title="Arquivos completos da base"
           rows={completeDownloadRows}
           onDownload={handleDownload}
         />
@@ -395,7 +504,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Integrações</p>
-              <h2>Canais analíticos</h2>
+              <h2>Canais de leitura e consumo</h2>
             </div>
           </div>
 
@@ -412,12 +521,12 @@ export default function AdminDataHubPage() {
                 <tr>
                   <td>Dashboard interno</td>
                   <td>Ativo</td>
-                  <td>Painel estatístico</td>
+                  <td>Leitura executiva e operacional</td>
                 </tr>
                 <tr>
                   <td>Power BI</td>
                   <td>Disponível</td>
-                  <td>CSV estatístico</td>
+                  <td>CSV estatístico e base em camadas</td>
                 </tr>
                 <tr>
                   <td>Planilhas internas</td>
