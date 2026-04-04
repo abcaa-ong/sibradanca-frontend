@@ -36,23 +36,23 @@ type DownloadRow = {
 
 const completeDownloadRows: DownloadRow[] = [
   {
-    title: 'Fichas detalhadas',
+    title: 'Fichas por protocolo',
     format: 'PDF',
-    scope: 'Cadastro completo por protocolo',
+    scope: 'PDF com resumo e seções completas de cada cadastro',
     actionLabel: 'Baixar PDF',
     action: downloadAdminSubmissionsDetailedPdf,
   },
   {
-    title: 'Base interna completa',
+    title: 'Base interna em camadas',
     format: 'XLSX',
-    scope: 'Todas as respostas da base',
+    scope: 'Abas para visão ONG, base nominal, camadas e perfis',
     actionLabel: 'Baixar Excel',
     action: downloadAdminSubmissionsDetailedXlsx,
   },
   {
-    title: 'Base interna completa',
+    title: 'Base interna em camadas',
     format: 'CSV',
-    scope: 'Todas as respostas da base',
+    scope: 'Campos por seção, em linhas próprias para leitura e BI',
     actionLabel: 'Baixar CSV',
     action: downloadAdminSubmissionsDetailedCsv,
   },
@@ -60,23 +60,23 @@ const completeDownloadRows: DownloadRow[] = [
 
 const statisticsDownloadRows: DownloadRow[] = [
   {
-    title: 'Relatório estatístico',
+    title: 'Relatório analítico',
     format: 'PDF',
-    scope: 'Indicadores consolidados',
+    scope: 'Resumo executivo e blocos analíticos por categoria',
     actionLabel: 'Baixar PDF',
     action: downloadAdminStatisticsPdf,
   },
   {
-    title: 'Indicadores estatísticos',
+    title: 'Indicadores analíticos',
     format: 'XLSX',
-    scope: 'Leitura analítica da base',
+    scope: 'Leitura executiva, filtros, base BI e abas temáticas',
     actionLabel: 'Baixar Excel',
     action: downloadAdminStatisticsXlsx,
   },
   {
-    title: 'Indicadores estatísticos',
+    title: 'Base estatística BI',
     format: 'CSV',
-    scope: 'Integração analítica',
+    scope: 'Camada, categoria, indicador e recorte para integração',
     actionLabel: 'Baixar CSV',
     action: downloadAdminStatisticsCsv,
   },
@@ -86,14 +86,14 @@ const operationalDownloadRows: DownloadRow[] = [
   {
     title: 'Cadastros operacionais',
     format: 'XLSX',
-    scope: 'Consulta nominal resumida',
+    scope: 'Consulta nominal resumida por protocolo',
     actionLabel: 'Baixar Excel',
     action: downloadAdminSubmissionsXlsx,
   },
   {
     title: 'Cadastros operacionais',
     format: 'CSV',
-    scope: 'Consulta nominal resumida',
+    scope: 'Consulta nominal resumida por protocolo',
     actionLabel: 'Baixar CSV',
     action: downloadAdminSubmissionsCsv,
   },
