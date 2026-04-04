@@ -221,35 +221,37 @@
 #sobre .section-title,
 #formularios .section-title,
 #parceiros .section-title {
-  max-width: 920px;
-  margin: 0;
-  justify-items: start;
-  text-align: left;
-  padding-inline: 0;
+  max-width: 980px;
+  margin: 0 auto;
+  justify-items: center;
+  text-align: center;
+  padding-inline: 18px;
 }
 
 #sobre .section-title::after,
 #formularios .section-title::after,
 #parceiros .section-title::after {
-  margin-left: 0;
+  margin-left: auto;
 }
 
 #sobre .section-title h2,
 #formularios .section-title h2,
 #parceiros .section-title h2 {
-  max-width: 22ch;
+  max-width: 18ch;
   margin-top: 22px;
+  line-height: 1.14;
 }
 
 #sobre .section-title p,
 #formularios .section-title p,
 #parceiros .section-title p {
-  max-width: 72ch;
-  margin-top: 20px;
+  max-width: 70ch;
+  margin-top: 24px;
+  line-height: 1.8;
 }
 
 #formularios .section-title h2 {
-  max-width: 16ch;
+  max-width: 18ch;
 }
 
 #sobre .stats-grid,
@@ -717,7 +719,7 @@
   #sobre .section-title h2,
   #formularios .section-title h2,
   #parceiros .section-title h2 {
-    max-width: 15ch;
+    max-width: 16ch;
   }
 
   #sobre .section-title p,
