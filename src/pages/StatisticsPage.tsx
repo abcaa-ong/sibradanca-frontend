@@ -167,9 +167,9 @@ export default function StatisticsPage() {
         <section className="statistics-hero section-space">
           <div className="container">
             <div className="statistics-hero-copy">
-              <Badge dark>Estatísticas nacionais</Badge>
+              <Badge dark>Banco Nacional da Dança</Badge>
               <h1>Banco Nacional da Dança do Brasil</h1>
-              <p className="statistics-hero-description">Números gerais do Banco Nacional da Dança.</p>
+              <p className="statistics-hero-description">Acompanhe a presença da dança no país.</p>
             </div>
 
             <div className="statistics-hero-actions">
@@ -183,12 +183,12 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Painel público" title="Visão geral" />
+            <SectionTitle badge="Visão geral" title="Base cadastrada" />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
               {overviewCards.map((item) => (
                 <article key={item.label} className="card statistics-kpi-card">
-                  <span className="eyebrow">Resumo</span>
+                  <span className="eyebrow">Base</span>
                   <h3 className="statistics-kpi-title">{item.label}</h3>
                   <strong className="statistics-kpi-value">{item.value}</strong>
                 </article>
@@ -197,13 +197,13 @@ export default function StatisticsPage() {
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
-                title="Participação por perfil"
+                title="Cadastros por perfil"
                 data={profileDistribution}
                 eyebrowLabel="Perfis"
                 summaryItems={3}
               />
               <ChartPanel
-                title="Distribuição da base"
+                title="Distribuição dos cadastros"
                 data={profileDistribution}
                 type="pie"
                 eyebrowLabel="Perfis"
@@ -215,17 +215,17 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Brasil" title="Presença pelo território" />
+            <SectionTitle badge="Brasil" title="Distribuição nacional" />
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
-                title="Participação por região"
+                title="Cadastros por região"
                 data={regionDistribution}
                 eyebrowLabel="Regiões"
                 summaryItems={5}
               />
               <ChartPanel
-                title="Estados com mais cadastros"
+                title="Estados com maior presença"
                 data={stateDistribution}
                 eyebrowLabel="Estados"
                 summaryItems={6}
@@ -236,7 +236,7 @@ export default function StatisticsPage() {
               <div className="card statistics-compact-panel">
                 <div className="panel-top">
                   <div>
-                    <span className="eyebrow">Municípios</span>
+                    <span className="eyebrow">Cidades</span>
                     <h3 className="statistics-compact-title">Municípios em destaque</h3>
                   </div>
                 </div>
@@ -256,11 +256,11 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Perfis" title="Quem aparece nesta leitura" />
+            <SectionTitle badge="Perfis" title="Retratos da base" />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
-                title="Faixas etárias"
+                title="Faixa etária"
                 data={ageDistribution}
                 type="pie"
                 eyebrowLabel="Idades"
@@ -270,7 +270,7 @@ export default function StatisticsPage() {
                 title="Gênero"
                 data={genderDistribution}
                 type="pie"
-                eyebrowLabel="Pessoas"
+                eyebrowLabel="Perfis"
                 summaryItems={4}
               />
               <ChartPanel
@@ -285,17 +285,17 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Formação e apoio" title="Caminhos da dança" />
+            <SectionTitle badge="Formação e interesses" title="Trajetórias da dança" />
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
-                title="Percursos de formação"
+                title="Formação"
                 data={trainingDistribution}
                 eyebrowLabel="Formação"
                 summaryItems={5}
               />
               <ChartPanel
-                title="Temas mais buscados"
+                title="Interesses mais frequentes"
                 data={supportDistribution}
                 eyebrowLabel="Interesses"
                 summaryItems={5}
