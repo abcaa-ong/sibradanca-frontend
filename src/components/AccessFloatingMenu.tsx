@@ -2,9 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import { Badge } from './Badge'
+import { TurnstileWidget } from './TurnstileWidget'
 import { listCities, listStates } from '../services/geo.services'
 import { submitInstitutionForm, submitProfessionalForm, submitYouthForm } from '../services/forms.service'
 import { getActiveConsentTerm, listContents, listModalities } from '../services/reference.service'
+import { setPublicFormGuardMetadata } from '../services/api'
 import type { CityResponse, StateResponse } from '../types/geo'
 import type { ActiveConsentTermResponse, ReferenceItemResponse } from '../types/reference'
 import type {
@@ -165,6 +167,8 @@ type InstitutionFormData = {
 }
 
 type OptionItem = { value: string; label: string }
+
+const TURNSTILE_SITE_KEY = (import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '').trim()
 
 const accessOptions = [
   {
@@ -650,8 +654,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const [adultSubmission, setAdultSubmission] = useState<ProfessionalFormResponse | null>(null)
   const [isInstitutionSubmitting, setIsInstitutionSubmitting] = useState(false)
   const [institutionSubmission, setInstitutionSubmission] = useState<InstitutionFormResponse | null>(null)
+  const [formStartedAt, setFormStartedAt] = useState(() => new Date().toISOString())
+  const [honeypotValue, setHoneypotValue] = useState('')
+  const [captchaToken, setCaptchaToken] = useState('')
+  const [captchaRenderKey, setCaptchaRenderKey] = useState(0)
   const previousOpenRef = useRef(open)
   const previousInitialViewRef = useRef(initialView)
+  const antiBotEnabled = Boolean(TURNSTILE_SITE_KEY)
 
   const currentMeta = useMemo(() => {
     if (view === 'menu') return null
@@ -692,7 +701,25 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     setMinorSubmission(null)
     setAdultSubmission(null)
     setInstitutionSubmission(null)
+    resetAntiBotState()
   }, [initialView, open])
+
+  useEffect(() => {
+    if (!open || view === 'menu') {
+      setPublicFormGuardMetadata(null)
+      return
+    }
+
+    setPublicFormGuardMetadata({
+      captchaToken,
+      formStartedAt,
+      honeypot: honeypotValue,
+    })
+
+    return () => {
+      setPublicFormGuardMetadata(null)
+    }
+  }, [captchaToken, formStartedAt, honeypotValue, open, view])
 
   useEffect(() => {
     if (!open || !['minor-flow', 'adult-flow', 'institution-flow'].includes(view)) {
@@ -878,10 +905,34 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     return ((currentStep + 1) / totalSteps) * 100
   }, [currentStep, totalSteps])
 
+  const resetAntiBotState = () => {
+    setFormStartedAt(new Date().toISOString())
+    setHoneypotValue('')
+    setCaptchaToken('')
+    setCaptchaRenderKey((prev) => prev + 1)
+  }
+
+  const getAntiBotHeaders = () => {
+    const headers: Record<string, string> = {
+      'X-Form-Started-At': formStartedAt,
+    }
+
+    if (honeypotValue.trim()) {
+      headers['X-Form-Honeypot'] = honeypotValue.trim()
+    }
+
+    if (captchaToken) {
+      headers['X-Captcha-Token'] = captchaToken
+    }
+
+    return headers
+  }
+
   const resetAll = () => {
     setView('menu')
     setCurrentStep(0)
     setStepError('')
+    resetAntiBotState()
     setMinorForm(initialMinorForm)
     setAdultForm(initialAdultForm)
     setInstitutionForm(initialInstitutionForm)
@@ -974,18 +1025,21 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     setStepError('')
 
     if (label === 'Sou menor de 18 anos') {
+      resetAntiBotState()
       setView('minor-flow')
       setCurrentStep(0)
       return
     }
 
     if (label === 'Sou maior de 18 anos') {
+      resetAntiBotState()
       setView('adult-flow')
       setCurrentStep(0)
       return
     }
 
     if (label === 'Escola / Grupo / Companhia') {
+      resetAntiBotState()
       setView('institution-flow')
       setCurrentStep(0)
       return
@@ -999,6 +1053,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     setStepError('')
 
     if (currentStep === 0) {
+      resetAntiBotState()
       setView('menu')
       return
     }
@@ -1338,9 +1393,24 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   }
 
   const validateCurrentStep = () => {
-    if (view === 'minor-flow') return validateMinorStep()
-    if (view === 'adult-flow') return validateAdultStep()
-    if (view === 'institution-flow') return validateInstitutionRealStep()
+    const isStepValid =
+      view === 'minor-flow'
+        ? validateMinorStep()
+        : view === 'adult-flow'
+          ? validateAdultStep()
+          : view === 'institution-flow'
+            ? validateInstitutionRealStep()
+            : true
+
+    if (!isStepValid) {
+      return false
+    }
+
+    if (currentStep === totalSteps - 1 && antiBotEnabled && !captchaToken) {
+      setStepError('Conclua a validacao de seguranca antes de enviar o cadastro.')
+      return false
+    }
+
     return true
   }
 
@@ -1367,34 +1437,39 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     setStepError('')
 
     try {
-      const response = await submitYouthForm({
-        fullName: minorForm.fullName.trim(),
-        cpf: minorForm.cpf.trim() || null,
-        email: minorForm.email.trim(),
-        whatsapp: minorForm.whatsapp.trim(),
-        region: minorForm.region || null,
-        age: Number(minorForm.age || 0) || null,
-        birthDate: minorForm.birthDate,
-        gender: minorForm.gender || null,
-        cityId: selectedCity.id,
-        modalityIds,
-        practiceTime: minorForm.practiceTime,
-        careerInterest: parseBooleanChoice(minorForm.careerInterest),
-        whoPaysExpenses: minorForm.whoPays.join(', '),
-        familyIncomeRange: minorForm.familyIncome,
-        monthlyFee: minorForm.monthlyFee.trim() || null,
-        monthlyCostSchool: minorForm.schoolFee.trim() || null,
-        monthlyCostCourses: minorForm.courses.trim() || null,
-        monthlyCostCostumes: minorForm.costumes.trim() || null,
-        monthlyCostFestivals: minorForm.festivals.trim() || null,
-        monthlyCostTravel: minorForm.travel.trim() || null,
-        monthlyCostOthers: minorForm.otherCosts.trim() || null,
-        searchesContent: parseBooleanChoice(minorForm.searchesContent),
-        contentIds,
-        consentCode: activeConsentTerm.code,
-        consentAccepted: minorForm.consentStats,
-        consentContact: minorForm.consentContact,
-      })
+      const response = await submitYouthForm(
+        {
+          fullName: minorForm.fullName.trim(),
+          cpf: minorForm.cpf.trim() || null,
+          email: minorForm.email.trim(),
+          whatsapp: minorForm.whatsapp.trim(),
+          region: minorForm.region || null,
+          age: Number(minorForm.age || 0) || null,
+          birthDate: minorForm.birthDate,
+          gender: minorForm.gender || null,
+          cityId: selectedCity.id,
+          modalityIds,
+          practiceTime: minorForm.practiceTime,
+          careerInterest: parseBooleanChoice(minorForm.careerInterest),
+          whoPaysExpenses: minorForm.whoPays.join(', '),
+          familyIncomeRange: minorForm.familyIncome,
+          monthlyFee: minorForm.monthlyFee.trim() || null,
+          monthlyCostSchool: minorForm.schoolFee.trim() || null,
+          monthlyCostCourses: minorForm.courses.trim() || null,
+          monthlyCostCostumes: minorForm.costumes.trim() || null,
+          monthlyCostFestivals: minorForm.festivals.trim() || null,
+          monthlyCostTravel: minorForm.travel.trim() || null,
+          monthlyCostOthers: minorForm.otherCosts.trim() || null,
+          searchesContent: parseBooleanChoice(minorForm.searchesContent),
+          contentIds,
+          consentCode: activeConsentTerm.code,
+          consentAccepted: minorForm.consentStats,
+          consentContact: minorForm.consentContact,
+        },
+        {
+          headers: getAntiBotHeaders(),
+        },
+      )
 
       setMinorSubmission(response)
     } catch (error) {
@@ -2812,6 +2887,26 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 ) : (
                   <>
                     {renderCurrentStep()}
+                    <label className="access-honeypot" aria-hidden="true">
+                      <span>Campo de validacao</span>
+                      <input
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={honeypotValue}
+                        onChange={(event) => setHoneypotValue(event.target.value)}
+                      />
+                    </label>
+                    {currentStep === totalSteps - 1 && antiBotEnabled ? (
+                      <div className="access-security-card">
+                        <span className="access-security-label">Validacao de seguranca</span>
+                        <TurnstileWidget
+                          key={captchaRenderKey}
+                          siteKey={TURNSTILE_SITE_KEY}
+                          onTokenChange={setCaptchaToken}
+                        />
+                        <small>Conclua a validacao para liberar o envio do cadastro.</small>
+                      </div>
+                    ) : null}
                     {stepError && <p className="access-step-error">{stepError}</p>}
                     <div className="access-form-actions">
                       <button type="button" className="access-action-btn is-secondary" onClick={handlePrevious}>
@@ -2825,7 +2920,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                           isMinorSubmitting ||
                           isAdultSubmitting ||
                           isInstitutionSubmitting ||
-                          ((view === 'minor-flow' || view === 'adult-flow' || view === 'institution-flow') && isMinorLoadingReferences)
+                          ((view === 'minor-flow' || view === 'adult-flow' || view === 'institution-flow') &&
+                            isMinorLoadingReferences) ||
+                          (currentStep === totalSteps - 1 && antiBotEnabled && !captchaToken)
                         }
                       >
                         {isMinorSubmitting || isAdultSubmitting || isInstitutionSubmitting

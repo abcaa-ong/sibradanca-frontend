@@ -4,18 +4,18 @@ import { getAdminAudit, getBackendHealthStatus } from '../services/admin.service
 import type { AdminAuditLogResponse, BackendHealthStatusResponse } from '../types/admin'
 
 const roles = [
-  ['Gestão', 'Indicadores e relatórios'],
-  ['Operação', 'Cadastros e protocolos'],
-  ['Auditoria', 'Histórico e conferência'],
+  ['Gestao', 'Indicadores e relatorios'],
+  ['Operacao', 'Cadastros e protocolos'],
+  ['Auditoria', 'Historico e conferencia'],
   ['Dados', 'Planilhas e cruzamentos'],
-  ['Administração', 'Contas e permissões'],
+  ['Administracao', 'Contas e permissoes'],
 ] as const
 
 const controls = [
-  ['Autenticação', 'Ativa'],
+  ['Autenticacao', 'Ativa'],
   ['Auditoria', 'Ativa'],
-  ['Permissões', 'Restritas'],
-  ['Recuperação', 'Em configuração'],
+  ['Permissoes', 'Restritas'],
+  ['Recuperacao', 'Em configuracao'],
 ] as const
 
 function formatDateTime(value: string | null) {
@@ -40,10 +40,13 @@ export default function AdminAccessHubPage() {
 
       try {
         const auditData = await getAdminAudit()
-
         setAuditLogs(auditData)
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar a área de acessos.')
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : 'Nao foi possivel carregar a area de acessos.',
+        )
       }
 
       try {
@@ -59,11 +62,13 @@ export default function AdminAccessHubPage() {
 
   return (
     <div className="admin-page-content">
-      <header className="admin-page-header">
+      <header className="admin-page-header admin-page-header-compact">
         <div>
           <p className="eyebrow">Acessos</p>
-          <h2>Segurança e auditoria</h2>
-          <p className="admin-page-subtitle">Contas internas, permissões e histórico operacional.</p>
+          <h2>Seguranca e auditoria</h2>
+          <p className="admin-page-subtitle">
+            Contas internas, permissoes e historico operacional.
+          </p>
         </div>
       </header>
 
@@ -81,7 +86,7 @@ export default function AdminAccessHubPage() {
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Último registro</span>
+          <span className="eyebrow">Ultimo registro</span>
           <strong>{formatDateTime(lastAudit)}</strong>
         </Card>
 
@@ -154,7 +159,7 @@ export default function AdminAccessHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Auditoria</p>
-              <h2>Histórico recente</h2>
+              <h2>Historico recente</h2>
             </div>
           </div>
 
@@ -162,7 +167,7 @@ export default function AdminAccessHubPage() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Ação</th>
+                  <th>Acao</th>
                   <th>Ator</th>
                   <th>Alvo</th>
                   <th>Detalhe</th>

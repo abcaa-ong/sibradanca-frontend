@@ -204,6 +204,10 @@
   align-items: flex-start;
 }
 
+.admin-page-header-compact {
+  justify-content: flex-start;
+}
+
 .admin-status-card {
   min-width: 180px;
   padding: 18px 20px;
@@ -339,6 +343,8 @@
 
 .admin-module-card,
 .admin-governance-card {
+  display: flex;
+  flex-direction: column;
   padding: 18px;
   border-radius: 22px;
   border: 1px solid rgba(16, 24, 40, 0.08);
@@ -378,7 +384,8 @@
 }
 
 .admin-card-action {
-  margin-top: 14px;
+  margin-top: auto;
+  padding-top: 14px;
 }
 
 .admin-kpi-grid {

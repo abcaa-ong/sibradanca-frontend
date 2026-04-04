@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { apiDownload, apiGet, apiPost } from './api'
+import { apiDownload, apiGet, apiPost, setPublicFormGuardMetadata } from './api'
 
 const originalFetch = globalThis.fetch
 const expectedApiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
@@ -9,6 +9,7 @@ describe('api service', () => {
   afterEach(() => {
     vi.restoreAllMocks()
     globalThis.fetch = originalFetch
+    setPublicFormGuardMetadata(null)
   })
 
   it('returns the data payload on successful GET responses', async () => {
@@ -65,6 +66,37 @@ describe('api service', () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ sector: 'YOUTH' }),
+    })
+  })
+
+  it('injects anti-bot headers on public form writes when guard metadata exists', async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        success: true,
+        message: 'created',
+        data: { protocolCode: 'SIB-12345678' },
+      }),
+    }) as typeof fetch
+
+    setPublicFormGuardMetadata({
+      captchaToken: 'token-123',
+      formStartedAt: '2026-04-03T23:00:00.000Z',
+      honeypot: '',
+    })
+
+    await apiPost<{ protocolCode: string }, { sector: string }>('/api/forms/youth', {
+      sector: 'YOUTH',
+    })
+
+    expect(globalThis.fetch).toHaveBeenCalledWith(`${expectedApiBaseUrl}/api/forms/youth`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Form-Started-At': '2026-04-03T23:00:00.000Z',
+        'X-Captcha-Token': 'token-123',
       },
       body: JSON.stringify({ sector: 'YOUTH' }),
     })

@@ -7,6 +7,18 @@ export type ApiDownloadResponse = {
   filename: string | null
 }
 
+export type ApiRequestOptions = {
+  headers?: HeadersInit
+}
+
+type PublicFormGuardMetadata = {
+  captchaToken?: string
+  formStartedAt?: string
+  honeypot?: string
+}
+
+let publicFormGuardMetadata: PublicFormGuardMetadata | null = null
+
 async function performRequest(input: RequestInfo | URL, init?: RequestInit) {
   try {
     return await fetch(input, init)
@@ -40,6 +52,32 @@ function buildUrl(path: string) {
   return `${API_BASE_URL}${path}`
 }
 
+function isPublicFormWrite(path: string) {
+  return path.startsWith('/api/forms/') || path === '/api/protocol-recovery'
+}
+
+function buildGuardHeaders(path: string) {
+  if (!isPublicFormWrite(path) || !publicFormGuardMetadata) {
+    return {}
+  }
+
+  const headers: Record<string, string> = {}
+
+  if (publicFormGuardMetadata.formStartedAt) {
+    headers['X-Form-Started-At'] = publicFormGuardMetadata.formStartedAt
+  }
+
+  if (publicFormGuardMetadata.captchaToken) {
+    headers['X-Captcha-Token'] = publicFormGuardMetadata.captchaToken
+  }
+
+  if (publicFormGuardMetadata.honeypot?.trim()) {
+    headers['X-Form-Honeypot'] = publicFormGuardMetadata.honeypot.trim()
+  }
+
+  return headers
+}
+
 function getFilenameFromDisposition(headerValue: string | null) {
   if (!headerValue) {
     return null
@@ -59,11 +97,21 @@ export async function apiGet<T>(path: string): Promise<T> {
   return parseApiResponse<T>(response, 'Erro ao buscar dados.')
 }
 
-export async function apiPost<TResponse, TBody>(path: string, body: TBody): Promise<TResponse> {
+export function setPublicFormGuardMetadata(metadata: PublicFormGuardMetadata | null) {
+  publicFormGuardMetadata = metadata
+}
+
+export async function apiPost<TResponse, TBody>(
+  path: string,
+  body: TBody,
+  options?: ApiRequestOptions,
+): Promise<TResponse> {
   const response = await performRequest(buildUrl(path), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...buildGuardHeaders(path),
+      ...(options?.headers ?? {}),
     },
     body: JSON.stringify(body),
   })
@@ -71,11 +119,17 @@ export async function apiPost<TResponse, TBody>(path: string, body: TBody): Prom
   return parseApiResponse<TResponse>(response, 'Erro ao enviar dados.')
 }
 
-export async function apiPut<TResponse, TBody>(path: string, body: TBody): Promise<TResponse> {
+export async function apiPut<TResponse, TBody>(
+  path: string,
+  body: TBody,
+  options?: ApiRequestOptions,
+): Promise<TResponse> {
   const response = await performRequest(buildUrl(path), {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      ...buildGuardHeaders(path),
+      ...(options?.headers ?? {}),
     },
     body: JSON.stringify(body),
   })

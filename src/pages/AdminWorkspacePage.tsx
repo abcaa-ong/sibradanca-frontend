@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
-import { getAdminDashboard, getAdminOverview, getBackendHealthStatus } from '../services/admin.service'
+import { getAdminDashboard, getAdminOverview } from '../services/admin.service'
 import type {
   AdminInsightsDashboardResponse,
   AdminInsightsOverviewResponse,
-  BackendHealthStatusResponse,
 } from '../types/admin'
 
 const workAreas = [
@@ -20,14 +19,14 @@ const workAreas = [
   {
     title: 'Dados',
     audience: 'Indicadores',
-    description: 'Dashboard, relatórios e exportações.',
+    description: 'Dashboard, relatorios e exportacoes.',
     route: '/painel-interno/dados',
     actionLabel: 'Abrir',
   },
   {
     title: 'Acessos',
-    audience: 'Segurança',
-    description: 'Contas internas, permissões e auditoria.',
+    audience: 'Seguranca',
+    description: 'Contas internas, permissoes e auditoria.',
     route: '/painel-interno/acessos',
     actionLabel: 'Abrir',
   },
@@ -35,7 +34,7 @@ const workAreas = [
 
 function getTopItem(
   items: Array<{ name: string; value: number }> | undefined,
-  fallbackLabel: string
+  fallbackLabel: string,
 ) {
   if (!items?.length) {
     return { label: fallbackLabel, value: '-' }
@@ -52,7 +51,6 @@ export default function AdminWorkspacePage() {
   const navigate = useNavigate()
   const [overview, setOverview] = useState<AdminInsightsOverviewResponse | null>(null)
   const [dashboard, setDashboard] = useState<AdminInsightsDashboardResponse | null>(null)
-  const [health, setHealth] = useState<BackendHealthStatusResponse | null>(null)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -68,14 +66,11 @@ export default function AdminWorkspacePage() {
         setOverview(overviewData)
         setDashboard(dashboardData)
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar o painel interno.')
-      }
-
-      try {
-        const healthData = await getBackendHealthStatus()
-        setHealth(healthData)
-      } catch {
-        setHealth({ status: 'Sem resposta' })
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : 'Nao foi possivel carregar o painel interno.',
+        )
       }
     }
 
@@ -88,17 +83,14 @@ export default function AdminWorkspacePage() {
 
   return (
     <div className="admin-page-content">
-      <header className="admin-page-header">
+      <header className="admin-page-header admin-page-header-compact">
         <div>
           <p className="eyebrow">Central da ONG</p>
           <h2>Painel interno</h2>
-          <p className="admin-page-subtitle">Acompanhamento da base, dos cadastros e dos acessos.</p>
+          <p className="admin-page-subtitle">
+            Acompanhamento da base, dos cadastros e dos acessos.
+          </p>
         </div>
-
-        <Card className="admin-status-card">
-          <span className="eyebrow">Ambiente</span>
-          <strong>{health?.status ?? '-'}</strong>
-        </Card>
       </header>
 
       {error ? <Card className="admin-alert admin-alert-error">{error}</Card> : null}
@@ -120,7 +112,7 @@ export default function AdminWorkspacePage() {
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Instituições</span>
+          <span className="eyebrow">Instituicoes</span>
           <strong>{overview?.totalInstitutions ?? '-'}</strong>
         </Card>
       </section>
@@ -129,8 +121,8 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Navegação</p>
-              <h2>Módulos</h2>
+              <p className="eyebrow">Navegacao</p>
+              <h2>Modulos</h2>
             </div>
           </div>
 
@@ -153,7 +145,7 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Leitura rápida</p>
+              <p className="eyebrow">Leitura rapida</p>
               <h2>Indicadores atuais</h2>
             </div>
           </div>
@@ -166,13 +158,13 @@ export default function AdminWorkspacePage() {
             </div>
 
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">Faixa etária</span>
+              <span className="admin-kpi-label">Faixa etaria</span>
               <strong>{topAgeRange.label}</strong>
               <span className="admin-kpi-value">{topAgeRange.value}</span>
             </div>
 
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">Gênero</span>
+              <span className="admin-kpi-label">Genero</span>
               <strong>{topGender.label}</strong>
               <span className="admin-kpi-value">{topGender.value}</span>
             </div>
@@ -182,8 +174,8 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Ações</p>
-              <h2>Acesso rápido</h2>
+              <p className="eyebrow">Acoes</p>
+              <h2>Acesso rapido</h2>
             </div>
           </div>
 
