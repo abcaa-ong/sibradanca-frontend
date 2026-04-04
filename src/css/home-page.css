@@ -38,6 +38,7 @@
 
 .hero-copy h1 {
   margin: 24px 0 0;
+  max-width: 12ch;
   font-size: clamp(2.25rem, 3.9vw, 3.95rem);
   line-height: 1.08;
   letter-spacing: -0.04em;
@@ -62,6 +63,10 @@
   flex-wrap: wrap;
   gap: 14px;
   margin-top: 32px;
+}
+
+.hero-actions .btn {
+  min-width: min(100%, 220px);
 }
 
 /* ============================================================
@@ -218,6 +223,7 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
+  align-items: stretch;
 }
 
 .stats-grid .card-text {
@@ -247,6 +253,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   align-items: stretch;
+  grid-auto-rows: 1fr;
 }
 
 
@@ -525,12 +532,14 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
+  align-items: stretch;
 }
 
 .partner-card {
   position: relative;
   overflow: hidden;
   padding: 28px;
+  height: 100%;
   text-align: center;
   background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(250, 250, 250, 0.95) 100%);
 }
@@ -610,6 +619,10 @@
     grid-template-columns: 1fr;
   }
 
+  .hero-copy h1 {
+    max-width: 11.5ch;
+  }
+
   .stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -628,6 +641,25 @@
     grid-column: 1 / -1;
     width: min(100%, 420px);
     justify-self: center;
+  }
+}
+
+@media (max-width: 960px) {
+  .hero-section {
+    padding: 68px 0 48px;
+  }
+
+  .hero-grid {
+    gap: 32px;
+  }
+
+  .hero-copy h1 {
+    max-width: 10.8ch;
+    font-size: clamp(2.1rem, 5vw, 3.1rem);
+  }
+
+  .hero-description {
+    max-width: 56ch;
   }
 }
 
@@ -663,6 +695,7 @@
   }
 
   .hero-copy h1 {
+    max-width: 11ch;
     font-size: 2.05rem;
     line-height: 1.08;
   }
@@ -772,6 +805,7 @@
 @media (max-width: 480px) {
   .hero-description {
     font-size: 0.94rem;
+    max-width: none;
   }
 
   .hero-artwork {
@@ -779,6 +813,7 @@
   }
 
   .hero-copy h1 {
+    max-width: 10ch;
     font-size: clamp(1.9rem, 8vw, 2.25rem);
   }
 

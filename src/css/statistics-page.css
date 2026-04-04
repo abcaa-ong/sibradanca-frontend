@@ -147,6 +147,16 @@
   text-align: center;
 }
 
+@media (max-width: 1280px) {
+  .statistics-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .statistics-chart-panel {
+    min-height: 430px;
+  }
+}
+
 /* ============================================================
    STATISTICS PAGE — RESPONSIVE
    ============================================================ */
@@ -163,6 +173,12 @@
   .statistics-hero-copy h1 {
     font-size: 2.2rem;
     line-height: 1.08;
+  }
+
+  .statistics-chart-panel,
+  .statistics-kpi-card,
+  .statistics-metric-card {
+    min-height: auto;
   }
 
   .statistics-export-actions {
