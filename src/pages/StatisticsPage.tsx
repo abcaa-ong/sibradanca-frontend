@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { ArrowLeft, ClipboardList, House, Instagram, Menu, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
@@ -31,22 +31,10 @@ const overviewCards: OverviewCard[] = [
 ]
 
 const statusCards: StatusCard[] = [
-  {
-    label: 'Cobertura',
-    value: '27 UFs',
-  },
-  {
-    label: 'Formulários',
-    value: '3 frentes',
-  },
-  {
-    label: 'Base atual',
-    value: '5.240 registros',
-  },
-  {
-    label: 'Dados públicos',
-    value: 'Sem dados pessoais',
-  },
+  { label: 'Cobertura nacional', value: '27 UFs' },
+  { label: 'Formulários ativos', value: '3 frentes' },
+  { label: 'Base demonstrativa', value: '5.240 registros' },
+  { label: 'Leitura pública', value: 'Sem dados pessoais' },
 ]
 
 const profileDistribution: ChartItem[] = [
@@ -203,8 +191,8 @@ export default function StatisticsPage() {
               <Badge dark>Estatísticas nacionais</Badge>
               <h1>Banco Nacional de Dados da Dança do Brasil</h1>
               <p className="statistics-hero-description">
-                Um painel público com a leitura geral da base de jovens, profissionais e
-                instituições da dança.
+                Uma demonstração pública de como a leitura nacional da dança pode aparecer no sistema,
+                com dados gerais dos formulários e sem exibir informações pessoais.
               </p>
             </div>
 

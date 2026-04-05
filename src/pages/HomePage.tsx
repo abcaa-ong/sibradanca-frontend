@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   ArrowRight,
@@ -64,7 +64,7 @@ const highlights = [
 
 const accessJourneys = [
   {
-    title: 'Jovens da Dança',
+    title: 'Jovens da dança',
     description:
       'Fluxo pensado para participantes menores de 18 anos, com perguntas guiadas e preenchimento simples.',
     badge: 'Setor 01',
@@ -72,7 +72,7 @@ const accessJourneys = [
     route: '/formulario/jovens',
   },
   {
-    title: 'Profissionais da Dança',
+    title: 'Profissionais da dança',
     description:
       'Percurso para pessoas adultas que atuam, estudam ou desenvolvem atividades ligadas à dança.',
     badge: 'Setor 02',

@@ -11,6 +11,7 @@ import {
   YAxis,
 } from 'recharts'
 import type { TooltipProps } from 'recharts'
+import { repairText } from '../utils/repairText'
 
 type ChartItem = {
   name: string
@@ -100,7 +101,7 @@ export function ChartPanel({
 
     return (
       <div className="statistics-tooltip">
-        <strong>{resolvedLabel}</strong>
+        <strong>{repairText(String(resolvedLabel))}</strong>
         <span>{formatNumber(value)} registros</span>
       </div>
     )
@@ -110,8 +111,10 @@ export function ChartPanel({
     <div className={`card chart-panel statistics-chart-panel ${className}`.trim()}>
       <div className="panel-top">
         <div>
-          <span className="eyebrow">{eyebrowLabel}</span>
-          <h3 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 800, lineHeight: 1.3 }}>{title}</h3>
+          <span className="eyebrow">{repairText(eyebrowLabel)}</span>
+          <h3 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 800, lineHeight: 1.3 }}>
+            {repairText(title)}
+          </h3>
         </div>
       </div>
 
@@ -179,7 +182,7 @@ export function ChartPanel({
         <div className="statistics-chart-summary">
           {summaryData.map((item) => (
             <div key={`${title}-${item.name}`} className="statistics-chart-summary-row">
-              <span>{item.name}</span>
+              <span>{repairText(item.name)}</span>
               <strong>{formatNumber(item.value)}</strong>
             </div>
           ))}
