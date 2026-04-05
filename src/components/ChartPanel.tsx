@@ -55,7 +55,7 @@ function resolveTooltipLabel(
     return item.name
   }
 
-  return 'Registro'
+  return 'Cadastro'
 }
 
 export function ChartPanel({
@@ -87,7 +87,7 @@ export function ChartPanel({
     return (
       <div className="statistics-tooltip">
         <strong>{String(resolvedLabel)}</strong>
-        <span>{formatNumber(value)} registros</span>
+        <span>{formatNumber(value)} cadastros</span>
       </div>
     )
   }

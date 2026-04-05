@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import logo from '../assets/logo-sibradanca.png'
 import { Badge } from '../components/Badge'
 import { ChartPanel } from '../components/ChartPanel'
+import { MetricCard } from '../components/MetricCard'
 import { SectionTitle } from '../components/SectionTitle'
 
 type ChartItem = {
@@ -30,10 +31,33 @@ const overviewCards: OverviewCard[] = [
 ]
 
 const statusCards: StatusCard[] = [
-  { label: 'Cobertura nacional', value: '27 UFs' },
-  { label: 'Formul\u00e1rios ativos', value: '3 frentes' },
-  { label: 'Base demonstrativa', value: '5.240 registros' },
-  { label: 'Leitura p\u00fablica', value: 'Sem dados pessoais' },
+  { label: 'Estados', value: '27 UFs' },
+  { label: 'Munic\u00edpios', value: '5.570 cidades' },
+  { label: 'Formul\u00e1rios', value: '3 cadastros' },
+  { label: 'Privacidade', value: 'Sem dados pessoais' },
+]
+
+const headlineCards = [
+  {
+    label: 'Presen\u00e7a fora do eixo Rio-S\u00e3o Paulo',
+    percent: '72%',
+    detail: 'A base se espalha por todas as regi\u00f5es e refor\u00e7a a presen\u00e7a nacional da dan\u00e7a.',
+  },
+  {
+    label: 'Forma\u00e7\u00e3o em destaque',
+    percent: '68%',
+    detail: 'Cursos, aulas e processos de aprendizagem aparecem em toda a leitura da base.',
+  },
+  {
+    label: 'Institui\u00e7\u00f5es com atua\u00e7\u00e3o cont\u00ednua',
+    percent: '61%',
+    detail: 'Escolas, grupos, projetos e companhias mant\u00eam atividade recorrente ao longo do ano.',
+  },
+  {
+    label: 'Modalidades mais citadas',
+    percent: 'Ballet e urbanas',
+    detail: 'As duas frentes lideram a leitura p\u00fablica atual e puxam a movimenta\u00e7\u00e3o da base.',
+  },
 ]
 
 const profileDistribution: ChartItem[] = [
@@ -192,8 +216,7 @@ export default function StatisticsPage() {
               <Badge dark>Estat\u00edsticas nacionais</Badge>
               <h1>Banco Nacional de Dados da Dan\u00e7a do Brasil</h1>
               <p className="statistics-hero-description">
-                Painel p\u00fablico com leitura demonstrativa da base nacional da dan\u00e7a, sem exibir
-                informa\u00e7\u00f5es pessoais.
+                Vis\u00e3o nacional da dan\u00e7a no Brasil com base nos formul\u00e1rios da plataforma.
               </p>
             </div>
 
@@ -217,15 +240,31 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Base nacional" title="Vis\u00e3o geral da base" />
+            <SectionTitle
+              badge="Painel nacional"
+              title="Panorama da base"
+              description="Totais principais da leitura p\u00fablica do sistema."
+            />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
               {overviewCards.map((item) => (
                 <article key={item.label} className="card statistics-kpi-card">
-                  <span className="eyebrow">Base</span>
+                  <span className="eyebrow">Cadastros</span>
                   <h3 className="statistics-kpi-title">{item.label}</h3>
                   <strong className="statistics-kpi-value">{item.value}</strong>
                 </article>
+              ))}
+            </div>
+
+            <div className="statistics-metric-grid">
+              {headlineCards.map((item) => (
+                <MetricCard
+                  key={item.label}
+                  label={item.label}
+                  percent={item.percent}
+                  detail={item.detail}
+                  eyebrowLabel="Destaque"
+                />
               ))}
             </div>
 
@@ -248,7 +287,11 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Territ\u00f3rio" title="Presen\u00e7a da dan\u00e7a no Brasil" />
+            <SectionTitle
+              badge="Territ\u00f3rio"
+              title="Presen\u00e7a da dan\u00e7a no pa\u00eds"
+              description="Estados e cidades com maior movimenta\u00e7\u00e3o na leitura atual."
+            />
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
@@ -281,7 +324,11 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Perfis da base" title="Quem aparece nesta leitura" />
+            <SectionTitle
+              badge="Perfis e modalidades"
+              title="Quem aparece nesta leitura"
+              description="Faixa et\u00e1ria, g\u00eanero e modalidades mais presentes na base."
+            />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
@@ -310,7 +357,11 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Estrutura da dan\u00e7a" title="Forma\u00e7\u00e3o, interesses e institui\u00e7\u00f5es" />
+            <SectionTitle
+              badge="Forma\u00e7\u00e3o e estrutura"
+              title="Percursos, temas e institui\u00e7\u00f5es"
+              description="Uma leitura das trajet\u00f3rias, interesses e organiza\u00e7\u00e3o da base."
+            />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
