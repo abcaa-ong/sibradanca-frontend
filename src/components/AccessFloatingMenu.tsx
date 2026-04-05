@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import { Badge } from './Badge'
@@ -234,7 +234,7 @@ const accessOptions = [
   },
   {
     label: 'Sou maior de 18 anos',
-    description: 'Cadastro para pessoas adultas ligadas ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a.',
+    description: 'Cadastro para pessoas adultas ligadas à dança.',
     accentClass: 'is-blue',
   },
   {
@@ -246,20 +246,20 @@ const accessOptions = [
 
 const FLOW_META: Record<ActiveFlow, { sector: string; title: string; totalSteps: number; selectLabel: string }> = {
   'minor-flow': {
-    sector: 'Cadastro para Jovens da DanÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a',
-    title: 'Menor de 18 anos ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Tempo estimado: 4 minutos',
+    sector: 'Cadastro para Jovens da Dança',
+    title: 'Menor de 18 anos • Tempo estimado: 4 minutos',
     totalSteps: 6,
     selectLabel: 'Sou menor de 18 anos',
   },
   'adult-flow': {
-    sector: 'Cadastro para Profissionais da DanÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a',
-    title: 'Maior de 18 anos ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Tempo estimado: 5ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ6 minutos',
+    sector: 'Cadastro para Profissionais da Dança',
+    title: 'Maior de 18 anos • Tempo estimado: 5–6 minutos',
     totalSteps: 9,
     selectLabel: 'Sou maior de 18 anos',
   },
   'institution-flow': {
-    sector: 'Cadastro para InstituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes da DanÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a',
-    title: 'Escolas, Grupos, Companhias e Projetos ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Tempo estimado: 5ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ6 minutos',
+    sector: 'Cadastro para Instituições da Dança',
+    title: 'Escolas, Grupos, Companhias e Projetos • Tempo estimado: 5–6 minutos',
     totalSteps: 8,
     selectLabel: 'Escola / Grupo / Companhia',
   },
@@ -276,60 +276,60 @@ const regionOptions: OptionItem[] = [
 const stateOptions: OptionItem[] = [
   { value: 'AC', label: 'Acre' },
   { value: 'AL', label: 'Alagoas' },
-  { value: 'AP', label: 'AmapÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡' },
+  { value: 'AP', label: 'Amapá' },
   { value: 'AM', label: 'Amazonas' },
   { value: 'BA', label: 'Bahia' },
-  { value: 'CE', label: 'CearÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡' },
+  { value: 'CE', label: 'Ceará' },
   { value: 'DF', label: 'Distrito Federal' },
-  { value: 'ES', label: 'EspÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­rito Santo' },
-  { value: 'GO', label: 'GoiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s' },
-  { value: 'MA', label: 'MaranhÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o' },
+  { value: 'ES', label: 'Espírito Santo' },
+  { value: 'GO', label: 'Goiás' },
+  { value: 'MA', label: 'Maranhão' },
   { value: 'MT', label: 'Mato Grosso' },
   { value: 'MS', label: 'Mato Grosso do Sul' },
   { value: 'MG', label: 'Minas Gerais' },
-  { value: 'PA', label: 'ParÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡' },
-  { value: 'PB', label: 'ParaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­ba' },
-  { value: 'PR', label: 'ParanÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡' },
+  { value: 'PA', label: 'Pará' },
+  { value: 'PB', label: 'Paraíba' },
+  { value: 'PR', label: 'Paraná' },
   { value: 'PE', label: 'Pernambuco' },
-  { value: 'PI', label: 'PiauÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­' },
+  { value: 'PI', label: 'Piauí' },
   { value: 'RJ', label: 'Rio de Janeiro' },
   { value: 'RN', label: 'Rio Grande do Norte' },
   { value: 'RS', label: 'Rio Grande do Sul' },
-  { value: 'RO', label: 'RondÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â´nia' },
+  { value: 'RO', label: 'Rondônia' },
   { value: 'RR', label: 'Roraima' },
   { value: 'SC', label: 'Santa Catarina' },
-  { value: 'SP', label: 'SÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o Paulo' },
+  { value: 'SP', label: 'São Paulo' },
   { value: 'SE', label: 'Sergipe' },
   { value: 'TO', label: 'Tocantins' },
 ]
 
-const youthWhoPaysOptions = ['FamÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­lia', 'Escola', 'PatrocÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nios', 'Outros']
+const youthWhoPaysOptions = ['Família', 'Escola', 'Patrocínios', 'Outros']
 
-const adultWhoPaysOptions = ['VocÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âª', 'FamÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­lia', 'Escola', 'Edital', 'Outros']
+const adultWhoPaysOptions = ['Você', 'Família', 'Escola', 'Edital', 'Outros']
 
 const genderIdentityOptions: OptionItem[] = [
   { value: 'Mulher cis', label: 'Mulher cis' },
   { value: 'Mulher trans', label: 'Mulher trans' },
   { value: 'Homem cis', label: 'Homem cis' },
   { value: 'Homem trans', label: 'Homem trans' },
-  { value: 'NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o-binÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio', label: 'NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o-binÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio' },
+  { value: 'Não-binário', label: 'Não-binário' },
   { value: 'Outros', label: 'Outros' },
 ]
 
 const householdIncomeOptions: OptionItem[] = [
-  { value: '1 salÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nimo', label: '1 salÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nimo' },
-  { value: '2 salÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rios mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nimos', label: '2 salÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rios mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nimos' },
-  { value: '3 salÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rios mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nimos', label: '3 salÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rios mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nimos' },
-  { value: '4 salÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rios mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nimos', label: '4 salÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rios mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nimos' },
-  { value: '5 ou mais salÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rios mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nimos', label: '5 ou mais salÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rios mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nimos' },
+  { value: '1 salário mínimo', label: '1 salário mínimo' },
+  { value: '2 salários mínimos', label: '2 salários mínimos' },
+  { value: '3 salários mínimos', label: '3 salários mínimos' },
+  { value: '4 salários mínimos', label: '4 salários mínimos' },
+  { value: '5 ou mais salários mínimos', label: '5 ou mais salários mínimos' },
 ]
 
 const adultRolesOptions = [
   'Bailarino(a)',
   'Professor(a)',
-  'CoreÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³grafo(a)',
+  'Coreógrafo(a)',
   'Ensaiador(a)',
-  'Diretor(a) artÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­stico(a)',
+  'Diretor(a) artístico(a)',
   'Coordenador(a)',
   'Produtor(a) cultural',
   'Gestor(a)',
@@ -348,85 +348,85 @@ const institutionLegalNatureOptions: OptionItem[] = [
   { value: 'MEI', label: 'MEI' },
   { value: 'ME', label: 'ME' },
   { value: 'EPP', label: 'EPP' },
-  { value: 'AssociaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o', label: 'AssociaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o' },
+  { value: 'Associação', label: 'Associação' },
   { value: 'Coletivo informal', label: 'Coletivo informal' },
 ]
 
 const institutionNatureOptions: OptionItem[] = [
   { value: 'particular', label: 'Particular' },
   { value: 'projeto_social', label: 'Projeto social' },
-  { value: 'espaco_publico', label: 'EspaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§o pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblico' },
-  { value: 'espaco_multiplas_artes', label: 'EspaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§o de mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºltiplas artes' },
+  { value: 'espaco_publico', label: 'Espaço público' },
+  { value: 'espaco_multiplas_artes', label: 'Espaço de múltiplas artes' },
 ]
 
 const institutionLocationTypeOptions: OptionItem[] = [
   { value: 'central', label: 'Central' },
-  { value: 'perifÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©rica', label: 'PerifÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©rica' },
+  { value: 'periférica', label: 'Periférica' },
   { value: 'rural', label: 'Rural' },
 ]
 
 const institutionSpaceTypeOptions: OptionItem[] = [
   { value: 'alugado', label: 'Alugado' },
-  { value: 'proprio', label: 'PrÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³prio' },
+  { value: 'proprio', label: 'Próprio' },
   { value: 'cedido', label: 'Cedido' },
-  { value: 'publico', label: 'EspaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§o pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblico' },
+  { value: 'publico', label: 'Espaço público' },
 ]
 
 const institutionIncomeSourcesOptions = [
   'Mensalidades de alunos',
-  'Editais pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblicos',
-  'PatrocÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nio privado',
+  'Editais públicos',
+  'Patrocínio privado',
   'Leis de incentivo',
-  'DoaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes',
-  'Recursos prÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³prios',
+  'Doações',
+  'Recursos próprios',
   'Venda de ingressos',
   'Outra',
 ]
 
 const institutionEditalDifficultiesOptions = [
-  'NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o sei fazer projetos',
-  'NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o tem informaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes',
-  'Muito burocrÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡tico',
-  'Falta de divulgaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o',
-  'Falta conhecimento tÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©cnico',
+  'Não sei fazer projetos',
+  'Não tem informações',
+  'Muito burocrático',
+  'Falta de divulgação',
+  'Falta conhecimento técnico',
   'Muitas regras',
 ]
 
 const adultWorkTypeOptions: OptionItem[] = [
-  { value: 'AutÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â´noma', label: 'AutÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â´noma' },
+  { value: 'Autônoma', label: 'Autônoma' },
   { value: 'CLT', label: 'CLT' },
   { value: 'PJ', label: 'PJ' },
-  { value: 'VoluntÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ria', label: 'VoluntÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ria' },
+  { value: 'Voluntária', label: 'Voluntária' },
   { value: 'Outra', label: 'Outra' },
 ]
 
 const institutionInfrastructureOptions = [
   'Espelhos',
-  'LinÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³leo',
+  'Linóleo',
   'Piso de madeira',
   'Piso frio',
   'Tatame',
   'Ventiladores',
   'Ar-condicionado',
   'Bebedouro',
-  'RecepÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o',
+  'Recepção',
 ]
 
 const institutionStaffRoleOptions = [
-  'DireÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o',
-  'CoordenaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o',
+  'Direção',
+  'Coordenação',
   'Professores',
-  'ProduÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o cultural',
+  'Produção cultural',
   'Administrativo/financeiro',
-  'ComunicaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o/marketing',
-  'TÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©cnico de som/luz',
-  'Eu faÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§o tudo sozinho(a)',
+  'Comunicação/marketing',
+  'Técnico de som/luz',
+  'Eu faço tudo sozinho(a)',
 ]
 
 const institutionPromotionChannelOptions = [
   'Redes sociais',
-  'TrÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡fego pago',
-  'RÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡dio',
+  'Tráfego pago',
+  'Rádio',
   'TV',
   'Jornal impresso',
   'Blog e portais',
@@ -435,11 +435,11 @@ const institutionPromotionChannelOptions = [
 ]
 
 const institutionEventCostOptions: OptionItem[] = [
-  { value: 'InstituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o', label: 'InstituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o' },
+  { value: 'Instituição', label: 'Instituição' },
   { value: 'Estudantes', label: 'Estudantes' },
-  { value: 'FamÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­lias', label: 'FamÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­lias' },
+  { value: 'Famílias', label: 'Famílias' },
   { value: 'Edital', label: 'Edital' },
-  { value: 'PatrocÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nio', label: 'PatrocÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nio' },
+  { value: 'Patrocínio', label: 'Patrocínio' },
   { value: 'Compartilhado', label: 'Compartilhado' },
 ]
 
@@ -691,7 +691,7 @@ function validateCurrencyFields(fields: Array<{ label: string; value: string; re
     }
 
     if (parseStrictCurrencyValue(normalizedValue) === null) {
-      return `${field.label} deve ter um valor vÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lido, com atÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© 9 dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­gitos e 2 casas decimais.`
+      return `${field.label} deve ter um valor válido, com até 9 dígitos e 2 casas decimais.`
     }
   }
 
@@ -713,7 +713,7 @@ function validateIntegerFields(
     }
 
     if (parseStrictIntegerValue(normalizedValue, field.maxValue) === null) {
-      return `${field.label} deve usar um nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºmero inteiro vÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lido dentro do limite permitido.`
+      return `${field.label} deve usar um número inteiro válido dentro do limite permitido.`
     }
   }
 
@@ -731,12 +731,12 @@ function mapFlowValidationError(
           {
             step: 2,
             fields: ['age'],
-            message: 'Revise a idade informada. O cadastro profissional ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© para maiores de 18 anos.',
+            message: 'Revise a idade informada. O cadastro profissional é para maiores de 18 anos.',
           },
           {
             step: 4,
             fields: ['totalIncome', 'danceIncome'],
-            message: 'Revise os valores de renda. Use nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºmeros vÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lidos, sem letras, e atÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© 9 dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­gitos.',
+            message: 'Revise os valores de renda. Use números válidos, sem letras, e até 9 dígitos.',
           },
           {
             step: 5,
@@ -749,12 +749,12 @@ function mapFlowValidationError(
               'monthlyCostOthers',
             ],
             message:
-              'Revise os valores de gastos mensais com danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a. Use nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºmeros vÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lidos, sem letras, e atÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© 9 dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­gitos.',
+              'Revise os valores de gastos mensais com dança. Use números válidos, sem letras, e até 9 dígitos.',
           },
           {
             step: 6,
             fields: ['coursesPerYear', 'onlineCoursesPerYear'],
-            message: 'Revise a quantidade de cursos por ano. Use nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºmeros vÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lidos e menores.',
+            message: 'Revise a quantidade de cursos por ano. Use números válidos e menores.',
           },
         ]
       : flow === 'institution-flow'
@@ -762,20 +762,20 @@ function mapFlowValidationError(
           {
             step: 4,
             fields: ['monthlyFee'],
-            message: 'Revise a mensalidade mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©dia. Use um valor vÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lido e dentro do limite permitido.',
+            message: 'Revise a mensalidade média. Use um valor válido e dentro do limite permitido.',
             },
             {
               step: 5,
               fields: ['monthlyRevenue'],
               message:
-                'Revise o faturamento mensal. Use um valor vÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lido, sem letras, e dentro do limite permitido.',
+                'Revise o faturamento mensal. Use um valor válido, sem letras, e dentro do limite permitido.',
             },
           ]
         : [
             {
               step: 2,
               fields: ['age'],
-              message: 'Revise a idade informada. O cadastro de jovens aceita idades atÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© 17 anos.',
+              message: 'Revise a idade informada. O cadastro de jovens aceita idades até 17 anos.',
             },
             {
               step: 3,
@@ -789,7 +789,7 @@ function mapFlowValidationError(
                 'monthlyCostOthers',
               ],
               message:
-                'Revise os valores de gastos com danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a. Use nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºmeros vÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lidos, sem letras, e dentro do limite permitido.',
+                'Revise os valores de gastos com dança. Use números válidos, sem letras, e dentro do limite permitido.',
             },
           ]
 
@@ -823,7 +823,7 @@ function resolveSubmissionError(flow: ActiveFlow, error: unknown, fallbackStep: 
 }
 
 function formatMinorSubmissionError(message: string) {
-  if (message.includes('seguranca') || message.includes('seguranÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a') || message.includes('captcha')) {
+  if (message.includes('seguranca') || message.includes('segurança') || message.includes('captcha')) {
     return 'Confirme a verificacao de seguranca e tente novamente.'
   }
 
@@ -912,7 +912,6 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const [captchaRenderKey, setCaptchaRenderKey] = useState(0)
   const previousOpenRef = useRef(open)
   const previousInitialViewRef = useRef(initialView)
-  const panelRef = useRef<HTMLDivElement | null>(null)
   const antiBotEnabled = Boolean(TURNSTILE_SITE_KEY)
 
   const currentMeta = useMemo(() => {
@@ -1027,30 +1026,6 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       isMounted = false
     }
   }, [hasLoadedReferences, open, view])
-
-  useEffect(() => {
-    if (!open || !panelRef.current) {
-      return
-    }
-
-    const root = panelRef.current
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
-    const updates: Array<{ node: Text; value: string }> = []
-
-    while (walker.nextNode()) {
-      const textNode = walker.currentNode as Text
-      const original = textNode.textContent ?? ''
-      const repaired = repairText(original)
-
-      if (repaired !== original) {
-        updates.push({ node: textNode, value: repaired })
-      }
-    }
-
-    for (const update of updates) {
-      update.node.textContent = update.value
-    }
-  }, [open, view, currentStep, stepError, minorSubmission, adultSubmission, institutionSubmission])
 
   useEffect(() => {
     if (view !== 'minor-flow' || !minorForm.state) {
@@ -1380,7 +1355,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (currentStep === 1 && (!minorForm.region || !minorForm.state || !minorForm.city)) {
-      setStepError('Preencha regiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o, estado e cidade.')
+      setStepError('Preencha região, estado e cidade.')
       return false
     }
 
@@ -1392,13 +1367,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         minorForm.danceModalities.length === 0)
     ) {
       setStepError(
-        'Preencha data de nascimento, idade, tempo de prÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡tica e ao menos uma modalidade.'
+        'Preencha data de nascimento, idade, tempo de prática e ao menos uma modalidade.'
       )
       return false
     }
 
     if (currentStep === 2 && Number(minorForm.age) > 17) {
-      setStepError('O cadastro de jovens aceita idades atÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© 17 anos.')
+      setStepError('O cadastro de jovens aceita idades até 17 anos.')
       return false
     }
 
@@ -1422,11 +1397,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       const currencyError = validateCurrencyFields([
         { label: 'a mensalidade', value: minorForm.monthlyFee },
         { label: 'o gasto com escola ou academia', value: minorForm.schoolFee },
-        { label: 'o gasto com cursos e formaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes', value: minorForm.courses },
-        { label: 'o gasto com figurinos e acessÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³rios', value: minorForm.costumes },
-        { label: 'o gasto com festivais e competiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes', value: minorForm.festivals },
+        { label: 'o gasto com cursos e formações', value: minorForm.courses },
+        { label: 'o gasto com figurinos e acessórios', value: minorForm.costumes },
+        { label: 'o gasto com festivais e competições', value: minorForm.festivals },
         { label: 'o gasto com viagens e deslocamentos', value: minorForm.travel },
-        { label: 'outros gastos com danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a', value: minorForm.otherCosts },
+        { label: 'outros gastos com dança', value: minorForm.otherCosts },
       ])
 
       if (currencyError) {
@@ -1440,13 +1415,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       (!minorForm.careerInterest || minorForm.whoPays.length === 0 || !minorForm.searchesContent)
     ) {
       setStepError(
-        'Informe interesse em carreira, quem banca os custos e se pesquisa conteÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºdos sobre danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a.'
+        'Informe interesse em carreira, quem banca os custos e se pesquisa conteúdos sobre dança.'
       )
       return false
     }
 
     if (currentStep === 5 && !minorForm.consentStats) {
-      setStepError('? necessÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio autorizar o uso estatÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­stico.')
+      setStepError('? necessário autorizar o uso estatístico.')
       return false
     }
 
@@ -1461,7 +1436,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (currentStep === 1 && (!adultForm.region || !adultForm.state || !adultForm.city)) {
-      setStepError('Preencha regiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o, estado e cidade.')
+      setStepError('Preencha região, estado e cidade.')
       return false
     }
 
@@ -1473,20 +1448,20 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         adultForm.danceModalities.length === 0)
     ) {
       setStepError(
-        'Preencha data de nascimento, idade, tempo de prÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡tica e ao menos uma modalidade.'
+        'Preencha data de nascimento, idade, tempo de prática e ao menos uma modalidade.'
       )
       return false
     }
 
     if (currentStep === 3 && (!adultForm.worksProfessionally || !adultForm.careerInterest || adultForm.danceRoles.length === 0 || !adultForm.workTypeChoice)) {
       setStepError(
-        'Informe se atua profissionalmente com danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a, se pretende seguir carreira, o tipo de atuaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o e selecione ao menos uma funÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o.'
+        'Informe se atua profissionalmente com dança, se pretende seguir carreira, o tipo de atuação e selecione ao menos uma função.'
       )
       return false
     }
 
     if (currentStep === 3 && (!adultForm.hasDrt || !adultForm.currentlyWorks)) {
-      setStepError('Informe se possui DRT e se atua atualmente na danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a.')
+      setStepError('Informe se possui DRT e se atua atualmente na dança.')
       return false
     }
 
@@ -1501,13 +1476,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       )
     ) {
       setStepError(
-        'Preencha renda da casa, renda total, renda com danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a, renda principal e outra renda.'
+        'Preencha renda da casa, renda total, renda com dança, renda principal e outra renda.'
       )
       return false
     }
 
     if (currentStep === 2 && Number(adultForm.age) < 18) {
-      setStepError('O cadastro profissional ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© destinado a maiores de 18 anos.')
+      setStepError('O cadastro profissional é destinado a maiores de 18 anos.')
       return false
     }
 
@@ -1525,7 +1500,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     if (currentStep === 4) {
       const currencyError = validateCurrencyFields([
         { label: 'a renda mensal total', value: adultForm.monthlyIncomeTotal, required: true },
-        { label: 'a renda mensal com danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a', value: adultForm.danceIncome, required: true },
+        { label: 'a renda mensal com dança', value: adultForm.danceIncome, required: true },
       ])
 
       if (currencyError) {
@@ -1545,16 +1520,16 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         adultForm.whoPays.length === 0 ||
         !adultForm.searchesContent)
     ) {
-      setStepError('Preencha os gastos mensais com danfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§a, quem banca esses custos e a busca de contefÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºdos.')
+      setStepError('Preencha os gastos mensais com dança, quem banca esses custos e a busca de conteúdos.')
       return false
     }
 
     if (currentStep === 5) {
       const currencyError = validateCurrencyFields([
         { label: 'a mensalidade de escola ou grupo', value: adultForm.schoolFee, required: true },
-        { label: 'o gasto com cursos e formaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes', value: adultForm.courses },
-        { label: 'o gasto com figurinos e acessÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³rios', value: adultForm.costumes },
-        { label: 'o gasto com festivais e competiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes', value: adultForm.festivals },
+        { label: 'o gasto com cursos e formações', value: adultForm.courses },
+        { label: 'o gasto com figurinos e acessórios', value: adultForm.costumes },
+        { label: 'o gasto com festivais e competições', value: adultForm.festivals },
         { label: 'o gasto com viagens e deslocamentos', value: adultForm.travel },
         { label: 'outros gastos', value: adultForm.otherCosts, required: true },
       ])
@@ -1573,7 +1548,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !adultForm.presentialCoursesPerYear ||
         !adultForm.onlineCoursesPerYear)
     ) {
-      setStepError('Preencha formafÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§fÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o acadfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âªmica, estudos em danfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§a e a quantidade de cursos presenciais e online por ano.')
+      setStepError('Preencha formação acadêmica, estudos em dança e a quantidade de cursos presenciais e online por ano.')
       return false
     }
 
@@ -1590,7 +1565,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (currentStep === 6 && !adultForm.academicEducation) {
-      setStepError('Selecione a formaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o acadÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âªmica.')
+      setStepError('Selecione a formação acadêmica.')
       return false
     }
 
@@ -1598,17 +1573,17 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       currentStep === 7 &&
       (!adultForm.participatedPublicCalls || !adultForm.wasSelected || !adultForm.appliedNotSelected)
     ) {
-      setStepError('Informe a participafÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§fÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o em editais, selefÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§fÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o e inscrifÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§fÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âµes nfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o contempladas.')
+      setStepError('Informe a participação em editais, seleção e inscrições não contempladas.')
       return false
     }
 
     if (currentStep === 7 && !adultForm.participatedPublicCalls) {
-      setStepError('Informe se jÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ participou de editais pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblicos.')
+      setStepError('Informe se já participou de editais públicos.')
       return false
     }
 
     if (currentStep === 8 && !adultForm.consentStats) {
-      setStepError('? necessÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio autorizar o uso estatÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­stico.')
+      setStepError('? necessário autorizar o uso estatístico.')
       return false
     }
 
@@ -1621,7 +1596,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       currentStep === 0 &&
       (!institutionForm.responsibleName || !institutionForm.email || !institutionForm.whatsapp)
     ) {
-      setStepError('Preencha nome completo do responsÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡vel, email e WhatsApp.')
+      setStepError('Preencha nome completo do responsável, email e WhatsApp.')
       return false
     }
 
@@ -1633,13 +1608,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.hasCnpj)
     ) {
       setStepError(
-        'Preencha nome da instituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o, tipo, perÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­odo de fundaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o e se possui CNPJ.'
+        'Preencha nome da instituição, tipo, período de fundação e informe se possui CNPJ.'
       )
       return false
     }
 
     if (currentStep === 1 && institutionForm.hasCnpj === 'sim' && !institutionForm.cnpj) {
-      setStepError('Preencha o CNPJ da instituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o.')
+      setStepError('Preencha o CNPJ da instituição.')
       return false
     }
 
@@ -1652,7 +1627,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.actsInRuralArea)
     ) {
       setStepError(
-        'Preencha regiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o, estado, cidade e informe atuaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o em periferia e zona rural.'
+        'Preencha região, estado, cidade e informe atuação em periferia e zona rural.'
       )
       return false
     }
@@ -1666,7 +1641,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.averageAudienceCapacity)
     ) {
       setStepError(
-        'Preencha sede prÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³pria, sede alugada, uso de espaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§o pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblico, nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºmero de salas e capacidade mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©dia de pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblico.'
+        'Preencha sede própria, sede alugada, uso de espaço público, número de salas e capacidade média de público.'
       )
       return false
     }
@@ -1680,7 +1655,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.servesVulnerablePopulation)
     ) {
       setStepError(
-        'Preencha nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºmero de alunos ativos, professores, funcionÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rios, pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblico mensal e vulnerabilidade.'
+        'Preencha número de alunos ativos, professores, funcionários, público mensal e vulnerabilidade.'
       )
       return false
     }
@@ -1692,7 +1667,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.annualBudgetRange)
     ) {
       setStepError(
-        'Selecione fontes de renda, informe sobre recurso pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblico e a faixa de orÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§amento anual.'
+        'Selecione fontes de renda, informe sobre recurso público e a faixa de orçamento anual.'
       )
       return false
     }
@@ -1704,18 +1679,18 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.interestedInPublicPartnerships)
     ) {
       setStepError(
-        'Preencha plano municipal, conselho de cultura e interesse em parcerias pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblicas.'
+        'Preencha plano municipal, conselho de cultura e interesse em parcerias públicas.'
       )
       return false
     }
 
     if (currentStep === 7 && !institutionForm.consentStats) {
-      setStepError('? necessÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio autorizar o uso estatÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­stico.')
+      setStepError('? necessário autorizar o uso estatístico.')
       return false
     }
 
     if (currentStep === 7 && !institutionForm.consentContact) {
-      setStepError('? necessÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio autorizar o contato.')
+      setStepError('? necessário autorizar o contato.')
       return false
     }
 
@@ -1730,7 +1705,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       currentStep === 0 &&
       (!institutionForm.responsibleName || !institutionForm.email || !institutionForm.whatsapp)
     ) {
-      setStepError('Preencha nome completo do responsÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡vel, email e WhatsApp.')
+      setStepError('Preencha nome completo do responsável, email e WhatsApp.')
       return false
     }
 
@@ -1744,12 +1719,12 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.foundationYearExact ||
         !institutionForm.hasCnpj)
     ) {
-      setStepError('Preencha razÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o social, nome fantasia, tipo de atuaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o, natureza jurÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­dica, perfil da instituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o, ano de fundaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o e informe se possui CNPJ.')
+      setStepError('Preencha razão social, nome fantasia, tipo de atuação, natureza jurídica, perfil da instituição, ano de fundação e informe se possui CNPJ.')
       return false
     }
 
     if (currentStep === 1 && institutionForm.hasCnpj === 'sim' && !institutionForm.cnpj) {
-      setStepError('Preencha o CNPJ da instituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o.')
+      setStepError('Preencha o CNPJ da instituição.')
       return false
     }
 
@@ -1758,13 +1733,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       institutionForm.foundationYearExact &&
       (Number(institutionForm.foundationYearExact) < 1900 || Number(institutionForm.foundationYearExact) > 2100)
     ) {
-      setStepError('Informe um ano de fundafÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§fÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o vfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡lido entre 1900 e 2100.')
+      setStepError('Informe um ano de fundação válido entre 1900 e 2100.')
       return false
     }
 
     if (currentStep === 1) {
       const integerError = validateIntegerFields([
-        { label: 'o ano de fundafÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§fÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o', value: institutionForm.foundationYearExact, maxValue: 2100, required: true },
+        { label: 'o ano de fundação', value: institutionForm.foundationYearExact, maxValue: 2100, required: true },
       ])
 
       if (integerError) {
@@ -1774,7 +1749,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (currentStep === 2 && (!institutionForm.state || !institutionForm.city || !institutionForm.locationType)) {
-      setStepError('Preencha estado, cidade e tipo de localizaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o da instituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o.')
+      setStepError('Preencha estado, cidade e tipo de localização da instituição.')
       return false
     }
 
@@ -1784,7 +1759,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.actsInPeriphery ||
         !institutionForm.actsInRuralArea)
     ) {
-      setStepError('Preencha regifÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o e informe a atuafÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§fÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o em periferia e fÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡rea rural.')
+      setStepError('Preencha região e informe a atuação em periferia e área rural.')
       return false
     }
 
@@ -1795,7 +1770,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.classesPerWeek ||
         institutionForm.danceModalities.length === 0)
     ) {
-      setStepError('Preencha modalidades, nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºmero de salas, aulas por semana e tipo de espaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§o.')
+      setStepError('Preencha modalidades, número de salas, aulas por semana e tipo de espaço.')
       return false
     }
 
@@ -1806,15 +1781,15 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.usesPublicSpace ||
         !institutionForm.averageAudienceCapacity)
     ) {
-      setStepError('Preencha uso da sede e capacidade mfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dia de pfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºblico.')
+      setStepError('Preencha uso da sede e capacidade média de público.')
       return false
     }
 
     if (currentStep === 3) {
       const integerError = validateIntegerFields([
-        { label: 'o nfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºmero de salas', value: institutionForm.numberOfRooms, maxValue: 999, required: true },
+        { label: 'o número de salas', value: institutionForm.numberOfRooms, maxValue: 999, required: true },
         { label: 'as aulas por semana', value: institutionForm.classesPerWeek, maxValue: 999, required: true },
-        { label: 'a capacidade mfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dia de pfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºblico', value: institutionForm.averageAudienceCapacity, maxValue: 999999, required: true },
+        { label: 'a capacidade média de público', value: institutionForm.averageAudienceCapacity, maxValue: 999999, required: true },
       ])
 
       if (integerError) {
@@ -1833,13 +1808,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.servesVulnerablePopulation ||
         !institutionForm.studentsPayMonthlyFee)
     ) {
-      setStepError('Preencha alunos, professores, mensalidade, bolsas, pagamento de mensalidade e pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblico atendido.')
+      setStepError('Preencha alunos, professores, mensalidade, bolsas, pagamento de mensalidade e público atendido.')
       return false
     }
 
     if (currentStep === 4) {
       const currencyError = validateCurrencyFields([
-        { label: 'a mensalidade mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©dia', value: institutionForm.monthlyFee, required: true },
+        { label: 'a mensalidade média', value: institutionForm.monthlyFee, required: true },
       ])
 
       if (currencyError) {
@@ -1849,14 +1824,14 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (currentStep === 4 && institutionForm.hasScholarShip === 'sim' && !institutionForm.scholarshipCount) {
-      setStepError('Informe a quantidade de bolsistas atendidos pela instituifÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§fÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o.')
+      setStepError('Informe a quantidade de bolsistas atendidos pela instituição.')
       return false
     }
 
     if (currentStep === 4) {
       const integerError = validateIntegerFields([
-        { label: 'o nfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºmero de professores', value: institutionForm.numberOfTeachers, maxValue: 9999, required: true },
-        { label: 'a mfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dia de alunos ativos', value: institutionForm.averageStudents, maxValue: 999999, required: true },
+        { label: 'o número de professores', value: institutionForm.numberOfTeachers, maxValue: 9999, required: true },
+        { label: 'a média de alunos ativos', value: institutionForm.averageStudents, maxValue: 999999, required: true },
         { label: 'os alunos ativos no momento', value: institutionForm.activeStudents, maxValue: 999999, required: true },
         { label: 'a quantidade de bolsistas', value: institutionForm.scholarshipCount, maxValue: 999999, required: institutionForm.hasScholarShip === 'sim' },
       ])
@@ -1877,13 +1852,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.receivedPublicFundingLast2Years ||
         !institutionForm.annualBudgetRange)
     ) {
-      setStepError('Preencha equipe, faturamento, sistema de gestÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o, fontes de renda, recurso pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblico e orÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§amento anual.')
+      setStepError('Preencha equipe, faturamento, sistema de gestão, fontes de renda, recurso público e orçamento anual.')
       return false
     }
 
     if (currentStep === 5) {
       const currencyError = validateCurrencyFields([
-        { label: 'o faturamento mensal mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©dio', value: institutionForm.monthlyRevenue, required: true },
+        { label: 'o faturamento mensal médio', value: institutionForm.monthlyRevenue, required: true },
       ])
 
       if (currencyError) {
@@ -1893,16 +1868,16 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (currentStep === 5 && (!institutionForm.numberOfStaff || !institutionForm.monthlyAudience)) {
-      setStepError('Preencha o tamanho da equipe e o pfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºblico mensal da instituifÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§fÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o.')
+      setStepError('Preencha o tamanho da equipe e o público mensal da instituição.')
       return false
     }
 
     if (currentStep === 5) {
       const integerError = validateIntegerFields([
-        { label: 'os funcionfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡rios CLT', value: institutionForm.cltEmployees, maxValue: 99999, required: true },
+        { label: 'os funcionários CLT', value: institutionForm.cltEmployees, maxValue: 99999, required: true },
         { label: 'os contratos PJ', value: institutionForm.pjContracts, maxValue: 99999, required: true },
-        { label: 'o nfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºmero total de pessoas na equipe', value: institutionForm.numberOfStaff, maxValue: 99999, required: true },
-        { label: 'o pfÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºblico mensal', value: institutionForm.monthlyAudience, maxValue: 999999, required: true },
+        { label: 'o número total de pessoas na equipe', value: institutionForm.numberOfStaff, maxValue: 99999, required: true },
+        { label: 'o público mensal', value: institutionForm.monthlyAudience, maxValue: 999999, required: true },
       ])
 
       if (integerError) {
@@ -1927,12 +1902,12 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         !institutionForm.wouldUseFreePromotionPlatform
       )
     ) {
-      setStepError('Preencha custos de eventos, equipe, editais, polÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­ticas pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblicas, divulgaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o e o principal desafio.')
+      setStepError('Preencha custos de eventos, equipe, editais, políticas públicas, divulgação e o principal desafio.')
       return false
     }
 
     if (currentStep === 7 && !institutionForm.consentStats) {
-      setStepError('? necessÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio autorizar o uso estatÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­stico.')
+      setStepError('? necessário autorizar o uso estatístico.')
       return false
     }
 
@@ -1972,7 +1947,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       .map((item) => item.id)
 
     if (!selectedCity) {
-      setStepError('Selecione uma cidade vÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lida na lista.')
+      setStepError('Selecione uma cidade válida na lista.')
       return
     }
 
@@ -2026,7 +2001,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         setCurrentStep(resolvedError.step)
         setStepError(resolvedError.message)
       } else {
-        setStepError('NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o foi possÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­vel enviar o formulÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio de jovens.')
+        setStepError('Não foi possível enviar o formulário de jovens.')
       }
     } finally {
       setIsMinorSubmitting(false)
@@ -2043,7 +2018,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       .map((item) => item.id)
 
     if (!selectedCity) {
-      setStepError('Selecione uma cidade vÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lida na lista.')
+      setStepError('Selecione uma cidade válida na lista.')
       return
     }
 
@@ -2115,7 +2090,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         setCurrentStep(resolvedError.step)
         setStepError(resolvedError.message)
       } else {
-        setStepError('NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o foi possÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­vel enviar o formulÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio profissional.')
+        setStepError('Não foi possível enviar o formulário profissional.')
       }
     } finally {
       setIsAdultSubmitting(false)
@@ -2129,7 +2104,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       .map((item) => item.id)
 
     if (!selectedCity) {
-      setStepError('Selecione uma cidade vÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lida na lista.')
+      setStepError('Selecione uma cidade válida na lista.')
       return
     }
 
@@ -2239,7 +2214,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         setCurrentStep(resolvedError.step)
         setStepError(resolvedError.message)
       } else {
-        setStepError('NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o foi possÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­vel enviar o formulÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio institucional.')
+        setStepError('Não foi possível enviar o formulário institucional.')
       }
     } finally {
       setIsInstitutionSubmitting(false)
@@ -2292,11 +2267,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         {value === 'sim'
           ? 'Sim'
           : value === 'nao'
-            ? 'NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o'
+            ? 'Não'
             : value === 'nao_sei_como_faz'
-              ? 'NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o sei como faz'
+              ? 'Não sei como faz'
               : value === 'nao_sei_o_que_e'
-                ? 'NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o sei o que ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©'
+                ? 'Não sei o que é'
                 : value}
       </button>
     )
@@ -2408,7 +2383,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
 
             <label className="access-field">
-              <span>GÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âªnero (opcional)</span>
+              <span>Gênero (opcional)</span>
               <select value={minorForm.gender} onChange={(e) => updateMinorField('gender', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(genderIdentityOptions)}
@@ -2416,7 +2391,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
 
             <label className="access-field">
-              <span>Tempo de prÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡tica na danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a *</span>
+              <span>Tempo de prática na dança *</span>
               <select value={minorForm.practiceTime} onChange={(e) => updateMinorField('practiceTime', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(minorPracticeTimeOptions)}
@@ -2460,8 +2435,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <div className="access-field access-field-full">
-              <span>Economia da danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a</span>
-              <small>Preencha os custos que ajudam a entender a prÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡tica da danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a.</small>
+              <span>Economia da dança</span>
+              <small>Preencha os custos que ajudam a entender a prática da dança.</small>
             </div>
 
             <label className="access-field">
@@ -2475,17 +2450,17 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
 
             <label className="access-field">
-              <span>Gasto com cursos e formaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes</span>
+              <span>Gasto com cursos e formações</span>
               <input type="text" inputMode="decimal" placeholder="Ex: R$ 80,00" value={minorForm.courses} onChange={(e) => updateMinorField('courses', e.target.value)} />
             </label>
 
             <label className="access-field">
-              <span>Gasto com figurinos e acessÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³rios</span>
+              <span>Gasto com figurinos e acessórios</span>
               <input type="text" inputMode="decimal" placeholder="Ex: R$ 60,00" value={minorForm.costumes} onChange={(e) => updateMinorField('costumes', e.target.value)} />
             </label>
 
             <label className="access-field">
-              <span>Gasto com festivais e competiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes</span>
+              <span>Gasto com festivais e competições</span>
               <input type="text" inputMode="decimal" placeholder="Ex: R$ 90,00" value={minorForm.festivals} onChange={(e) => updateMinorField('festivals', e.target.value)} />
             </label>
 
@@ -2495,7 +2470,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
 
             <label className="access-field">
-              <span>Outros gastos com danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a</span>
+              <span>Outros gastos com dança</span>
               <input type="text" placeholder="Ex: R$ 50" value={minorForm.otherCosts} onChange={(e) => updateMinorField('otherCosts', e.target.value)} />
             </label>
 
@@ -2663,14 +2638,14 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <input type="number" min="18" max="99" value={adultForm.age} onChange={(e) => updateAdultField('age', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>GÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âªnero (opcional)</span>
+              <span>Gênero (opcional)</span>
               <select value={adultForm.gender} onChange={(e) => updateAdultField('gender', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(genderIdentityOptions)}
               </select>
             </label>
             <label className="access-field">
-              <span>Tempo de prÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡tica na danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a *</span>
+              <span>Tempo de prática na dança *</span>
               <select value={adultForm.practiceTime} onChange={(e) => updateAdultField('practiceTime', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(minorPracticeTimeOptions)}
@@ -2715,7 +2690,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <div className="access-field">
-              <span>Pretende seguir carreira na danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a? *</span>
+              <span>Pretende seguir carreira na dança? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.careerInterest, (value) => updateAdultField('careerInterest', value))}
                 {renderChoiceCard('nao', adultForm.careerInterest, (value) => updateAdultField('careerInterest', value))}
@@ -2735,7 +2710,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </div>
 
             <label className="access-field">
-              <span>Tipo de atuaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o *</span>
+              <span>Tipo de atuação *</span>
               <select value={adultForm.workTypeChoice} onChange={(e) => updateAdultField('workTypeChoice', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(adultWorkTypeOptions)}
@@ -2747,18 +2722,18 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <label className="access-field">
-              <span>Renda mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©dia salarial da sua casa *</span>
+              <span>Renda média salarial da sua casa *</span>
               <select value={adultForm.familyIncome} onChange={(e) => updateAdultField('familyIncome', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(householdIncomeOptions)}
               </select>
             </label>
             <label className="access-field">
-              <span>Renda mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©dia mensal total (R$) *</span>
+              <span>Renda média mensal total (R$) *</span>
               <input type="text" inputMode="decimal" placeholder="Ex: 2500,00" value={adultForm.monthlyIncomeTotal} onChange={(e) => updateAdultField('monthlyIncomeTotal', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>Renda mensal mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©dia exclusivamente com a danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a (R$) *</span>
+              <span>Renda mensal média exclusivamente com a dança (R$) *</span>
               <input type="text" inputMode="decimal" placeholder="Ex: 1200,00" value={adultForm.danceIncome} onChange={(e) => updateAdultField('danceIncome', e.target.value)} />
             </label>
             <div className="access-field">
@@ -2781,13 +2756,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <div className="access-field access-field-full">
-              <span>Gastos mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©dios mensais com danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a (estimativa em R$)</span>
+              <span>Gastos médios mensais com dança (estimativa em R$)</span>
               <small>Preencha os valores mensais de cada categoria.</small>
             </div>
             <label className="access-field"><span>Mensalidade de escola ou grupo</span><input type="text" inputMode="decimal" placeholder="Ex: 180,00" value={adultForm.schoolFee} onChange={(e) => updateAdultField('schoolFee', e.target.value)} /></label>
-            <label className="access-field"><span>Cursos e formaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes</span><input type="text" inputMode="decimal" placeholder="Ex: 120,00" value={adultForm.courses} onChange={(e) => updateAdultField('courses', e.target.value)} /></label>
-            <label className="access-field"><span>Figurinos e acessÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³rios</span><input type="text" inputMode="decimal" placeholder="Ex: 90,00" value={adultForm.costumes} onChange={(e) => updateAdultField('costumes', e.target.value)} /></label>
-            <label className="access-field"><span>Festivais e competiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes</span><input type="text" inputMode="decimal" placeholder="Ex: 140,00" value={adultForm.festivals} onChange={(e) => updateAdultField('festivals', e.target.value)} /></label>
+            <label className="access-field"><span>Cursos e formações</span><input type="text" inputMode="decimal" placeholder="Ex: 120,00" value={adultForm.courses} onChange={(e) => updateAdultField('courses', e.target.value)} /></label>
+            <label className="access-field"><span>Figurinos e acessórios</span><input type="text" inputMode="decimal" placeholder="Ex: 90,00" value={adultForm.costumes} onChange={(e) => updateAdultField('costumes', e.target.value)} /></label>
+            <label className="access-field"><span>Festivais e competições</span><input type="text" inputMode="decimal" placeholder="Ex: 140,00" value={adultForm.festivals} onChange={(e) => updateAdultField('festivals', e.target.value)} /></label>
             <label className="access-field"><span>Viagens e deslocamentos</span><input type="text" inputMode="decimal" placeholder="Ex: 110,00" value={adultForm.travel} onChange={(e) => updateAdultField('travel', e.target.value)} /></label>
             <label className="access-field"><span>Outros</span><input type="text" inputMode="decimal" placeholder="Ex: 60,00" value={adultForm.otherCosts} onChange={(e) => updateAdultField('otherCosts', e.target.value)} /></label>
             <div className="access-field access-field-full">
@@ -2803,7 +2778,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <div className="access-field access-field-full">
-              <span>VocÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âª pesquisa conteÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºdos sobre danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a na internet?</span>
+              <span>Você pesquisa conteúdos sobre dança na internet?</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.searchesContent, (value) => updateAdultField('searchesContent', value))}
                 {renderChoiceCard('nao', adultForm.searchesContent, (value) => updateAdultField('searchesContent', value))}
@@ -2842,14 +2817,14 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </select>
             </label>
             <label className="access-field">
-              <span>JÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ estudou ou estuda danÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a formalmente?</span>
+              <span>Já estudou ou estuda dança formalmente?</span>
               <select value={adultForm.danceEducationLevel} onChange={(e) => updateAdultField('danceEducationLevel', e.target.value)}>
                 <option value="">Selecione</option>
                 <option value="Curso livre">Curso livre</option>
-                <option value="TÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©cnico">TÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©cnico</option>
-                <option value="GraduaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o">GraduaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o</option>
-                <option value="PÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³s-graduaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o">PÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³s-graduaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o</option>
-                <option value="Ainda nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o">Ainda nÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o</option>
+                <option value="Técnico">Técnico</option>
+                <option value="Graduação">Graduação</option>
+                <option value="Pós-graduação">Pós-graduação</option>
+                <option value="Ainda não">Ainda não</option>
               </select>
             </label>
             <div className="access-field">
@@ -2898,7 +2873,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <label className="access-field access-field-full">
-              <span>Quais dificuldades vocÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âª encontra para participar de editais?</span>
+              <span>Quais dificuldades você encontra para participar de editais?</span>
               <textarea rows={4} placeholder="Descreva as principais dificuldades encontradas." value={adultForm.editalDifficulty} onChange={(e) => updateAdultField('editalDifficulty', e.target.value)} />
             </label>
           </div>
@@ -2937,7 +2912,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <label className="access-field">
-              <span>Nome completo do responsÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡vel *</span>
+              <span>Nome completo do responsável *</span>
               <input type="text" placeholder="Seu nome completo" value={institutionForm.responsibleName} onChange={(e) => updateInstitutionField('responsibleName', e.target.value)} />
             </label>
             <label className="access-field">
@@ -2954,36 +2929,36 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <label className="access-field">
-              <span>RazÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o social *</span>
-              <input type="text" placeholder="Nome jurÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­dico da instituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o" value={institutionForm.institutionName} onChange={(e) => updateInstitutionField('institutionName', e.target.value)} />
+              <span>Razão social *</span>
+              <input type="text" placeholder="Nome jurídico da instituição" value={institutionForm.institutionName} onChange={(e) => updateInstitutionField('institutionName', e.target.value)} />
             </label>
             <label className="access-field">
               <span>Nome fantasia *</span>
-              <input type="text" placeholder="Nome pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblico da escola, grupo ou companhia" value={institutionForm.tradeName} onChange={(e) => updateInstitutionField('tradeName', e.target.value)} />
+              <input type="text" placeholder="Nome público da escola, grupo ou companhia" value={institutionForm.tradeName} onChange={(e) => updateInstitutionField('tradeName', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>Tipo de atuaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o *</span>
+              <span>Tipo de atuação *</span>
               <select value={institutionForm.institutionType} onChange={(e) => updateInstitutionField('institutionType', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(institutionTypeOptions)}
               </select>
             </label>
             <label className="access-field">
-              <span>Natureza jurÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­dica *</span>
+              <span>Natureza jurídica *</span>
               <select value={institutionForm.legalNature} onChange={(e) => updateInstitutionField('legalNature', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(institutionLegalNatureOptions)}
               </select>
             </label>
             <label className="access-field">
-              <span>A instituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© *</span>
+              <span>A instituição é *</span>
               <select value={institutionForm.institutionNature} onChange={(e) => updateInstitutionField('institutionNature', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(institutionNatureOptions)}
               </select>
             </label>
             <label className="access-field">
-              <span>Ano de fundaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o *</span>
+              <span>Ano de fundação *</span>
               <input type="number" min="1900" max="2100" placeholder="Ex: 2014" value={institutionForm.foundationYearExact} onChange={(e) => updateInstitutionField('foundationYearExact', e.target.value)} />
             </label>
             <div className="access-field">
@@ -3005,9 +2980,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <label className="access-field">
-              <span>RegiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o</span>
+              <span>Região</span>
               <select value={institutionForm.region} onChange={(e) => updateInstitutionField('region', e.target.value)}>
-                <option value="">Selecione a regiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o</option>
+                <option value="">Selecione a região</option>
                 {renderRegionOptions()}
               </select>
             </label>
@@ -3030,11 +3005,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </select>
             </label>
             <label className="access-field">
-              <span>Rede social / divulgaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o</span>
-              <input type="text" placeholder="@perfil ou principal canal de divulgaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o" value={institutionForm.socialMedia} onChange={(e) => updateInstitutionField('socialMedia', e.target.value)} />
+              <span>Rede social / divulgação</span>
+              <input type="text" placeholder="@perfil ou principal canal de divulgação" value={institutionForm.socialMedia} onChange={(e) => updateInstitutionField('socialMedia', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>Tipo de localizaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o *</span>
+              <span>Tipo de localização *</span>
               <select value={institutionForm.locationType} onChange={(e) => updateInstitutionField('locationType', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(institutionLocationTypeOptions)}
@@ -3058,7 +3033,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <label className="access-field">
-              <span>NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºmero de salas *</span>
+              <span>Número de salas *</span>
               <input type="number" min="0" placeholder="Ex: 3" value={institutionForm.numberOfRooms} onChange={(e) => updateInstitutionField('numberOfRooms', e.target.value)} />
             </label>
             <label className="access-field">
@@ -3066,15 +3041,15 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <input type="number" min="0" placeholder="Ex: 12" value={institutionForm.classesPerWeek} onChange={(e) => updateInstitutionField('classesPerWeek', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>Tipo de espaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§o *</span>
+              <span>Tipo de espaço *</span>
               <select value={institutionForm.spaceType} onChange={(e) => updateInstitutionField('spaceType', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(institutionSpaceTypeOptions)}
               </select>
             </label>
             <div className="access-field access-field-full">
-              <span>Infraestrutura disponÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­vel</span>
-              <small>Selecione os itens presentes no espaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§o.</small>
+              <span>Infraestrutura disponível</span>
+              <small>Selecione os itens presentes no espaço.</small>
               <div className="access-checkbox-grid access-checkbox-grid-compact">
                 {institutionInfrastructureOptions.map((item) => (
                   <label key={item} className="access-check-card">
@@ -3090,11 +3065,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <label className="access-field">
-              <span>NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºmero de professores *</span>
+              <span>Número de professores *</span>
               <input type="number" min="0" placeholder="Ex: 8" value={institutionForm.numberOfTeachers} onChange={(e) => updateInstitutionField('numberOfTeachers', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>MÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©dia de alunos ativos *</span>
+              <span>Média de alunos ativos *</span>
               <input type="number" min="0" placeholder="Ex: 120" value={institutionForm.averageStudents} onChange={(e) => updateInstitutionField('averageStudents', e.target.value)} />
             </label>
             <label className="access-field">
@@ -3102,11 +3077,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <input type="number" min="0" placeholder="Ex: 98" value={institutionForm.activeStudents} onChange={(e) => updateInstitutionField('activeStudents', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>Mensalidade mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©dia (R$) *</span>
+              <span>Mensalidade média (R$) *</span>
               <input type="text" inputMode="decimal" placeholder="Ex: 250,00" value={institutionForm.monthlyFee} onChange={(e) => updateInstitutionField('monthlyFee', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>Capacidade mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©dia de pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblico</span>
+              <span>Capacidade média de público</span>
               <input type="number" min="0" placeholder="Ex: 80" value={institutionForm.averageAudienceCapacity} onChange={(e) => updateInstitutionField('averageAudienceCapacity', e.target.value)} />
             </label>
             <div className="access-field">
@@ -3130,7 +3105,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <div className="access-field">
-              <span>Atende populaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o em situaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o de vulnerabilidade?</span>
+              <span>Atende população em situação de vulnerabilidade?</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.servesVulnerablePopulation, (value) => updateInstitutionField('servesVulnerablePopulation', value))}
                 {renderChoiceCard('nao', institutionForm.servesVulnerablePopulation, (value) => updateInstitutionField('servesVulnerablePopulation', value))}
@@ -3142,7 +3117,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <label className="access-field">
-              <span>FuncionÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rios CLT *</span>
+              <span>Funcionários CLT *</span>
               <input type="number" min="0" placeholder="Ex: 4" value={institutionForm.cltEmployees} onChange={(e) => updateInstitutionField('cltEmployees', e.target.value)} />
             </label>
             <label className="access-field">
@@ -3150,40 +3125,40 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <input type="number" min="0" placeholder="Ex: 3" value={institutionForm.pjContracts} onChange={(e) => updateInstitutionField('pjContracts', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>Faturamento mensal mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©dio (R$) *</span>
+              <span>Faturamento mensal médio (R$) *</span>
               <input type="text" inputMode="decimal" placeholder="Ex: 15000,00" value={institutionForm.monthlyRevenue} onChange={(e) => updateInstitutionField('monthlyRevenue', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>NÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºmero total de pessoas na equipe</span>
+              <span>Número total de pessoas na equipe</span>
               <input type="number" min="0" placeholder="Ex: 10" value={institutionForm.numberOfStaff} onChange={(e) => updateInstitutionField('numberOfStaff', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>PÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblico mensal</span>
+              <span>Público mensal</span>
               <input type="number" min="0" placeholder="Ex: 350" value={institutionForm.monthlyAudience} onChange={(e) => updateInstitutionField('monthlyAudience', e.target.value)} />
             </label>
             <div className="access-field">
-              <span>Usa sistema de gestÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o? *</span>
+              <span>Usa sistema de gestão? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.usesManagementSystem, (value) => updateInstitutionField('usesManagementSystem', value))}
                 {renderChoiceCard('nao', institutionForm.usesManagementSystem, (value) => updateInstitutionField('usesManagementSystem', value))}
               </div>
             </div>
             <div className="access-field">
-              <span>Recebeu recurso pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblico nos ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºltimos 2 anos?</span>
+              <span>Recebeu recurso público nos últimos 2 anos?</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.receivedPublicFundingLast2Years, (value) => updateInstitutionField('receivedPublicFundingLast2Years', value))}
                 {renderChoiceCard('nao', institutionForm.receivedPublicFundingLast2Years, (value) => updateInstitutionField('receivedPublicFundingLast2Years', value))}
               </div>
             </div>
             <label className="access-field">
-              <span>Faixa de orÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§amento anual</span>
+              <span>Faixa de orçamento anual</span>
               <select value={institutionForm.annualBudgetRange} onChange={(e) => updateInstitutionField('annualBudgetRange', e.target.value)}>
                 <option value="">Selecione</option>
-                <option value="AtÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© R$ 50 mil">AtÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© R$ 50 mil</option>
+                <option value="Até R$ 50 mil">Até R$ 50 mil</option>
                 <option value="R$ 50 mil a R$ 100 mil">R$ 50 mil a R$ 100 mil</option>
                 <option value="R$ 100 mil a R$ 300 mil">R$ 100 mil a R$ 300 mil</option>
-                <option value="R$ 300 mil a R$ 1 milhÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o">R$ 300 mil a R$ 1 milhÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o</option>
-                <option value="Mais de R$ 1 milhÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o">Mais de R$ 1 milhÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o</option>
+                <option value="R$ 300 mil a R$ 1 milhão">R$ 300 mil a R$ 1 milhão</option>
+                <option value="Mais de R$ 1 milhão">Mais de R$ 1 milhão</option>
               </select>
             </label>
             <div className="access-field access-field-full">
@@ -3212,7 +3187,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
             <div className="access-field access-field-full">
               <span>Profissionais da estrutura</span>
-              <small>Selecione todos que fazem parte da instituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o.</small>
+              <small>Selecione todos que fazem parte da instituição.</small>
               <div className="access-checkbox-grid access-checkbox-grid-compact">
                 {institutionStaffRoleOptions.map((item) => (
                   <label key={item} className="access-check-card">
@@ -3223,21 +3198,21 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <div className="access-field">
-              <span>JÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ se cadastrou em editais pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblicos?</span>
+              <span>Já se cadastrou em editais públicos?</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.registeredInPublicCalls, (value) => updateInstitutionField('registeredInPublicCalls', value))}
                 {renderChoiceCard('nao', institutionForm.registeredInPublicCalls, (value) => updateInstitutionField('registeredInPublicCalls', value))}
               </div>
             </div>
             <div className="access-field">
-              <span>JÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ foi contemplada em edital?</span>
+              <span>Já foi contemplada em edital?</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.approvedInPublicCalls, (value) => updateInstitutionField('approvedInPublicCalls', value))}
                 {renderChoiceCard('nao', institutionForm.approvedInPublicCalls, (value) => updateInstitutionField('approvedInPublicCalls', value))}
               </div>
             </div>
             <div className="access-field">
-              <span>Conhece os mecanismos de acesso a polÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­ticas pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblicas?</span>
+              <span>Conhece os mecanismos de acesso a políticas públicas?</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.knowsPublicPolicyAccessMechanisms, (value) => updateInstitutionField('knowsPublicPolicyAccessMechanisms', value))}
                 {renderChoiceCard('nao', institutionForm.knowsPublicPolicyAccessMechanisms, (value) => updateInstitutionField('knowsPublicPolicyAccessMechanisms', value))}
@@ -3265,7 +3240,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <div className="access-field">
-              <span>Tem interesse em parcerias pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºblicas?</span>
+              <span>Tem interesse em parcerias públicas?</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.interestedInPublicPartnerships, (value) => updateInstitutionField('interestedInPublicPartnerships', value))}
                 {renderChoiceCard('nao', institutionForm.interestedInPublicPartnerships, (value) => updateInstitutionField('interestedInPublicPartnerships', value))}
@@ -3284,8 +3259,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <div className="access-field access-field-full">
-              <span>Canais de divulgaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o</span>
-              <small>Selecione os canais utilizados pela instituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o.</small>
+              <span>Canais de divulgação</span>
+              <small>Selecione os canais utilizados pela instituição.</small>
               <div className="access-checkbox-grid access-checkbox-grid-compact">
                 {institutionPromotionChannelOptions.map((item) => (
                   <label key={item} className="access-check-card">
@@ -3296,8 +3271,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <label className="access-field access-field-full">
-              <span>Principal desafio da instituiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o *</span>
-              <textarea rows={5} placeholder="Ex: captaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o de alunos, sustentabilidade financeira, estrutura, equipe, gestÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o..." value={institutionForm.mainChallenges} onChange={(e) => updateInstitutionField('mainChallenges', e.target.value)} />
+              <span>Principal desafio da instituição *</span>
+              <textarea rows={5} placeholder="Ex: captação de alunos, sustentabilidade financeira, estrutura, equipe, gestão..." value={institutionForm.mainChallenges} onChange={(e) => updateInstitutionField('mainChallenges', e.target.value)} />
             </label>
           </div>
         )
@@ -3307,18 +3282,18 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             <div className="access-field access-field-full"><span>Consentimento LGPD</span></div>
             <label className="access-consent-card">
               <div className="access-consent-copy">
-                <strong>Autorizo o uso estatÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­stico e anonimizado dos dados institucionais fornecidos.</strong>
+                <strong>Autorizo o uso estatístico e anonimizado dos dados institucionais fornecidos.</strong>
                 <small>
                   {activeConsentTerm
                     ? activeConsentTerm.title
-                    : '? necessÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio autorizar o uso estatÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­stico'}
+                    : '? necessário autorizar o uso estatístico'}
                 </small>
               </div>
               <input type="checkbox" checked={institutionForm.consentStats} onChange={(e) => updateInstitutionField('consentStats', e.target.checked)} />
             </label>
             <label className="access-consent-card">
               <div className="access-consent-copy">
-                <strong>Autorizo o contato institucional por email e WhatsApp para informaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes sobre o SIBRADANÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡A.</strong>
+                <strong>Autorizo o contato institucional por email e WhatsApp para informações sobre o SIBRADANÇA.</strong>
                 <small>Opcional</small>
               </div>
               <input type="checkbox" checked={institutionForm.consentContact} onChange={(e) => updateInstitutionField('consentContact', e.target.checked)} />
@@ -3354,7 +3329,6 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
           onClick={handleOverlayClick}
         >
           <motion.div
-            ref={panelRef}
             className={`access-floating-panel ${view !== 'menu' ? 'is-form-mode' : ''}`}
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -3369,7 +3343,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                     <Badge dark>Acesso</Badge>
                     <h3 className="access-panel-title">Escolha seu perfil</h3>
                     <p className="access-panel-text">
-                      {repairText('Selecione a opÃƒÂ§ÃƒÂ£o que melhor representa vocÃƒÂª para abrir o formulÃƒÂ¡rio certo.')}
+                      {repairText('Selecione a opção que melhor representa você para abrir o formulário certo.')}
                     </p>
                   </>
                 ) : (
