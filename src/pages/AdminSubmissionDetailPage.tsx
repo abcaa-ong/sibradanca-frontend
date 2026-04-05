@@ -4,8 +4,8 @@ import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { getAdminSubmissionDetail } from '../services/admin.service'
 import type {
-  AdminSubmissionDetailResponse,
   AdminDetailSectionResponse,
+  AdminSubmissionDetailResponse,
   InstitutionFormDetailResponse,
   ProfessionalFormDetailResponse,
   YouthFormDetailResponse,
@@ -32,30 +32,30 @@ const youthSections: Array<SectionConfig<YouthFormDetailResponse>> = [
       { key: 'protocol', label: 'Protocolo' },
       { key: 'submittedAt', label: 'Data do cadastro', kind: 'datetime' },
       { key: 'canUpdate', label: 'Pode atualizar', kind: 'boolean' },
-      { key: 'nextUpdateAvailableAt', label: 'Próxima atualização', kind: 'datetime' },
+      { key: 'nextUpdateAvailableAt', label: 'Pr\u00f3xima atualiza\u00e7\u00e3o', kind: 'datetime' },
     ],
   },
   {
-    title: 'Identificação',
+    title: 'Identifica\u00e7\u00e3o',
     fields: [
       { key: 'fullName', label: 'Nome completo' },
       { key: 'cpf', label: 'CPF' },
       { key: 'email', label: 'E-mail' },
       { key: 'whatsapp', label: 'WhatsApp' },
       { key: 'birthDate', label: 'Data de nascimento', kind: 'date' },
-      { key: 'gender', label: 'Gênero', kind: 'enum' },
+      { key: 'gender', label: 'G\u00eanero', kind: 'enum' },
       { key: 'city', label: 'Cidade' },
       { key: 'state', label: 'UF' },
     ],
   },
   {
-    title: 'Dança e participação',
+    title: 'Dan\u00e7a e participa\u00e7\u00e3o',
     fields: [
       { key: 'danceModalities', label: 'Modalidades', kind: 'list' },
-      { key: 'practiceTime', label: 'Tempo de prática', kind: 'enum' },
+      { key: 'practiceTime', label: 'Tempo de pr\u00e1tica', kind: 'enum' },
       { key: 'careerInterest', label: 'Pretende seguir carreira', kind: 'boolean' },
-      { key: 'searchesContent', label: 'Busca conteúdo na internet', kind: 'boolean' },
-      { key: 'consumedContent', label: 'Conteúdos consumidos', kind: 'list' },
+      { key: 'searchesContent', label: 'Busca conte\u00fado na internet', kind: 'boolean' },
+      { key: 'consumedContent', label: 'Conte\u00fados consumidos', kind: 'list' },
     ],
   },
   {
@@ -64,10 +64,10 @@ const youthSections: Array<SectionConfig<YouthFormDetailResponse>> = [
       { key: 'whoPaysExpenses', label: 'Quem financia os custos', kind: 'enum' },
       { key: 'familyIncomeRange', label: 'Faixa de renda familiar', kind: 'enum' },
       { key: 'consentAccepted', label: 'Consentimento aceito', kind: 'boolean' },
-      { key: 'consentCode', label: 'Código do consentimento' },
+      { key: 'consentCode', label: 'C\u00f3digo do consentimento' },
     ],
   },
-]
+] as const
 
 const professionalSections: Array<SectionConfig<ProfessionalFormDetailResponse>> = [
   {
@@ -76,54 +76,54 @@ const professionalSections: Array<SectionConfig<ProfessionalFormDetailResponse>>
       { key: 'protocol', label: 'Protocolo' },
       { key: 'submittedAt', label: 'Data do cadastro', kind: 'datetime' },
       { key: 'canUpdate', label: 'Pode atualizar', kind: 'boolean' },
-      { key: 'nextUpdateAvailableAt', label: 'Próxima atualização', kind: 'datetime' },
+      { key: 'nextUpdateAvailableAt', label: 'Pr\u00f3xima atualiza\u00e7\u00e3o', kind: 'datetime' },
     ],
   },
   {
-    title: 'Identificação',
+    title: 'Identifica\u00e7\u00e3o',
     fields: [
       { key: 'fullName', label: 'Nome completo' },
       { key: 'cpf', label: 'CPF' },
       { key: 'email', label: 'E-mail' },
       { key: 'whatsapp', label: 'WhatsApp' },
       { key: 'birthDate', label: 'Data de nascimento', kind: 'date' },
-      { key: 'gender', label: 'Gênero', kind: 'enum' },
+      { key: 'gender', label: 'G\u00eanero', kind: 'enum' },
       { key: 'city', label: 'Cidade' },
       { key: 'state', label: 'UF' },
     ],
   },
   {
-    title: 'Atuação em dança',
+    title: 'Atua\u00e7\u00e3o em dan\u00e7a',
     fields: [
       { key: 'danceModalities', label: 'Modalidades', kind: 'list' },
-      { key: 'practiceTime', label: 'Tempo de prática', kind: 'enum' },
-      { key: 'worksWithDance', label: 'Trabalha com dança', kind: 'boolean' },
+      { key: 'practiceTime', label: 'Tempo de pr\u00e1tica', kind: 'enum' },
+      { key: 'worksWithDance', label: 'Trabalha com dan\u00e7a', kind: 'boolean' },
       { key: 'currentlyWorks', label: 'Atua atualmente', kind: 'boolean' },
       { key: 'hasDrt', label: 'Possui DRT', kind: 'boolean' },
-      { key: 'rolesPerformed', label: 'Funções exercidas' },
+      { key: 'rolesPerformed', label: 'Fun\u00e7\u00f5es exercidas' },
       { key: 'workType', label: 'Tipo de trabalho' },
     ],
   },
   {
     title: 'Renda e financiamento',
     fields: [
-      { key: 'danceMainIncome', label: 'Dança é a renda principal', kind: 'boolean' },
+      { key: 'danceMainIncome', label: 'Dan\u00e7a \u00e9 a renda principal', kind: 'boolean' },
       { key: 'hasOtherIncome', label: 'Possui outra fonte de renda', kind: 'boolean' },
       { key: 'totalIncome', label: 'Renda mensal total', kind: 'currency' },
-      { key: 'danceIncome', label: 'Renda mensal com dança', kind: 'currency' },
+      { key: 'danceIncome', label: 'Renda mensal com dan\u00e7a', kind: 'currency' },
       { key: 'householdIncomeRange', label: 'Faixa de renda familiar', kind: 'enum' },
       { key: 'costResponsibility', label: 'Quem financia os custos', kind: 'enum' },
     ],
   },
   {
-    title: 'Formação e desenvolvimento',
+    title: 'Forma\u00e7\u00e3o e desenvolvimento',
     fields: [
-      { key: 'consumedContent', label: 'Conteúdos consumidos', kind: 'list' },
+      { key: 'consumedContent', label: 'Conte\u00fados consumidos', kind: 'list' },
       { key: 'coursesPerYear', label: 'Cursos presenciais por ano', kind: 'number' },
       { key: 'onlineCoursesPerYear', label: 'Cursos online por ano', kind: 'number' },
       { key: 'currentlyStudies', label: 'Estuda atualmente', kind: 'boolean' },
-      { key: 'formalStudyType', label: 'Tipo de formação formal' },
-      { key: 'wantsFormalStudy', label: 'Deseja formação formal', kind: 'boolean' },
+      { key: 'formalStudyType', label: 'Tipo de forma\u00e7\u00e3o formal' },
+      { key: 'wantsFormalStudy', label: 'Deseja forma\u00e7\u00e3o formal', kind: 'boolean' },
       { key: 'careerInterest', label: 'Deseja crescer na carreira', kind: 'boolean' },
     ],
   },
@@ -138,13 +138,13 @@ const professionalSections: Array<SectionConfig<ProfessionalFormDetailResponse>>
       { key: 'monthlyCostOthers', label: 'Outros custos mensais', kind: 'currency' },
       { key: 'participatedInEdital', label: 'Participou de edital', kind: 'boolean' },
       { key: 'approvedInEdital', label: 'Foi aprovado em edital', kind: 'boolean' },
-      { key: 'appliedNotApproved', label: 'Inscrito sem aprovação', kind: 'boolean' },
+      { key: 'appliedNotApproved', label: 'Inscrito sem aprova\u00e7\u00e3o', kind: 'boolean' },
       { key: 'editalDifficulty', label: 'Dificuldade com editais' },
       { key: 'consentAccepted', label: 'Consentimento aceito', kind: 'boolean' },
-      { key: 'consentCode', label: 'Código do consentimento' },
+      { key: 'consentCode', label: 'C\u00f3digo do consentimento' },
     ],
   },
-]
+] as const
 
 const institutionSections: Array<SectionConfig<InstitutionFormDetailResponse>> = [
   {
@@ -153,15 +153,15 @@ const institutionSections: Array<SectionConfig<InstitutionFormDetailResponse>> =
       { key: 'protocol', label: 'Protocolo' },
       { key: 'submittedAt', label: 'Data do cadastro', kind: 'datetime' },
       { key: 'canUpdate', label: 'Pode atualizar', kind: 'boolean' },
-      { key: 'nextUpdateAvailableAt', label: 'Próxima atualização', kind: 'datetime' },
+      { key: 'nextUpdateAvailableAt', label: 'Pr\u00f3xima atualiza\u00e7\u00e3o', kind: 'datetime' },
     ],
   },
   {
-    title: 'Identificação',
+    title: 'Identifica\u00e7\u00e3o',
     fields: [
-      { key: 'legalName', label: 'Razão social' },
+      { key: 'legalName', label: 'Raz\u00e3o social' },
       { key: 'tradeName', label: 'Nome fantasia' },
-      { key: 'responsibleName', label: 'Responsável' },
+      { key: 'responsibleName', label: 'Respons\u00e1vel' },
       { key: 'cnpj', label: 'CNPJ' },
       { key: 'email', label: 'E-mail' },
       { key: 'phone', label: 'Telefone' },
@@ -169,27 +169,27 @@ const institutionSections: Array<SectionConfig<InstitutionFormDetailResponse>> =
     ],
   },
   {
-    title: 'Localização e perfil',
+    title: 'Localiza\u00e7\u00e3o e perfil',
     fields: [
       { key: 'city', label: 'Cidade' },
       { key: 'state', label: 'UF' },
-      { key: 'type', label: 'Tipo de instituição', kind: 'enum' },
+      { key: 'type', label: 'Tipo de institui\u00e7\u00e3o', kind: 'enum' },
       { key: 'nature', label: 'Natureza', kind: 'enum' },
-      { key: 'locationType', label: 'Tipo de localização', kind: 'enum' },
-      { key: 'foundationYear', label: 'Ano de fundação', kind: 'number' },
+      { key: 'locationType', label: 'Tipo de localiza\u00e7\u00e3o', kind: 'enum' },
+      { key: 'foundationYear', label: 'Ano de funda\u00e7\u00e3o', kind: 'number' },
       { key: 'modalities', label: 'Modalidades', kind: 'list' },
     ],
   },
   {
     title: 'Estrutura e atendimento',
     fields: [
-      { key: 'numberOfTeachers', label: 'Número de professores', kind: 'number' },
-      { key: 'averageStudents', label: 'Média de alunos', kind: 'number' },
+      { key: 'numberOfTeachers', label: 'N\u00famero de professores', kind: 'number' },
+      { key: 'averageStudents', label: 'M\u00e9dia de alunos', kind: 'number' },
       { key: 'monthlyFee', label: 'Mensalidade', kind: 'currency' },
       { key: 'classesPerWeek', label: 'Aulas por semana', kind: 'number' },
-      { key: 'numberOfRooms', label: 'Número de salas', kind: 'number' },
-      { key: 'spaceType', label: 'Tipo de espaço', kind: 'enum' },
-      { key: 'infrastructureItems', label: 'Infraestrutura disponível' },
+      { key: 'numberOfRooms', label: 'N\u00famero de salas', kind: 'number' },
+      { key: 'spaceType', label: 'Tipo de espa\u00e7o', kind: 'enum' },
+      { key: 'infrastructureItems', label: 'Infraestrutura dispon\u00edvel' },
       { key: 'hasCnpj', label: 'Possui CNPJ', kind: 'boolean' },
       { key: 'hasScholarShip', label: 'Oferece bolsa', kind: 'boolean' },
       { key: 'scholarshipCount', label: 'Quantidade de bolsas', kind: 'number' },
@@ -197,52 +197,72 @@ const institutionSections: Array<SectionConfig<InstitutionFormDetailResponse>> =
     ],
   },
   {
-    title: 'Equipe e operação',
+    title: 'Equipe e opera\u00e7\u00e3o',
     fields: [
-      { key: 'cltEmployees', label: 'Funcionários CLT', kind: 'number' },
+      { key: 'cltEmployees', label: 'Funcion\u00e1rios CLT', kind: 'number' },
       { key: 'pjContracts', label: 'Contratos PJ', kind: 'number' },
       { key: 'numberOfStaff', label: 'Equipe total', kind: 'number' },
-      { key: 'staffRoles', label: 'Funções da equipe' },
-      { key: 'usesManagementSystem', label: 'Usa sistema de gestão', kind: 'boolean' },
+      { key: 'staffRoles', label: 'Fun\u00e7\u00f5es da equipe' },
+      { key: 'usesManagementSystem', label: 'Usa sistema de gest\u00e3o', kind: 'boolean' },
       { key: 'mainChallenges', label: 'Principais desafios' },
       { key: 'eventCostResponsibility', label: 'Quem financia eventos', kind: 'enum' },
     ],
   },
   {
-    title: 'Território, público e receita',
+    title: 'Territ\u00f3rio, p\u00fablico e receita',
     fields: [
       { key: 'actsInPeriphery', label: 'Atua em periferia', kind: 'boolean' },
-      { key: 'actsInRuralArea', label: 'Atua em área rural', kind: 'boolean' },
-      { key: 'hasOwnHeadquarters', label: 'Possui sede própria', kind: 'boolean' },
+      { key: 'actsInRuralArea', label: 'Atua em \u00e1rea rural', kind: 'boolean' },
+      { key: 'hasOwnHeadquarters', label: 'Possui sede pr\u00f3pria', kind: 'boolean' },
       { key: 'rentedHeadquarters', label: 'Possui sede alugada', kind: 'boolean' },
-      { key: 'usesPublicSpace', label: 'Utiliza espaço público', kind: 'boolean' },
-      { key: 'averageAudienceCapacity', label: 'Capacidade média de público', kind: 'number' },
+      { key: 'usesPublicSpace', label: 'Utiliza espa\u00e7o p\u00fablico', kind: 'boolean' },
+      { key: 'averageAudienceCapacity', label: 'Capacidade m\u00e9dia de p\u00fablico', kind: 'number' },
       { key: 'activeStudents', label: 'Alunos ativos', kind: 'number' },
-      { key: 'monthlyAudience', label: 'Público mensal', kind: 'number' },
-      { key: 'servesVulnerablePopulation', label: 'Atende população vulnerável', kind: 'boolean' },
+      { key: 'monthlyAudience', label: 'P\u00fablico mensal', kind: 'number' },
+      { key: 'servesVulnerablePopulation', label: 'Atende popula\u00e7\u00e3o vulner\u00e1vel', kind: 'boolean' },
       { key: 'monthlyRevenue', label: 'Receita mensal', kind: 'currency' },
       { key: 'mainIncomeSources', label: 'Principais fontes de renda' },
     ],
   },
   {
-    title: 'Políticas públicas e comunicação',
+    title: 'Pol\u00edticas p\u00fablicas e comunica\u00e7\u00e3o',
     fields: [
-      { key: 'receivedPublicFundingLast2Years', label: 'Recebeu recurso público nos últimos 2 anos', kind: 'boolean' },
-      { key: 'registeredInPublicCalls', label: 'Inscrita em editais públicos', kind: 'boolean' },
-      { key: 'approvedInPublicCalls', label: 'Aprovada em editais públicos', kind: 'boolean' },
+      {
+        key: 'receivedPublicFundingLast2Years',
+        label: 'Recebeu recurso p\u00fablico nos \u00faltimos 2 anos',
+        kind: 'boolean',
+      },
+      { key: 'registeredInPublicCalls', label: 'Inscrita em editais p\u00fablicos', kind: 'boolean' },
+      { key: 'approvedInPublicCalls', label: 'Aprovada em editais p\u00fablicos', kind: 'boolean' },
       { key: 'editalDifficulties', label: 'Dificuldades com editais' },
-      { key: 'annualBudgetRange', label: 'Faixa de orçamento anual', kind: 'enum' },
-      { key: 'knowsMunicipalCulturePlan', label: 'Conhece o plano municipal de cultura', kind: 'boolean' },
+      { key: 'annualBudgetRange', label: 'Faixa de or\u00e7amento anual', kind: 'enum' },
+      {
+        key: 'knowsMunicipalCulturePlan',
+        label: 'Conhece o plano municipal de cultura',
+        kind: 'boolean',
+      },
       { key: 'participatesInCultureCouncil', label: 'Participa de conselho de cultura', kind: 'boolean' },
-      { key: 'interestedInPublicPartnerships', label: 'Tem interesse em parcerias públicas', kind: 'boolean' },
-      { key: 'knowsPublicPolicyAccessMechanisms', label: 'Conhece mecanismos de acesso a políticas públicas', kind: 'boolean' },
-      { key: 'promotionChannels', label: 'Canais de divulgação' },
-      { key: 'wouldUseFreePromotionPlatform', label: 'Usaria plataforma gratuita de divulgação', kind: 'boolean' },
+      {
+        key: 'interestedInPublicPartnerships',
+        label: 'Tem interesse em parcerias p\u00fablicas',
+        kind: 'boolean',
+      },
+      {
+        key: 'knowsPublicPolicyAccessMechanisms',
+        label: 'Conhece mecanismos de acesso a pol\u00edticas p\u00fablicas',
+        kind: 'boolean',
+      },
+      { key: 'promotionChannels', label: 'Canais de divulga\u00e7\u00e3o' },
+      {
+        key: 'wouldUseFreePromotionPlatform',
+        label: 'Usaria plataforma gratuita de divulga\u00e7\u00e3o',
+        kind: 'boolean',
+      },
       { key: 'consentAccepted', label: 'Consentimento aceito', kind: 'boolean' },
-      { key: 'consentCode', label: 'Código do consentimento' },
+      { key: 'consentCode', label: 'C\u00f3digo do consentimento' },
     ],
   },
-]
+] as const
 
 function formatCurrency(value: number | null) {
   if (value === null || value === undefined) {
@@ -255,29 +275,8 @@ function formatCurrency(value: number | null) {
   }).format(value)
 }
 
-function repairText(value: string) {
-  if (!value || (!value.includes('Ã') && !value.includes('Â') && !value.includes('â'))) {
-    return value
-  }
-
-  let repaired = value
-
-  for (let attempt = 0; attempt < 2; attempt += 1) {
-    const bytes = Uint8Array.from(Array.from(repaired).map((character) => character.charCodeAt(0) & 0xff))
-    const candidate = new TextDecoder('utf-8').decode(bytes)
-
-    if (!candidate || candidate === repaired || candidate.includes('\uFFFD')) {
-      break
-    }
-
-    repaired = candidate
-  }
-
-  return repaired
-}
-
 function parseBirthDateFromSection(value: string) {
-  const normalizedValue = repairText(value).trim()
+  const normalizedValue = value.trim()
   const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(normalizedValue)
 
   if (!match) {
@@ -302,7 +301,7 @@ function calculateAge(birthDate: Date) {
 
 function resolveAgeRangeForSector(sector: string, age: number) {
   if (sector === 'YOUTH') {
-    if (age <= 10) return 'Até 10 anos'
+    if (age <= 10) return 'At\u00e9 10 anos'
     if (age <= 13) return '11 a 13 anos'
     if (age <= 15) return '14 a 15 anos'
     if (age <= 17) return '16 a 17 anos'
@@ -330,12 +329,12 @@ function humanizeEnum(value: string | null) {
     ENTRE_1_E_3_ANOS: 'Entre 1 e 3 anos',
     ENTRE_4_E_6_ANOS: 'Entre 4 e 6 anos',
     MAIS_DE_6_ANOS: 'Mais de 6 anos',
-    PREFIRO_NAO_INFORMAR: 'Prefiro não informar',
-    ATE_1_SM: 'Até 1 salário mínimo',
-    ATE_1_SALARIO_MINIMO: 'Até 1 salário mínimo',
-    DE_1_A_2_SALARIOS_MINIMOS: 'De 1 a 2 salários mínimos',
-    DE_2_A_5_SALARIOS_MINIMOS: 'De 2 a 5 salários mínimos',
-    ACIMA_DE_5_SALARIOS_MINIMOS: 'Acima de 5 salários mínimos',
+    PREFIRO_NAO_INFORMAR: 'Prefiro n\u00e3o informar',
+    ATE_1_SM: 'At\u00e9 1 sal\u00e1rio m\u00ednimo',
+    ATE_1_SALARIO_MINIMO: 'At\u00e9 1 sal\u00e1rio m\u00ednimo',
+    DE_1_A_2_SALARIOS_MINIMOS: 'De 1 a 2 sal\u00e1rios m\u00ednimos',
+    DE_2_A_5_SALARIOS_MINIMOS: 'De 2 a 5 sal\u00e1rios m\u00ednimos',
+    ACIMA_DE_5_SALARIOS_MINIMOS: 'Acima de 5 sal\u00e1rios m\u00ednimos',
   }
 
   if (mappedValues[value]) {
@@ -344,7 +343,7 @@ function humanizeEnum(value: string | null) {
 
   if (value === 'YOUTH') return 'Jovens'
   if (value === 'PROFESSIONAL') return 'Profissionais'
-  if (value === 'INSTITUTION') return 'Instituições'
+  if (value === 'INSTITUTION') return 'Institui\u00e7\u00f5es'
 
   return value
     .replace(/_/g, ' ')
@@ -362,7 +361,7 @@ function formatValue(value: unknown, kind: FieldKind = 'text') {
   }
 
   if (kind === 'boolean' && typeof value === 'boolean') {
-    return value ? 'Sim' : 'Não'
+    return value ? 'Sim' : 'N\u00e3o'
   }
 
   if (kind === 'date' && typeof value === 'string') {
@@ -397,9 +396,7 @@ function renderSections<T extends object>(sections: Array<SectionConfig<T>>, val
         {section.fields.map((field) => (
           <div key={String(field.key)} className="admin-detail-item">
             <span className="admin-detail-label">{field.label}</span>
-            <strong className="admin-detail-value">
-              {formatValue(values[field.key], field.kind)}
-            </strong>
+            <strong className="admin-detail-value">{formatValue(values[field.key], field.kind)}</strong>
           </div>
         ))}
       </div>
@@ -415,23 +412,20 @@ function normalizeStructuredSections(sections: AdminDetailSectionResponse[], sec
 
     return {
       ...section,
-      title: repairText(section.title),
       fields: section.fields.map((field) => {
-        const repairedLabel = repairText(field.label)
-        let repairedValue = repairText(field.value)
+        let nextValue = field.value
 
         if (calculatedAge !== null && field.key === 'age') {
-          repairedValue = String(calculatedAge)
+          nextValue = String(calculatedAge)
         }
 
         if (calculatedAge !== null && field.key === 'ageRange') {
-          repairedValue = resolveAgeRangeForSector(sector, calculatedAge)
+          nextValue = resolveAgeRangeForSector(sector, calculatedAge)
         }
 
         return {
           ...field,
-          label: repairedLabel,
-          value: repairedValue,
+          value: nextValue,
         }
       }),
     }
@@ -475,7 +469,7 @@ export default function AdminSubmissionDetailPage() {
         const data = await getAdminSubmissionDetail(protocol)
         setDetail(data)
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar a ficha do cadastro.')
+        setError(loadError instanceof Error ? loadError.message : 'N\u00e3o foi poss\u00edvel carregar a ficha do cadastro.')
       } finally {
         setIsLoading(false)
       }
@@ -552,9 +546,7 @@ export default function AdminSubmissionDetailPage() {
             </Card>
           </section>
 
-          <section className="admin-section-grid">
-            {activeSections}
-          </section>
+          <section className="admin-section-grid">{activeSections}</section>
         </>
       ) : null}
     </div>

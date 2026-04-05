@@ -12,7 +12,7 @@ import { formatBackendDateTime } from '../utils/backend-date'
 function formatSector(value: string) {
   if (value === 'YOUTH') return 'Jovens'
   if (value === 'PROFESSIONAL') return 'Profissionais'
-  if (value === 'INSTITUTION') return 'Instituições'
+  if (value === 'INSTITUTION') return 'Institui\u00e7\u00f5es'
   return value
 }
 
@@ -42,7 +42,7 @@ export default function AdminSubmissionsPage() {
       setOverview(overviewData)
       setSubmissions(submissionsData)
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar os cadastros.')
+      setError(loadError instanceof Error ? loadError.message : 'N\u00e3o foi poss\u00edvel carregar os cadastros.')
     } finally {
       setIsLoading(false)
     }
@@ -88,7 +88,7 @@ export default function AdminSubmissionsPage() {
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Instituições</span>
+          <span className="eyebrow">Institui\u00e7\u00f5es</span>
           <strong>{overview?.totalInstitutions ?? '-'}</strong>
         </Card>
 
@@ -123,7 +123,7 @@ export default function AdminSubmissionsPage() {
                 <option value="">Todos</option>
                 <option value="YOUTH">Jovens</option>
                 <option value="PROFESSIONAL">Profissionais</option>
-                <option value="INSTITUTION">Instituições</option>
+                <option value="INSTITUTION">Institui\u00e7\u00f5es</option>
               </select>
             </label>
 
@@ -148,7 +148,7 @@ export default function AdminSubmissionsPage() {
                   <th>Cidade</th>
                   <th>UF</th>
                   <th>Data</th>
-                  <th>Ações</th>
+                  <th>A\u00e7\u00f5es</th>
                 </tr>
               </thead>
               <tbody>

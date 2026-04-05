@@ -60,7 +60,7 @@ const completeDownloadRows: DownloadRow[] = [
 
 const statisticsDownloadRows: DownloadRow[] = [
   {
-    title: 'Relatório geral da base',
+    title: 'Relat\u00f3rio geral da base',
     format: 'PDF',
     scope: 'Resumo visual da base.',
     actionLabel: 'Baixar PDF',
@@ -69,7 +69,7 @@ const statisticsDownloadRows: DownloadRow[] = [
   {
     title: 'Indicadores da base',
     format: 'XLSX',
-    scope: 'Recortes da base para relatórios e BI.',
+    scope: 'Recortes da base para relat\u00f3rios e BI.',
     actionLabel: 'Baixar Excel',
     action: downloadAdminStatisticsXlsx,
   },
@@ -86,14 +86,14 @@ const operationalDownloadRows: DownloadRow[] = [
   {
     title: 'Cadastros do dia a dia',
     format: 'XLSX',
-    scope: 'Consulta rápida por protocolo.',
+    scope: 'Consulta r\u00e1pida por protocolo.',
     actionLabel: 'Baixar Excel',
     action: downloadAdminSubmissionsXlsx,
   },
   {
     title: 'Cadastros do dia a dia',
     format: 'CSV',
-    scope: 'Conferência rápida da base.',
+    scope: 'Confer\u00eancia r\u00e1pida da base.',
     actionLabel: 'Baixar CSV',
     action: downloadAdminSubmissionsCsv,
   },
@@ -101,23 +101,23 @@ const operationalDownloadRows: DownloadRow[] = [
 
 const formJourneyCards = [
   {
-    title: 'Jovens da dança',
-    description: 'Identidade, território, modalidades e permanência.',
+    title: 'Jovens da dan\u00e7a',
+    description: 'Identidade, territ\u00f3rio, modalidades, forma\u00e7\u00e3o e perman\u00eancia.',
     outputs: 'Painel / PDF / Excel',
   },
   {
-    title: 'Profissionais da dança',
-    description: 'Trajetória, trabalho, renda, circulação e apoio público.',
+    title: 'Profissionais da dan\u00e7a',
+    description: 'Trajet\u00f3ria, trabalho, renda, circula\u00e7\u00e3o e apoio p\u00fablico.',
     outputs: 'Painel / PDF / Excel / Power BI',
   },
   {
-    title: 'Instituições da dança',
-    description: 'Estrutura, ação formativa, território e rotina de atividades.',
+    title: 'Institui\u00e7\u00f5es da dan\u00e7a',
+    description: 'Estrutura, a\u00e7\u00e3o formativa, territ\u00f3rio e rotina de atividades.',
     outputs: 'Painel / PDF / Excel / Power BI',
   },
   {
     title: 'Leitura nacional consolidada',
-    description: 'Leitura conjunta das três frentes da base.',
+    description: 'Leitura conjunta das tr\u00eas frentes da base.',
     outputs: 'Painel / PDF / XLSX / CSV',
   },
 ] as const
@@ -125,28 +125,28 @@ const formJourneyCards = [
 const internalFlowRows = [
   {
     stage: 'Cadastro recebido',
-    detail: 'O cadastro entra na base.',
-    use: 'Acompanhamento diário.',
+    detail: 'O formul\u00e1rio entra na base com protocolo e data de envio.',
+    use: 'Acompanhamento do dia a dia.',
   },
   {
-    stage: 'Ficha em PDF',
-    detail: 'Leitura completa por protocolo.',
-    use: 'Revisão e atendimento.',
+    stage: 'Ficha individual',
+    detail: 'Cada protocolo fica dispon\u00edvel para leitura completa.',
+    use: 'Confer\u00eancia, atendimento e revis\u00e3o.',
   },
   {
-    stage: 'Planilha completa',
-    detail: 'Abas por tema e perfil.',
-    use: 'Excel e cruzamentos.',
+    stage: 'Planilha da base',
+    detail: 'A base sai organizada em linhas e colunas para trabalho interno.',
+    use: 'Excel, cruzamentos e relat\u00f3rios.',
   },
   {
-    stage: 'Base para Power BI',
-    detail: 'Recortes prontos para BI.',
-    use: 'Power BI e dashboards.',
+    stage: 'Arquivo para BI',
+    detail: 'Os recortes saem prontos para dashboards e Power BI.',
+    use: 'Leitura anal\u00edtica e apresenta\u00e7\u00f5es.',
   },
   {
-    stage: 'Material para fora',
-    detail: 'A ONG separa o recorte certo.',
-    use: 'Materiais externos.',
+    stage: 'Material externo',
+    detail: 'A ONG escolhe o recorte que pode ser compartilhado.',
+    use: 'Reuni\u00f5es, parceiros e apresenta\u00e7\u00f5es.',
   },
 ] as const
 
@@ -158,17 +158,17 @@ const sharingRows = [
   },
   {
     material: 'Base completa em planilhas',
-    use: 'Cruzamentos e estudos internos.',
+    use: 'Cruzamentos, estudos internos e relat\u00f3rios da equipe.',
     sharing: 'Sai apenas em recortes preparados pela ONG.',
   },
   {
     material: 'Indicadores gerais',
-    use: 'Diretoria, reuniões e apresentações.',
+    use: 'Diretoria, reuni\u00f5es e apresenta\u00e7\u00f5es.',
     sharing: 'Pode sair em materiais sem dados pessoais.',
   },
   {
     material: 'Arquivos para Power BI e dashboards',
-    use: 'Dashboards e BI.',
+    use: 'Dashboards, BI e leitura anal\u00edtica.',
     sharing: 'Uso interno ou recortes preparados pela ONG.',
   },
 ] as const
@@ -232,7 +232,7 @@ function DownloadTable({
               <th>Arquivo</th>
               <th>Formato</th>
               <th>Uso</th>
-              <th>Acao</th>
+              <th>A\u00e7\u00e3o</th>
             </tr>
           </thead>
           <tbody>
@@ -286,7 +286,7 @@ export default function AdminDataHubPage() {
         setSectorSummary(sectorData)
         setStateSummary(stateData)
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar a área de dados.')
+        setError(loadError instanceof Error ? loadError.message : 'N\u00e3o foi poss\u00edvel carregar a \u00e1rea de dados.')
       }
     }
 
@@ -300,7 +300,7 @@ export default function AdminDataHubPage() {
       const file = await action()
       triggerDownload(file.blob, file.filename)
     } catch (downloadError) {
-      setError(downloadError instanceof Error ? downloadError.message : 'Não foi possível gerar o arquivo.')
+      setError(downloadError instanceof Error ? downloadError.message : 'N\u00e3o foi poss\u00edvel gerar o arquivo.')
     }
   }
 
@@ -321,24 +321,24 @@ export default function AdminDataHubPage() {
   const dataControlRows = useMemo(
     () => [
       {
-        label: 'Cadastros disponíveis',
+        label: 'Cadastros dispon\u00edveis',
         value: overview ? formatNumber(overview.totalResponses) : '-',
-        detail: 'Base pronta para consulta e exportação.',
+        detail: 'Base pronta para consulta e exporta\u00e7\u00e3o.',
       },
       {
-        label: 'Presença territorial',
+        label: 'Presen\u00e7a territorial',
         value: formatNumber(stateSummary.filter((item) => item.totalSubmissions > 0).length),
-        detail: 'Estados e DF com registros.',
+        detail: 'Estados e Distrito Federal com registros.',
       },
       {
-        label: 'Último envio recebido',
+        label: '\u00daltimo envio recebido',
         value: latestRecordAt ? formatBackendDateTime(latestRecordAt) : 'Sem registro',
         detail: 'Cadastro mais recente da base.',
       },
       {
         label: 'Frentes reunidas',
         value: sectorSummary.length ? `${sectorSummary.length}/3` : '-',
-        detail: 'Jovens, profissionais e instituições.',
+        detail: 'Jovens, profissionais e institui\u00e7\u00f5es.',
       },
     ],
     [latestRecordAt, overview, sectorSummary.length, stateSummary],
@@ -349,9 +349,9 @@ export default function AdminDataHubPage() {
       <header className="admin-page-header">
         <div>
           <p className="eyebrow">Dados</p>
-          <h2>Painel de dados, análises e exportações</h2>
+          <h2>Dados, an\u00e1lises e sa\u00eddas da base</h2>
           <p className="admin-page-subtitle">
-            Tudo o que entra pelos formulários e sai em análise, planilha, PDF, CSV e BI.
+            Tudo o que entra pelos formul\u00e1rios e sai em leitura, planilha, PDF, CSV e BI.
           </p>
         </div>
       </header>
@@ -378,7 +378,7 @@ export default function AdminDataHubPage() {
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Instituições</span>
+          <span className="eyebrow">Institui\u00e7\u00f5es</span>
           <strong>{overview?.totalInstitutions ?? '-'}</strong>
           <p className="card-text">Registros de escolas, grupos e projetos.</p>
         </Card>
@@ -410,7 +410,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Entrada da base</p>
-              <h2>Entradas da base</h2>
+              <h2>Como os formul\u00e1rios entram no sistema</h2>
             </div>
           </div>
 
@@ -431,7 +431,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Perfis</p>
-              <h2>Distribuição por perfil</h2>
+              <h2>Distribui\u00e7\u00e3o por frente</h2>
             </div>
           </div>
 
@@ -442,7 +442,7 @@ export default function AdminDataHubPage() {
                   <th>Perfil</th>
                   <th>Total</th>
                   <th>Estados</th>
-                  <th>Último registro</th>
+                  <th>\u00daltimo registro</th>
                 </tr>
               </thead>
               <tbody>
@@ -462,8 +462,8 @@ export default function AdminDataHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Território</p>
-              <h2>Distribuição por estado</h2>
+              <p className="eyebrow">Territ\u00f3rio</p>
+              <h2>Distribui\u00e7\u00e3o por estado</h2>
             </div>
           </div>
 
@@ -475,7 +475,7 @@ export default function AdminDataHubPage() {
                   <th>Total</th>
                   <th>Jovens</th>
                   <th>Profissionais</th>
-                  <th>Instituições</th>
+                  <th>Institui\u00e7\u00f5es</th>
                 </tr>
               </thead>
               <tbody>
@@ -499,7 +499,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Destaques</p>
-              <h2>Destaques da base</h2>
+              <h2>Leituras r\u00e1pidas da base</h2>
             </div>
           </div>
 
@@ -511,13 +511,13 @@ export default function AdminDataHubPage() {
             </div>
 
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">Faixa etária em destaque</span>
+              <span className="admin-kpi-label">Faixa et\u00e1ria em destaque</span>
               <strong>{topAgeRange.label}</strong>
               <span className="admin-kpi-value">{topAgeRange.value}</span>
             </div>
 
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">Gênero em destaque</span>
+              <span className="admin-kpi-label">G\u00eanero em destaque</span>
               <strong>{topGender.label}</strong>
               <span className="admin-kpi-value">{topGender.value}</span>
             </div>
@@ -541,7 +541,7 @@ export default function AdminDataHubPage() {
 
         <DownloadTable
           eyebrow="Indicadores"
-          title="Arquivos para análises e apresentações"
+          title="Arquivos para an\u00e1lises e apresenta\u00e7\u00f5es"
           rows={statisticsDownloadRows}
           onDownload={handleDownload}
         />
@@ -549,7 +549,7 @@ export default function AdminDataHubPage() {
 
       <section className="admin-section-stack">
         <DownloadTable
-          eyebrow="Operação"
+          eyebrow="Opera\u00e7\u00e3o"
           title="Arquivos do dia a dia"
           rows={operationalDownloadRows}
           onDownload={handleDownload}
@@ -559,7 +559,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Fluxo da equipe</p>
-              <h2>Do formulário ao arquivo</h2>
+              <h2>Do formul\u00e1rio ao arquivo</h2>
             </div>
           </div>
 
@@ -590,7 +590,7 @@ export default function AdminDataHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Saída da base</p>
+              <p className="eyebrow">Sa\u00edda da base</p>
               <h2>O que fica interno e o que pode sair</h2>
             </div>
           </div>
@@ -630,7 +630,7 @@ export default function AdminDataHubPage() {
               <thead>
                 <tr>
                   <th>Canal</th>
-                  <th>Situação</th>
+                  <th>Situa\u00e7\u00e3o</th>
                   <th>Uso principal</th>
                 </tr>
               </thead>
@@ -638,17 +638,17 @@ export default function AdminDataHubPage() {
                 <tr>
                   <td>Painel interno da ONG</td>
                   <td>Ativo</td>
-                  <td>Acompanhamento da equipe, leitura da base e consulta diária.</td>
+                  <td>Acompanhamento da equipe, leitura da base e consulta di\u00e1ria.</td>
                 </tr>
                 <tr>
-                  <td>PDFs e relatórios</td>
-                  <td>Disponível</td>
-                  <td>Leitura institucional, reuniões, conselhos e apresentações.</td>
+                  <td>PDFs e relat\u00f3rios</td>
+                  <td>Dispon\u00edvel</td>
+                  <td>Leitura institucional, reuni\u00f5es, conselhos e apresenta\u00e7\u00f5es.</td>
                 </tr>
                 <tr>
                   <td>Excel, CSV e Power BI</td>
-                  <td>Disponível</td>
-                  <td>Cruzamentos, dashboards, recortes e aprofundamento analítico.</td>
+                  <td>Dispon\u00edvel</td>
+                  <td>Cruzamentos, dashboards, recortes e aprofundamento anal\u00edtico.</td>
                 </tr>
                 <tr>
                   <td>Materiais para parceiros</td>

@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { ArrowLeft, ClipboardList, House, Instagram, Menu, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
@@ -20,27 +20,26 @@ type OverviewCard = {
 type StatusCard = {
   label: string
   value: string
-  detail?: string
 }
 
 const overviewCards: OverviewCard[] = [
   { label: 'Cadastros totais', value: '5.240' },
   { label: 'Jovens', value: '2.380' },
   { label: 'Profissionais', value: '1.960' },
-  { label: 'Instituições', value: '900' },
+  { label: 'Institui\u00e7\u00f5es', value: '900' },
 ]
 
 const statusCards: StatusCard[] = [
   { label: 'Cobertura nacional', value: '27 UFs' },
-  { label: 'Formulários ativos', value: '3 frentes' },
+  { label: 'Formul\u00e1rios ativos', value: '3 frentes' },
   { label: 'Base demonstrativa', value: '5.240 registros' },
-  { label: 'Leitura pública', value: 'Sem dados pessoais' },
+  { label: 'Leitura p\u00fablica', value: 'Sem dados pessoais' },
 ]
 
 const profileDistribution: ChartItem[] = [
   { name: 'Jovens', value: 2380 },
   { name: 'Profissionais', value: 1960 },
-  { name: 'Instituições', value: 900 },
+  { name: 'Institui\u00e7\u00f5es', value: 900 },
 ]
 
 const regionDistribution: ChartItem[] = [
@@ -52,7 +51,7 @@ const regionDistribution: ChartItem[] = [
 ]
 
 const stateDistribution: ChartItem[] = [
-  { name: 'São Paulo', value: 620 },
+  { name: 'S\u00e3o Paulo', value: 620 },
   { name: 'Bahia', value: 510 },
   { name: 'Pernambuco', value: 470 },
   { name: 'Rio de Janeiro', value: 455 },
@@ -65,12 +64,12 @@ const cityHighlights: ChartItem[] = [
   { name: 'Recife', value: 185 },
   { name: 'Belo Horizonte', value: 172 },
   { name: 'Rio de Janeiro', value: 168 },
-  { name: 'São Paulo', value: 160 },
-  { name: 'Belém', value: 132 },
+  { name: 'S\u00e3o Paulo', value: 160 },
+  { name: 'Bel\u00e9m', value: 132 },
 ]
 
 const ageDistribution: ChartItem[] = [
-  { name: 'Até 17 anos', value: 2290 },
+  { name: 'At\u00e9 17 anos', value: 2290 },
   { name: '18 a 24 anos', value: 980 },
   { name: '25 a 34 anos', value: 1135 },
   { name: '35 a 49 anos', value: 610 },
@@ -80,44 +79,46 @@ const ageDistribution: ChartItem[] = [
 const genderDistribution: ChartItem[] = [
   { name: 'Mulheres', value: 2810 },
   { name: 'Homens', value: 1710 },
-  { name: 'Não binário', value: 290 },
-  { name: 'Outro ou não informado', value: 430 },
+  { name: 'N\u00e3o bin\u00e1rio', value: 290 },
+  { name: 'Outro ou n\u00e3o informado', value: 430 },
 ]
 
 const modalityDistribution: ChartItem[] = [
-  { name: 'Ballet clássico', value: 960 },
-  { name: 'Danças urbanas', value: 890 },
-  { name: 'Dança contemporânea', value: 780 },
-  { name: 'Danças populares', value: 710 },
+  { name: 'Ballet cl\u00e1ssico', value: 960 },
+  { name: 'Dan\u00e7as urbanas', value: 890 },
+  { name: 'Dan\u00e7a contempor\u00e2nea', value: 780 },
+  { name: 'Dan\u00e7as populares', value: 710 },
   { name: 'Jazz', value: 655 },
-  { name: 'Dança de salão', value: 520 },
+  { name: 'Dan\u00e7a de sal\u00e3o', value: 520 },
 ]
 
 const trainingDistribution: ChartItem[] = [
-  { name: 'Em formação', value: 1430 },
+  { name: 'Em forma\u00e7\u00e3o', value: 1430 },
   { name: 'Autodidatas', value: 860 },
-  { name: 'Cursos técnicos', value: 720 },
-  { name: 'Graduação', value: 480 },
-  { name: 'Pós-graduação', value: 170 },
+  { name: 'Cursos t\u00e9cnicos', value: 720 },
+  { name: 'Gradua\u00e7\u00e3o', value: 480 },
+  { name: 'P\u00f3s-gradua\u00e7\u00e3o', value: 170 },
 ]
 
 const supportDistribution: ChartItem[] = [
-  { name: 'Cursos e formação', value: 940 },
+  { name: 'Cursos e forma\u00e7\u00e3o', value: 940 },
   { name: 'Festivais e eventos', value: 860 },
   { name: 'Editais e oportunidades', value: 790 },
-  { name: 'Conteúdo digital', value: 650 },
-  { name: 'Gestão e carreira', value: 520 },
+  { name: 'Conte\u00fado digital', value: 650 },
+  { name: 'Gest\u00e3o e carreira', value: 520 },
 ]
 
 const institutionStructureDistribution: ChartItem[] = [
   { name: 'Com aulas regulares', value: 710 },
-  { name: 'Atuação em periferias', value: 520 },
-  { name: 'Uso de espaço público', value: 430 },
-  { name: 'Sede própria', value: 390 },
+  { name: 'Atua\u00e7\u00e3o em periferias', value: 520 },
+  { name: 'Uso de espa\u00e7o p\u00fablico', value: 430 },
+  { name: 'Sede pr\u00f3pria', value: 390 },
   { name: 'Com bolsas ativas', value: 265 },
 ]
 
-const formatNumber = (value: number) => new Intl.NumberFormat('pt-BR').format(value)
+function formatNumber(value: number) {
+  return new Intl.NumberFormat('pt-BR').format(value)
+}
 
 export default function StatisticsPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -128,13 +129,13 @@ export default function StatisticsPage() {
         <div className="container header-inner">
           <div className="brand-mini">
             <div className="brand-mini-icon">
-              <img src={logo} alt="Logo SIBRADANÇA" />
+              <img src={logo} alt="Logo SIBRADAN\u00c7A" />
             </div>
           </div>
 
           <nav className="desktop-nav">
-            <Link to="/">Página inicial</Link>
-            <Link to="/">Formulários</Link>
+            <Link to="/">P\u00e1gina inicial</Link>
+            <Link to="/">Formul\u00e1rios</Link>
             <a
               href="https://www.instagram.com/sibradanca"
               target="_blank"
@@ -162,12 +163,12 @@ export default function StatisticsPage() {
           <div className="mobile-menu">
             <Link to="/" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
               <House size={18} />
-              <span>Página inicial</span>
+              <span>P\u00e1gina inicial</span>
             </Link>
 
             <Link to="/" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
               <ClipboardList size={18} />
-              <span>Formulários</span>
+              <span>Formul\u00e1rios</span>
             </Link>
 
             <a
@@ -188,18 +189,18 @@ export default function StatisticsPage() {
         <section className="statistics-hero section-space">
           <div className="container">
             <div className="statistics-hero-copy">
-              <Badge dark>Estatísticas nacionais</Badge>
-              <h1>Banco Nacional de Dados da Dança do Brasil</h1>
+              <Badge dark>Estat\u00edsticas nacionais</Badge>
+              <h1>Banco Nacional de Dados da Dan\u00e7a do Brasil</h1>
               <p className="statistics-hero-description">
-                Uma demonstração pública de como a leitura nacional da dança pode aparecer no sistema,
-                com dados gerais dos formulários e sem exibir informações pessoais.
+                Painel p\u00fablico com leitura demonstrativa da base nacional da dan\u00e7a, sem exibir
+                informa\u00e7\u00f5es pessoais.
               </p>
             </div>
 
             <div className="statistics-hero-actions">
               <Link to="/" className="btn btn-primary btn-large">
                 <ArrowLeft size={18} />
-                Voltar para os formulários
+                Voltar para os formul\u00e1rios
               </Link>
             </div>
 
@@ -208,7 +209,6 @@ export default function StatisticsPage() {
                 <article key={item.label} className="card statistics-status-card">
                   <span className="eyebrow">{item.label}</span>
                   <strong className="statistics-status-value">{item.value}</strong>
-                  {item.detail ? <p className="statistics-status-detail">{item.detail}</p> : null}
                 </article>
               ))}
             </div>
@@ -217,7 +217,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Painel nacional" title="Visão geral da base" />
+            <SectionTitle badge="Base nacional" title="Vis\u00e3o geral da base" />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
               {overviewCards.map((item) => (
@@ -237,9 +237,9 @@ export default function StatisticsPage() {
                 summaryItems={3}
               />
               <ChartPanel
-                title="Presença por região"
+                title="Presen\u00e7a por regi\u00e3o"
                 data={regionDistribution}
-                eyebrowLabel="Território"
+                eyebrowLabel="Territ\u00f3rio"
                 summaryItems={5}
               />
             </div>
@@ -248,11 +248,11 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Território" title="Presença da dança no Brasil" />
+            <SectionTitle badge="Territ\u00f3rio" title="Presen\u00e7a da dan\u00e7a no Brasil" />
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
-                title="Estados com maior presença"
+                title="Estados com maior presen\u00e7a"
                 data={stateDistribution}
                 eyebrowLabel="Estados"
                 summaryItems={6}
@@ -262,7 +262,7 @@ export default function StatisticsPage() {
                 <div className="panel-top">
                   <div>
                     <span className="eyebrow">Cidades</span>
-                    <h3 className="statistics-compact-title">Municípios em destaque</h3>
+                    <h3 className="statistics-compact-title">Munic\u00edpios em destaque</h3>
                   </div>
                 </div>
 
@@ -281,18 +281,18 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Perfis" title="Quem aparece nesta base" />
+            <SectionTitle badge="Perfis da base" title="Quem aparece nesta leitura" />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
-                title="Faixa etária"
+                title="Faixa et\u00e1ria"
                 data={ageDistribution}
                 type="pie"
                 eyebrowLabel="Idades"
                 summaryItems={5}
               />
               <ChartPanel
-                title="Gênero"
+                title="G\u00eanero"
                 data={genderDistribution}
                 type="pie"
                 eyebrowLabel="Perfis"
@@ -310,11 +310,11 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Formação e instituições" title="Formação e estrutura" />
+            <SectionTitle badge="Estrutura da dan\u00e7a" title="Forma\u00e7\u00e3o, interesses e institui\u00e7\u00f5es" />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
-                title="Formação"
+                title="Forma\u00e7\u00e3o"
                 data={trainingDistribution}
                 eyebrowLabel="Percursos"
                 summaryItems={5}
@@ -326,9 +326,9 @@ export default function StatisticsPage() {
                 summaryItems={5}
               />
               <ChartPanel
-                title="Estrutura das instituições"
+                title="Estrutura das institui\u00e7\u00f5es"
                 data={institutionStructureDistribution}
-                eyebrowLabel="Instituições"
+                eyebrowLabel="Institui\u00e7\u00f5es"
                 summaryItems={5}
               />
             </div>
@@ -339,20 +339,20 @@ export default function StatisticsPage() {
       <footer className="site-footer">
         <div className="container footer-inner">
           <div className="footer-brand">
-            <img src={logo} alt="Logo SIBRADANÇA" />
+            <img src={logo} alt="Logo SIBRADAN\u00c7A" />
             <p>
-              <strong>SIBRADANÇA – Sistema Brasileiro de Evidências da Dança</strong>
+              <strong>SIBRADAN\u00c7A \u2013 Sistema Brasileiro de Evid\u00eancias da Dan\u00e7a</strong>
             </p>
           </div>
 
           <div className="footer-links">
-            <Link to="/">Formulários</Link>
-            <a href="#">Política de privacidade</a>
+            <Link to="/">Formul\u00e1rios</Link>
+            <a href="#">Pol\u00edtica de privacidade</a>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} SIBRADANÇA · Todos os direitos reservados</p>
+          <p>\u00a9 {new Date().getFullYear()} SIBRADAN\u00c7A \u00b7 Todos os direitos reservados</p>
         </div>
       </footer>
     </div>

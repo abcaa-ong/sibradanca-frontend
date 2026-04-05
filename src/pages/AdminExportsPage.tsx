@@ -18,7 +18,7 @@ type DownloadAction = () => Promise<{ blob: Blob; filename: string | null }>
 const exportGroups = [
   {
     title: 'Leitura completa da equipe',
-    description: 'Arquivos completos da base.',
+    description: 'Arquivos completos da base para consulta interna.',
     items: [
       {
         name: 'Fichas por protocolo',
@@ -44,31 +44,31 @@ const exportGroups = [
     ],
   },
   {
-    title: 'Operação do dia a dia',
-    description: 'Arquivos rápidos da rotina.',
+    title: 'Opera\u00e7\u00e3o do dia a dia',
+    description: 'Arquivos r\u00e1pidos para rotina de consulta e confer\u00eancia.',
     items: [
       {
         name: 'Cadastros do dia a dia',
         format: 'XLSX',
-        purpose: 'Consulta rápida por protocolo.',
+        purpose: 'Consulta r\u00e1pida por protocolo.',
         actionLabel: 'Baixar Excel',
         action: downloadAdminSubmissionsXlsx,
       },
       {
         name: 'Cadastros do dia a dia',
         format: 'CSV',
-        purpose: 'Conferência rápida da base.',
+        purpose: 'Confer\u00eancia r\u00e1pida da base.',
         actionLabel: 'Baixar CSV',
         action: downloadAdminSubmissionsCsv,
       },
     ],
   },
   {
-    title: 'Análises, relatórios e apresentações',
-    description: 'Arquivos para análise e apresentação.',
+    title: 'An\u00e1lises e apresenta\u00e7\u00f5es',
+    description: 'Arquivos para leitura institucional, dashboards e BI.',
     items: [
       {
-        name: 'Relatório geral da base',
+        name: 'Relat\u00f3rio geral da base',
         format: 'PDF',
         purpose: 'Resumo visual da base.',
         actionLabel: 'Baixar PDF',
@@ -77,7 +77,7 @@ const exportGroups = [
       {
         name: 'Indicadores da base',
         format: 'XLSX',
-        purpose: 'Recortes da base para relatórios e BI.',
+        purpose: 'Recortes da base para relat\u00f3rios e BI.',
         actionLabel: 'Baixar Excel',
         action: downloadAdminStatisticsXlsx,
       },
@@ -96,40 +96,40 @@ const deliveryGuide = [
   {
     file: 'Fichas por protocolo',
     content: 'Mostram o cadastro inteiro por protocolo.',
-    use: 'Revisão, atendimento e leitura institucional.',
-    sharing: 'Não saem para fora da ONG.',
+    use: 'Revis\u00e3o, atendimento e leitura institucional.',
+    sharing: 'N\u00e3o saem para fora da ONG.',
   },
   {
     file: 'Base completa da equipe',
-    content: 'Reúne a leitura total da base.',
+    content: 'Re\u00fane a leitura total da base.',
     use: 'Estudos internos e cruzamentos.',
     sharing: 'Sai apenas em recortes preparados pela ONG.',
   },
   {
     file: 'Cadastros do dia a dia',
-    content: 'Mostram consulta rápida por protocolo.',
+    content: 'Mostram consulta r\u00e1pida por protocolo.',
     use: 'Rotina da equipe e acompanhamento operacional.',
     sharing: 'Uso interno da equipe.',
   },
   {
-    file: 'Relatório geral da base',
-    content: 'Apresenta os principais números da base.',
-    use: 'Reuniões, diretorias, eventos e alinhamentos institucionais.',
+    file: 'Relat\u00f3rio geral da base',
+    content: 'Apresenta os principais n\u00fameros da base.',
+    use: 'Reuni\u00f5es, diretorias, eventos e alinhamentos institucionais.',
     sharing: 'Pode ser apresentado sem dados pessoais.',
   },
   {
     file: 'Indicadores para Power BI e dashboards',
-    content: 'Levam recortes por tema, território e perfil.',
+    content: 'Levam recortes por tema, territ\u00f3rio e perfil.',
     use: 'Power BI e dashboards.',
     sharing: 'Pode sair em materiais sem dados pessoais.',
   },
 ] as const
 
 const exportRules = [
-  ['Uso interno da equipe', 'Fichas completas, base detalhada e revisão por protocolo.'],
-  ['Uso institucional', 'Relatórios, gráficos e recortes preparados pela ONG.'],
+  ['Uso interno da equipe', 'Fichas completas, base detalhada e revis\u00e3o por protocolo.'],
+  ['Uso institucional', 'Relat\u00f3rios, gr\u00e1ficos e recortes preparados pela ONG.'],
   ['Uso com parceiros', 'Somente materiais enviados pela ONG, sem acesso ao sistema.'],
-  ['Dados pessoais', 'Ficam no ambiente interno e não saem em materiais públicos.'],
+  ['Dados pessoais', 'Ficam no ambiente interno e n\u00e3o saem em materiais p\u00fablicos.'],
 ] as const
 
 const handoffFlow = [
@@ -139,14 +139,14 @@ const handoffFlow = [
   },
   {
     title: 'Escolher o arquivo',
-    text: 'A ONG escolhe ficha, planilha, CSV ou relatório.',
+    text: 'A ONG escolhe ficha, planilha, CSV ou relat\u00f3rio.',
   },
   {
     title: 'Preparar o material',
-    text: 'Os arquivos são revisados antes do envio.',
+    text: 'Os arquivos s\u00e3o revisados antes do envio.',
   },
   {
-    title: 'Compartilhar com segurança',
+    title: 'Compartilhar com seguran\u00e7a',
     text: 'A ONG envia apenas o recorte adequado.',
   },
 ] as const
@@ -175,7 +175,7 @@ export default function AdminExportsPage() {
       setDownloadError(
         downloadActionError instanceof Error
           ? downloadActionError.message
-          : 'Não foi possível gerar o arquivo solicitado.',
+          : 'N\u00e3o foi poss\u00edvel gerar o arquivo solicitado.',
       )
     }
   }
@@ -184,10 +184,10 @@ export default function AdminExportsPage() {
     <div className="admin-page-content">
       <header className="admin-page-header">
         <div>
-          <p className="eyebrow">Exportações</p>
-          <h2>Arquivos que saem do Banco Nacional da Dança</h2>
+          <p className="eyebrow">Exporta\u00e7\u00f5es</p>
+          <h2>Arquivos que saem do Banco Nacional da Dan\u00e7a</h2>
           <p className="admin-page-subtitle">
-            Arquivos da base para leitura interna, relatórios, dashboards e materiais preparados pela ONG.
+            Arquivos da base para leitura interna, relat\u00f3rios, dashboards e materiais preparados pela ONG.
           </p>
         </div>
       </header>
@@ -260,7 +260,7 @@ export default function AdminExportsPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Regras de saída</p>
+              <p className="eyebrow">Regras de sa\u00edda</p>
               <h2>Como cada material deve sair</h2>
             </div>
           </div>
@@ -269,7 +269,7 @@ export default function AdminExportsPage() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Situação</th>
+                  <th>Situa\u00e7\u00e3o</th>
                   <th>Diretriz</th>
                 </tr>
               </thead>
@@ -315,8 +315,8 @@ export default function AdminExportsPage() {
 
           <div className="admin-governance-grid">
             <div className="admin-governance-card">
-              <h3>Apresentações e reuniões</h3>
-              <p>Relatórios em PDF e indicadores gerais apoiam reuniões e apresentações.</p>
+              <h3>Apresenta\u00e7\u00f5es e reuni\u00f5es</h3>
+              <p>Relat\u00f3rios em PDF e indicadores gerais apoiam reuni\u00f5es e apresenta\u00e7\u00f5es.</p>
             </div>
             <div className="admin-governance-card">
               <h3>Planilhas e Power BI</h3>
@@ -328,7 +328,7 @@ export default function AdminExportsPage() {
             </div>
             <div className="admin-governance-card">
               <h3>Dados pessoais</h3>
-              <p>Informações nominais seguem protegidas no ambiente interno.</p>
+              <p>Informa\u00e7\u00f5es nominais seguem protegidas no ambiente interno.</p>
             </div>
           </div>
         </Card>

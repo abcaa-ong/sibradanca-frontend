@@ -3,13 +3,15 @@ import { NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { Button } from './Button'
 import { clearAdminCredentials, hasAdminSession } from '../services/admin-auth.service'
 
+const SYSTEM_TITLE = 'Banco Nacional de Dados da Dan\u00e7a do Brasil'
+
 const navSections = [
   {
-    title: 'Banco Nacional da Dança do Brasil',
+    title: SYSTEM_TITLE,
     items: [
       {
         to: '/painel-interno/dashboard',
-        label: 'Visão geral',
+        label: 'Vis\u00e3o geral',
         icon: Home,
       },
       {
@@ -19,17 +21,17 @@ const navSections = [
       },
       {
         to: '/painel-interno/dados',
-        label: 'Dados e análises',
+        label: 'Dados e an\u00e1lises',
         icon: BarChart3,
       },
       {
         to: '/painel-interno/exportacoes',
-        label: 'Exportações',
+        label: 'Exporta\u00e7\u00f5es',
         icon: Download,
       },
       {
         to: '/painel-interno/acessos',
-        label: 'Segurança e LGPD',
+        label: 'Seguran\u00e7a e LGPD',
         icon: ShieldCheck,
       },
     ],
@@ -52,14 +54,15 @@ export default function AdminLayout() {
     <div className="admin-app-shell">
       <aside className="admin-sidebar">
         <div className="admin-sidebar-brand">
-          <p className="eyebrow">SIBRADANÇA</p>
+          <p className="eyebrow">SIBRADAN\u00c7A</p>
           <h1>Painel interno da ONG</h1>
           <p className="admin-sidebar-text">
-            Base nacional, análises, exportações e segurança reunidas em um único ambiente.
+            Base nacional, leitura anal\u00edtica, exporta\u00e7\u00f5es e prote\u00e7\u00e3o do ambiente
+            em um \u00fanico sistema.
           </p>
         </div>
 
-        <nav className="admin-sidebar-nav" aria-label="Navegação do painel interno">
+        <nav className="admin-sidebar-nav" aria-label="Navega\u00e7\u00e3o do painel interno">
           {navSections.map((section) => (
             <div key={section.title} className="admin-sidebar-group">
               <p className="admin-sidebar-group-title">{section.title}</p>

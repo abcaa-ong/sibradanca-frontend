@@ -11,7 +11,6 @@ import {
   YAxis,
 } from 'recharts'
 import type { TooltipProps } from 'recharts'
-import { repairText } from '../utils/repairText'
 
 type ChartItem = {
   name: string
@@ -29,13 +28,10 @@ type ChartPanelProps = {
   summaryItems?: number
 }
 
-const colors = {
-  yellow: '#f4eb00',
-  blue: '#48a9e6',
-  pink: '#ef2f8d',
-  green: '#7be33d',
-  purple: '#b36ce6',
-  cyan: '#6fd8e6',
+const palette = ['#f4eb00', '#48a9e6', '#ef2f8d', '#7be33d', '#b36ce6', '#6fd8e6']
+
+function formatNumber(value: number) {
+  return new Intl.NumberFormat('pt-BR').format(value)
 }
 
 function resolveTooltipLabel(
@@ -72,23 +68,12 @@ export function ChartPanel({
   eyebrowLabel = 'Leitura',
   summaryItems = 0,
 }: ChartPanelProps) {
-  const palette = [
-    colors.yellow,
-    colors.blue,
-    colors.pink,
-    colors.green,
-    colors.purple,
-    colors.cyan,
-  ]
-
   const hasData = data.some((item) => item.value > 0)
   const placeholderPieData = [{ name: 'Sem dados', value: 1 }]
   const summaryData =
     summaryItems > 0
       ? [...data].sort((left, right) => right.value - left.value).slice(0, summaryItems)
       : []
-
-  const formatNumber = (value: number) => new Intl.NumberFormat('pt-BR').format(value)
 
   function CustomTooltip({ active, payload, label }: TooltipProps<number, string>) {
     if (!active || !payload?.length) {
@@ -101,7 +86,7 @@ export function ChartPanel({
 
     return (
       <div className="statistics-tooltip">
-        <strong>{repairText(String(resolvedLabel))}</strong>
+        <strong>{String(resolvedLabel)}</strong>
         <span>{formatNumber(value)} registros</span>
       </div>
     )
@@ -111,10 +96,8 @@ export function ChartPanel({
     <div className={`card chart-panel statistics-chart-panel ${className}`.trim()}>
       <div className="panel-top">
         <div>
-          <span className="eyebrow">{repairText(eyebrowLabel)}</span>
-          <h3 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 800, lineHeight: 1.3 }}>
-            {repairText(title)}
-          </h3>
+          <span className="eyebrow">{eyebrowLabel}</span>
+          <h3 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 800, lineHeight: 1.3 }}>{title}</h3>
         </div>
       </div>
 
@@ -182,7 +165,7 @@ export function ChartPanel({
         <div className="statistics-chart-summary">
           {summaryData.map((item) => (
             <div key={`${title}-${item.name}`} className="statistics-chart-summary-row">
-              <span>{repairText(item.name)}</span>
+              <span>{item.name}</span>
               <strong>{formatNumber(item.value)}</strong>
             </div>
           ))}

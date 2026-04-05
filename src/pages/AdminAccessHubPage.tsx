@@ -5,24 +5,24 @@ import type { AdminAuditLogResponse, BackendHealthStatusResponse } from '../type
 import { formatBackendDateTime } from '../utils/backend-date'
 
 const roles = [
-  ['Coordenação da ONG', 'Visão geral e decisões institucionais'],
-  ['Equipe de operação', 'Cadastros, protocolos e base'],
+  ['Coordena\u00e7\u00e3o da ONG', 'Vis\u00e3o geral e decis\u00f5es institucionais'],
+  ['Equipe de opera\u00e7\u00e3o', 'Cadastros, protocolos e base'],
   ['Equipe de dados', 'Indicadores, cruzamentos e materiais'],
-  ['Controle interno', 'Conferência e histórico de uso'],
+  ['Controle interno', 'Confer\u00eancia e hist\u00f3rico de uso'],
 ] as const
 
 const controls = [
-  ['Acesso ao painel', 'Restrito à equipe da ONG'],
-  ['Exportações', 'Feitas apenas pela equipe interna'],
-  ['Histórico de uso', 'Acompanhado no ambiente interno'],
+  ['Acesso ao painel', 'Restrito \u00e0 equipe da ONG'],
+  ['Exporta\u00e7\u00f5es', 'Feitas apenas pela equipe interna'],
+  ['Hist\u00f3rico de uso', 'Acompanhado no ambiente interno'],
   ['Compartilhamento externo', 'Sempre mediado pela ONG'],
 ] as const
 
 const lgpdPrinciples = [
   'Dados pessoais e fichas individuais ficam apenas no ambiente interno da ONG.',
-  'Parceiros e apoiadores não acessam o sistema administrativo.',
+  'Parceiros e apoiadores n\u00e3o acessam o sistema administrativo.',
   'A ONG exporta e compartilha apenas o recorte adequado.',
-  'Materiais externos usam números gerais, sem identificação pessoal.',
+  'Materiais externos usam n\u00fameros gerais, sem identifica\u00e7\u00e3o pessoal.',
 ] as const
 
 export default function AdminAccessHubPage() {
@@ -44,7 +44,7 @@ export default function AdminAccessHubPage() {
         setError(
           loadError instanceof Error
             ? loadError.message
-            : 'Não foi possível carregar a área de segurança.',
+            : 'N\u00e3o foi poss\u00edvel carregar a \u00e1rea de seguran\u00e7a.',
         )
       }
 
@@ -63,10 +63,10 @@ export default function AdminAccessHubPage() {
     <div className="admin-page-content">
       <header className="admin-page-header admin-page-header-compact">
         <div>
-          <p className="eyebrow">Segurança e LGPD</p>
-          <h2>Acessos, proteção da base e regras de compartilhamento</h2>
+          <p className="eyebrow">Seguran\u00e7a e LGPD</p>
+          <h2>Acessos, prote\u00e7\u00e3o da base e regras de compartilhamento</h2>
           <p className="admin-page-subtitle">
-            Quem acessa o sistema, o que fica interno e como a ONG compartilha a base com segurança.
+            Quem acessa o sistema, o que fica interno e como a ONG compartilha a base com seguran\u00e7a.
           </p>
         </div>
       </header>
@@ -83,11 +83,11 @@ export default function AdminAccessHubPage() {
         <Card className="admin-metric-card">
           <span className="eyebrow">Uso interno</span>
           <strong>Exclusivo</strong>
-          <p className="card-text">Acesso reservado à ONG.</p>
+          <p className="card-text">Acesso reservado \u00e0 ONG.</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Última movimentação</span>
+          <span className="eyebrow">\u00daltima movimenta\u00e7\u00e3o</span>
           <strong>{formatBackendDateTime(lastAudit)}</strong>
           <p className="card-text">Registro mais recente do ambiente.</p>
         </Card>
@@ -95,7 +95,7 @@ export default function AdminAccessHubPage() {
         <Card className="admin-metric-card">
           <span className="eyebrow">Compartilhamento externo</span>
           <strong>Mediado</strong>
-          <p className="card-text">A ONG exporta os recortes necessários.</p>
+          <p className="card-text">A ONG exporta os recortes necess\u00e1rios.</p>
         </Card>
       </section>
 
@@ -161,7 +161,7 @@ export default function AdminAccessHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">LGPD na prática</p>
+              <p className="eyebrow">LGPD na pr\u00e1tica</p>
               <h2>O que fica interno e o que pode sair</h2>
             </div>
           </div>
@@ -183,8 +183,8 @@ export default function AdminAccessHubPage() {
 
           <ul className="admin-purpose-list">
             <li>Acompanhar os cadastros e consultar a base completa dentro do sistema.</li>
-            <li>Montar relatórios e materiais de decisão a partir dos recortes internos.</li>
-            <li>Baixar arquivos adequados para uso institucional e reuniões externas.</li>
+            <li>Montar relat\u00f3rios e materiais de decis\u00e3o a partir dos recortes internos.</li>
+            <li>Baixar arquivos adequados para uso institucional e reuni\u00f5es externas.</li>
             <li>Preservar fichas completas e dados pessoais no ambiente restrito da ONG.</li>
           </ul>
         </Card>
@@ -194,8 +194,8 @@ export default function AdminAccessHubPage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Histórico recente</p>
-              <h2>Movimentações acompanhadas no ambiente interno</h2>
+              <p className="eyebrow">Hist\u00f3rico recente</p>
+              <h2>Movimenta\u00e7\u00f5es acompanhadas no ambiente interno</h2>
             </div>
           </div>
 
@@ -203,9 +203,9 @@ export default function AdminAccessHubPage() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Ação</th>
-                  <th>Responsável</th>
-                  <th>Área</th>
+                  <th>A\u00e7\u00e3o</th>
+                  <th>Respons\u00e1vel</th>
+                  <th>\u00c1rea</th>
                   <th>Detalhe</th>
                   <th>Data</th>
                 </tr>
