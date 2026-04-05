@@ -16,7 +16,6 @@ import type {
   ProfessionalFormResponse,
   YouthFormResponse,
 } from '../types/forms'
-import { repairText } from '../utils/repairText'
 
 type AccessFloatingMenuProps = {
   open: boolean
@@ -856,7 +855,7 @@ function parseNumericSelection(value: string, fallback = 0) {
 }
 
 function normalizeTextValue(value: string) {
-  return repairText(value).trim()
+  return value.trim()
 }
 
 function normalizeOptionalTextValue(value: string) {
@@ -871,7 +870,7 @@ function normalizeTextList(values: string[]) {
 function renderSelectOptions(options: OptionItem[]) {
   return options.map((item) => (
     <option key={item.value} value={item.value}>
-      {repairText(item.label)}
+      {item.label}
     </option>
   ))
 }
@@ -879,7 +878,7 @@ function renderSelectOptions(options: OptionItem[]) {
 function renderRegionOptions() {
   return regionOptions.map((item) => (
     <option key={item.value} value={item.value}>
-      {repairText(item.label)}
+      {item.label}
     </option>
   ))
 }
@@ -927,7 +926,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
     return statesToRender.map((item) => (
       <option key={item.value} value={item.value}>
-        {repairText(item.label)}
+        {item.label}
       </option>
     ))
   }
@@ -1930,7 +1929,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (currentStep === totalSteps - 1 && antiBotEnabled && !captchaToken) {
-      setStepError('Conclua a validacao de seguranca antes de enviar o cadastro.')
+      setStepError('Conclua a validação de segurança antes de enviar o cadastro.')
       return false
     }
 
@@ -3343,7 +3342,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                     <Badge dark>Acesso</Badge>
                     <h3 className="access-panel-title">Escolha seu perfil</h3>
                     <p className="access-panel-text">
-                      {repairText('Selecione a opção que melhor representa você para abrir o formulário certo.')}
+                      Selecione a opção que melhor representa você para abrir o formulário certo.
                     </p>
                   </>
                 ) : (
@@ -3351,8 +3350,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                     <button type="button" className="access-back-link" onClick={handleTopBack}>
                       Voltar
                     </button>
-                    <p className="access-panel-sector">{repairText(currentMeta?.sector)}</p>
-                    <h3 className="access-panel-title">{repairText(currentMeta?.title)}</h3>
+                    <p className="access-panel-sector">{currentMeta?.sector}</p>
+                    <h3 className="access-panel-title">{currentMeta?.title}</h3>
                     <div className="access-progress-wrap">
                       <div className="access-progress-bar">
                         <div className="access-progress-fill" style={{ width: `${progress}%` }} />
@@ -3371,11 +3370,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             {view === 'menu' ? (
               <div className="access-options-grid">
                 {accessOptions.map((item) => (
-                  <button key={repairText(item.label)} type="button" className={`access-option-card ${item.accentClass}`} onClick={() => handleOptionSelect(item.label)}>
+                  <button key={item.label} type="button" className={`access-option-card ${item.accentClass}`} onClick={() => handleOptionSelect(item.label)}>
                     <div className="access-option-accent" />
                     <div className="access-option-content">
-                      <strong>{repairText(item.label)}</strong>
-                      <p>{repairText(item.description)}</p>
+                      <strong>{item.label}</strong>
+                      <p>{item.description}</p>
                     </div>
                     <span className="access-option-icon">
                       <ChevronRight size={18} />
@@ -3392,7 +3391,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                     <div className="access-field access-field-full">
                       <span>Cadastro enviado com sucesso</span>
                       <strong>Os dados foram recebidos com sucesso.</strong>
-                      <small>{repairText('Obrigado por contribuir com o mapeamento nacional da dança.')}</small>
+                      <small>Obrigado por contribuir com o mapeamento nacional da dança.</small>
                     </div>
                     <div className="access-form-actions">
                       <button type="button" className="access-action-btn is-primary" onClick={handleClose}>
@@ -3404,7 +3403,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                   <>
                     {renderCurrentStep()}
                     <label className="access-honeypot" aria-hidden="true">
-                      <span>Campo de validacao</span>
+                      <span>Campo de validação</span>
                       <input
                         tabIndex={-1}
                         autoComplete="off"
@@ -3414,16 +3413,16 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                     </label>
                     {currentStep === totalSteps - 1 && antiBotEnabled ? (
                       <div className="access-security-card">
-                        <span className="access-security-label">Validacao de seguranca</span>
+                        <span className="access-security-label">Validação de segurança</span>
                         <TurnstileWidget
                           key={captchaRenderKey}
                           siteKey={TURNSTILE_SITE_KEY}
                           onTokenChange={setCaptchaToken}
                         />
-                        <small>Conclua a validacao para liberar o envio do cadastro.</small>
+                        <small>Conclua a validação para liberar o envio do cadastro.</small>
                       </div>
                     ) : null}
-                    {stepError && <p className="access-step-error">{repairText(stepError)}</p>}
+                    {stepError && <p className="access-step-error">{stepError}</p>}
                     <div className="access-form-actions">
                       <button type="button" className="access-action-btn is-secondary" onClick={handlePrevious}>
                         Anterior
@@ -3445,7 +3444,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                           ? 'Enviando...'
                           : currentStep === totalSteps - 1
                             ? 'Finalizar Cadastro'
-                            : repairText('Próximo')}
+                            : 'Próximo'}
                       </button>
                     </div>
                   </>
