@@ -595,7 +595,9 @@ function parseBooleanChoice(value: string) {
 }
 
 function sanitizeIntegerInput(value: string, maxDigits = MAX_GENERIC_INTEGER_DIGITS) {
-  return value.replace(/\D/g, '').slice(0, maxDigits)
+  const cleanedValue = value.replace(/[^\d,.-]/g, '')
+  const integerDigits = cleanedValue.split(/[.,-]/)[0]?.replace(/\D/g, '') ?? ''
+  return integerDigits.slice(0, maxDigits)
 }
 
 function sanitizeCurrencyInput(
@@ -655,6 +657,26 @@ function parseStrictCurrencyValue(value: string) {
   return parsedValue
 }
 
+function parseStrictIntegerValue(value: string, maxValue = Number.MAX_SAFE_INTEGER) {
+  const normalizedValue = value.trim()
+
+  if (!normalizedValue) {
+    return null
+  }
+
+  if (!/^\d+$/.test(normalizedValue)) {
+    return null
+  }
+
+  const parsedValue = Number(normalizedValue)
+
+  if (!Number.isSafeInteger(parsedValue) || parsedValue < 0 || parsedValue > maxValue) {
+    return null
+  }
+
+  return parsedValue
+}
+
 function validateCurrencyFields(fields: Array<{ label: string; value: string; required?: boolean }>) {
   for (const field of fields) {
     const normalizedValue = field.value.trim()
@@ -669,6 +691,28 @@ function validateCurrencyFields(fields: Array<{ label: string; value: string; re
 
     if (parseStrictCurrencyValue(normalizedValue) === null) {
       return `${field.label} deve ter um valor válido, com até 9 dígitos e 2 casas decimais.`
+    }
+  }
+
+  return null
+}
+
+function validateIntegerFields(
+  fields: Array<{ label: string; value: string; maxValue: number; required?: boolean }>
+) {
+  for (const field of fields) {
+    const normalizedValue = field.value.trim()
+
+    if (!normalizedValue) {
+      if (field.required) {
+        return `Preencha ${field.label.toLowerCase()}.`
+      }
+
+      continue
+    }
+
+    if (parseStrictIntegerValue(normalizedValue, field.maxValue) === null) {
+      return `${field.label} deve usar um número inteiro válido dentro do limite permitido.`
     }
   }
 
@@ -810,14 +854,6 @@ function parseNumericSelection(value: string, fallback = 0) {
   return parsedValue ?? fallback
 }
 
-function parseOptionalChoice(value: string, fallback = false) {
-  if (!value) {
-    return fallback
-  }
-
-  return parseBooleanChoice(value)
-}
-
 function inferAnnualBudgetRange(monthlyRevenue: number) {
   const annualRevenue = monthlyRevenue * 12
 
@@ -827,6 +863,8 @@ function inferAnnualBudgetRange(monthlyRevenue: number) {
   if (annualRevenue <= 1000000) return 'R$ 300 mil a R$ 1 milhão'
   return 'Mais de R$ 1 milhão'
 }
+
+void inferAnnualBudgetRange
 
 function renderSelectOptions(options: OptionItem[]) {
   return options.map((item) => (
@@ -1337,6 +1375,17 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
+    if (currentStep === 2) {
+      const integerError = validateIntegerFields([
+        { label: 'a idade', value: minorForm.age, maxValue: 17, required: true },
+      ])
+
+      if (integerError) {
+        setStepError(integerError)
+        return false
+      }
+    }
+
     if (currentStep === 3 && !minorForm.familyIncome) {
       setStepError('Selecione a faixa de renda familiar.')
       return false
@@ -1435,6 +1484,17 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
+    if (currentStep === 2) {
+      const integerError = validateIntegerFields([
+        { label: 'a idade', value: adultForm.age, maxValue: 99, required: true },
+      ])
+
+      if (integerError) {
+        setStepError(integerError)
+        return false
+      }
+    }
+
     if (currentStep === 4) {
       const currencyError = validateCurrencyFields([
         { label: 'a renda mensal total', value: adultForm.monthlyIncomeTotal, required: true },
@@ -1447,14 +1507,29 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       }
     }
 
+    if (
+      currentStep === 5 &&
+      (!adultForm.schoolFee ||
+        !adultForm.courses ||
+        !adultForm.costumes ||
+        !adultForm.festivals ||
+        !adultForm.travel ||
+        !adultForm.otherCosts ||
+        adultForm.whoPays.length === 0 ||
+        !adultForm.searchesContent)
+    ) {
+      setStepError('Preencha os gastos mensais com danÃ§a, quem banca esses custos e a busca de conteÃºdos.')
+      return false
+    }
+
     if (currentStep === 5) {
       const currencyError = validateCurrencyFields([
-        { label: 'a mensalidade de escola ou grupo', value: adultForm.schoolFee },
+        { label: 'a mensalidade de escola ou grupo', value: adultForm.schoolFee, required: true },
         { label: 'o gasto com cursos e formações', value: adultForm.courses },
         { label: 'o gasto com figurinos e acessórios', value: adultForm.costumes },
         { label: 'o gasto com festivais e competições', value: adultForm.festivals },
         { label: 'o gasto com viagens e deslocamentos', value: adultForm.travel },
-        { label: 'outros gastos', value: adultForm.otherCosts },
+        { label: 'outros gastos', value: adultForm.otherCosts, required: true },
       ])
 
       if (currencyError) {
@@ -1463,8 +1538,40 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       }
     }
 
+    if (
+      currentStep === 6 &&
+      (!adultForm.academicEducation ||
+        !adultForm.studiesDanceNow ||
+        !adultForm.wantsFormalDanceStudy ||
+        !adultForm.presentialCoursesPerYear ||
+        !adultForm.onlineCoursesPerYear)
+    ) {
+      setStepError('Preencha formaÃ§Ã£o acadÃªmica, estudos em danÃ§a e a quantidade de cursos presenciais e online por ano.')
+      return false
+    }
+
+    if (currentStep === 6) {
+      const integerError = validateIntegerFields([
+        { label: 'a quantidade de cursos presenciais por ano', value: adultForm.presentialCoursesPerYear, maxValue: 9999, required: true },
+        { label: 'a quantidade de cursos online por ano', value: adultForm.onlineCoursesPerYear, maxValue: 9999, required: true },
+      ])
+
+      if (integerError) {
+        setStepError(integerError)
+        return false
+      }
+    }
+
     if (currentStep === 6 && !adultForm.academicEducation) {
       setStepError('Selecione a formação acadêmica.')
+      return false
+    }
+
+    if (
+      currentStep === 7 &&
+      (!adultForm.participatedPublicCalls || !adultForm.wasSelected || !adultForm.appliedNotSelected)
+    ) {
+      setStepError('Informe a participaÃ§Ã£o em editais, seleÃ§Ã£o e inscriÃ§Ãµes nÃ£o contempladas.')
       return false
     }
 
@@ -1619,8 +1726,38 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
+    if (
+      currentStep === 1 &&
+      institutionForm.foundationYearExact &&
+      (Number(institutionForm.foundationYearExact) < 1900 || Number(institutionForm.foundationYearExact) > 2100)
+    ) {
+      setStepError('Informe um ano de fundaÃ§Ã£o vÃ¡lido entre 1900 e 2100.')
+      return false
+    }
+
+    if (currentStep === 1) {
+      const integerError = validateIntegerFields([
+        { label: 'o ano de fundaÃ§Ã£o', value: institutionForm.foundationYearExact, maxValue: 2100, required: true },
+      ])
+
+      if (integerError) {
+        setStepError(integerError)
+        return false
+      }
+    }
+
     if (currentStep === 2 && (!institutionForm.state || !institutionForm.city || !institutionForm.locationType)) {
       setStepError('Preencha estado, cidade e tipo de localização da instituição.')
+      return false
+    }
+
+    if (
+      currentStep === 2 &&
+      (!institutionForm.region ||
+        !institutionForm.actsInPeriphery ||
+        !institutionForm.actsInRuralArea)
+    ) {
+      setStepError('Preencha regiÃ£o e informe a atuaÃ§Ã£o em periferia e Ã¡rea rural.')
       return false
     }
 
@@ -1633,6 +1770,30 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     ) {
       setStepError('Preencha modalidades, número de salas, aulas por semana e tipo de espaço.')
       return false
+    }
+
+    if (
+      currentStep === 3 &&
+      (!institutionForm.hasOwnHeadquarters ||
+        !institutionForm.rentedHeadquarters ||
+        !institutionForm.usesPublicSpace ||
+        !institutionForm.averageAudienceCapacity)
+    ) {
+      setStepError('Preencha uso da sede e capacidade mÃ©dia de pÃºblico.')
+      return false
+    }
+
+    if (currentStep === 3) {
+      const integerError = validateIntegerFields([
+        { label: 'o nÃºmero de salas', value: institutionForm.numberOfRooms, maxValue: 999, required: true },
+        { label: 'as aulas por semana', value: institutionForm.classesPerWeek, maxValue: 999, required: true },
+        { label: 'a capacidade mÃ©dia de pÃºblico', value: institutionForm.averageAudienceCapacity, maxValue: 999999, required: true },
+      ])
+
+      if (integerError) {
+        setStepError(integerError)
+        return false
+      }
     }
 
     if (
@@ -1660,6 +1821,25 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       }
     }
 
+    if (currentStep === 4 && institutionForm.hasScholarShip === 'sim' && !institutionForm.scholarshipCount) {
+      setStepError('Informe a quantidade de bolsistas atendidos pela instituiÃ§Ã£o.')
+      return false
+    }
+
+    if (currentStep === 4) {
+      const integerError = validateIntegerFields([
+        { label: 'o nÃºmero de professores', value: institutionForm.numberOfTeachers, maxValue: 9999, required: true },
+        { label: 'a mÃ©dia de alunos ativos', value: institutionForm.averageStudents, maxValue: 999999, required: true },
+        { label: 'os alunos ativos no momento', value: institutionForm.activeStudents, maxValue: 999999, required: true },
+        { label: 'a quantidade de bolsistas', value: institutionForm.scholarshipCount, maxValue: 999999, required: institutionForm.hasScholarShip === 'sim' },
+      ])
+
+      if (integerError) {
+        setStepError(integerError)
+        return false
+      }
+    }
+
     if (
       currentStep === 5 &&
       (!institutionForm.cltEmployees ||
@@ -1681,6 +1861,25 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
       if (currencyError) {
         setStepError(currencyError)
+        return false
+      }
+    }
+
+    if (currentStep === 5 && (!institutionForm.numberOfStaff || !institutionForm.monthlyAudience)) {
+      setStepError('Preencha o tamanho da equipe e o pÃºblico mensal da instituiÃ§Ã£o.')
+      return false
+    }
+
+    if (currentStep === 5) {
+      const integerError = validateIntegerFields([
+        { label: 'os funcionÃ¡rios CLT', value: institutionForm.cltEmployees, maxValue: 99999, required: true },
+        { label: 'os contratos PJ', value: institutionForm.pjContracts, maxValue: 99999, required: true },
+        { label: 'o nÃºmero total de pessoas na equipe', value: institutionForm.numberOfStaff, maxValue: 99999, required: true },
+        { label: 'o pÃºblico mensal', value: institutionForm.monthlyAudience, maxValue: 999999, required: true },
+      ])
+
+      if (integerError) {
+        setStepError(integerError)
         return false
       }
     }
@@ -1852,31 +2051,31 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         hasOtherIncome: parseBooleanChoice(adultForm.hasOtherIncomeChoice),
         totalIncome: parseNumericSelection(adultForm.monthlyIncomeTotal),
         danceIncome: parseNumericSelection(adultForm.danceIncome),
-        careerInterest: parseOptionalChoice(adultForm.careerInterest),
+        careerInterest: parseBooleanChoice(adultForm.careerInterest),
         householdIncomeRange: adultForm.familyIncome || null,
         rolesPerformed: adultForm.danceRoles.join(', ') || null,
-        workType: adultForm.workTypeChoice || (worksWithDance ? 'Autônoma' : 'Não informado'),
+        workType: adultForm.workTypeChoice,
         coursesPerYear: Number(adultForm.presentialCoursesPerYear || 0),
         onlineCoursesPerYear: Number(adultForm.onlineCoursesPerYear || 0),
-        currentlyStudies: parseOptionalChoice(adultForm.studiesDanceNow),
+        currentlyStudies: parseBooleanChoice(adultForm.studiesDanceNow),
         academicEducation: adultForm.academicEducation || null,
         formalStudyType: adultForm.danceEducationLevel || null,
-        wantsFormalStudy: parseOptionalChoice(adultForm.wantsFormalDanceStudy),
+        wantsFormalStudy: parseBooleanChoice(adultForm.wantsFormalDanceStudy),
         monthlyCostCourses: parseNumericSelection(adultForm.courses),
         monthlyCostCostumes: parseNumericSelection(adultForm.costumes),
         monthlyCostEvents: parseNumericSelection(adultForm.festivals),
         monthlyCostTravel: parseNumericSelection(adultForm.travel),
         monthlyCostSchool: parseNumericSelection(adultForm.schoolFee),
         monthlyCostOthers: parseNumericSelection(adultForm.otherCosts),
-        costResponsibility: adultForm.whoPays.join(', ') || 'Nao informado',
+        costResponsibility: adultForm.whoPays.join(', '),
         participatedInEdital: parseBooleanChoice(adultForm.participatedPublicCalls),
-        approvedInEdital: parseOptionalChoice(adultForm.wasSelected),
-        appliedNotApproved: parseOptionalChoice(adultForm.appliedNotSelected),
+        approvedInEdital: parseBooleanChoice(adultForm.wasSelected),
+        appliedNotApproved: parseBooleanChoice(adultForm.appliedNotSelected),
         participatedInEditalStatus: adultForm.participatedPublicCalls || null,
         approvedInEditalStatus: adultForm.wasSelected || null,
         appliedNotApprovedStatus: adultForm.appliedNotSelected || null,
         editalDifficulty: adultForm.editalDifficulty.trim() || null,
-        searchesContent: parseOptionalChoice(adultForm.searchesContent),
+        searchesContent: parseBooleanChoice(adultForm.searchesContent),
         consentCode: activeConsentTerm.code,
         consentAccepted: adultForm.consentStats,
         consentContact: adultForm.consentContact,
@@ -1924,26 +2123,15 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       const cltEmployees = parseNumericSelection(institutionForm.cltEmployees)
       const pjContracts = parseNumericSelection(institutionForm.pjContracts)
       const monthlyRevenue = parseNumericSelection(institutionForm.monthlyRevenue)
-      const numberOfStaff =
-        parseNumericSelection(institutionForm.numberOfStaff, cltEmployees + pjContracts) ||
-        cltEmployees + pjContracts
-      const activeStudents =
-        parseNumericSelection(institutionForm.activeStudents, averageStudents) || averageStudents
-      const monthlyAudience =
-        parseNumericSelection(institutionForm.monthlyAudience, averageStudents) || averageStudents
-      const averageAudienceCapacity =
-        parseNumericSelection(institutionForm.averageAudienceCapacity, numberOfRooms * 30) ||
-        numberOfRooms * 30
-      const hasOwnHeadquarters =
-        institutionForm.spaceType === 'proprio' || parseOptionalChoice(institutionForm.hasOwnHeadquarters)
-      const rentedHeadquarters =
-        institutionForm.spaceType === 'alugado' || parseOptionalChoice(institutionForm.rentedHeadquarters)
-      const usesPublicSpace =
-        institutionForm.spaceType === 'publico' || parseOptionalChoice(institutionForm.usesPublicSpace)
-      const actsInPeriphery =
-        institutionForm.locationType === 'periférica' || parseOptionalChoice(institutionForm.actsInPeriphery)
-      const actsInRuralArea =
-        institutionForm.locationType === 'rural' || parseOptionalChoice(institutionForm.actsInRuralArea)
+      const numberOfStaff = parseNumericSelection(institutionForm.numberOfStaff)
+      const activeStudents = parseNumericSelection(institutionForm.activeStudents)
+      const monthlyAudience = parseNumericSelection(institutionForm.monthlyAudience)
+      const averageAudienceCapacity = parseNumericSelection(institutionForm.averageAudienceCapacity)
+      const hasOwnHeadquarters = parseBooleanChoice(institutionForm.hasOwnHeadquarters)
+      const rentedHeadquarters = parseBooleanChoice(institutionForm.rentedHeadquarters)
+      const usesPublicSpace = parseBooleanChoice(institutionForm.usesPublicSpace)
+      const actsInPeriphery = parseBooleanChoice(institutionForm.actsInPeriphery)
+      const actsInRuralArea = parseBooleanChoice(institutionForm.actsInRuralArea)
 
       const response = await submitInstitutionForm({
         responsibleName: institutionForm.responsibleName.trim(),
@@ -1970,15 +2158,18 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         infrastructureItems: institutionForm.infrastructureItems.join(', ') || null,
         hasCnpj: parseBooleanChoice(institutionForm.hasCnpj),
         hasScholarShip: parseBooleanChoice(institutionForm.hasScholarShip),
-        scholarshipCount: parseNumericSelection(institutionForm.scholarshipCount, 0),
-        studentsPayMonthlyFee: parseOptionalChoice(institutionForm.studentsPayMonthlyFee, monthlyFee > 0),
+        scholarshipCount:
+          institutionForm.hasScholarShip === 'sim'
+            ? parseNumericSelection(institutionForm.scholarshipCount)
+            : null,
+        studentsPayMonthlyFee: parseBooleanChoice(institutionForm.studentsPayMonthlyFee),
         cltEmployees,
         pjContracts,
         monthlyRevenue,
         usesManagementSystem: parseBooleanChoice(institutionForm.usesManagementSystem),
         mainChallenges: institutionForm.mainChallenges.trim(),
-        eventCostResponsibility: institutionForm.eventCostResponsibility || null,
-        staffRoles: institutionForm.staffRoles.join(', ') || null,
+        eventCostResponsibility: institutionForm.eventCostResponsibility,
+        staffRoles: institutionForm.staffRoles.join(', '),
         actsInPeriphery,
         actsInRuralArea,
         hasOwnHeadquarters,
@@ -1988,31 +2179,26 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         activeStudents,
         numberOfStaff,
         monthlyAudience,
-        servesVulnerablePopulation: parseOptionalChoice(institutionForm.servesVulnerablePopulation),
-        mainIncomeSources:
-          institutionForm.mainIncomeSources.join(', ') ||
-          (monthlyFee > 0 ? 'Mensalidades de alunos' : 'Nao informado'),
-        receivedPublicFundingLast2Years: parseOptionalChoice(
+        servesVulnerablePopulation: parseBooleanChoice(institutionForm.servesVulnerablePopulation),
+        mainIncomeSources: institutionForm.mainIncomeSources.join(', '),
+        receivedPublicFundingLast2Years: parseBooleanChoice(
           institutionForm.receivedPublicFundingLast2Years,
         ),
-        registeredInPublicCalls: parseOptionalChoice(institutionForm.registeredInPublicCalls),
-        approvedInPublicCalls: parseOptionalChoice(institutionForm.approvedInPublicCalls),
+        registeredInPublicCalls: parseBooleanChoice(institutionForm.registeredInPublicCalls),
+        approvedInPublicCalls: parseBooleanChoice(institutionForm.approvedInPublicCalls),
         editalDifficulties: institutionForm.editalDifficulties.join(', ') || null,
-        annualBudgetRange:
-          institutionForm.annualBudgetRange || inferAnnualBudgetRange(monthlyRevenue),
-        knowsMunicipalCulturePlan: parseOptionalChoice(institutionForm.knowsMunicipalCulturePlan),
-        participatesInCultureCouncil: parseOptionalChoice(institutionForm.participatesInCultureCouncil),
-        interestedInPublicPartnerships: parseOptionalChoice(
+        annualBudgetRange: institutionForm.annualBudgetRange,
+        knowsMunicipalCulturePlan: parseBooleanChoice(institutionForm.knowsMunicipalCulturePlan),
+        participatesInCultureCouncil: parseBooleanChoice(institutionForm.participatesInCultureCouncil),
+        interestedInPublicPartnerships: parseBooleanChoice(
           institutionForm.interestedInPublicPartnerships,
-          true,
         ),
-        knowsPublicPolicyAccessMechanisms: parseOptionalChoice(
+        knowsPublicPolicyAccessMechanisms: parseBooleanChoice(
           institutionForm.knowsPublicPolicyAccessMechanisms,
         ),
-        promotionChannels: institutionForm.promotionChannels.join(', ') || null,
-        wouldUseFreePromotionPlatform: parseOptionalChoice(
+        promotionChannels: institutionForm.promotionChannels.join(', '),
+        wouldUseFreePromotionPlatform: parseBooleanChoice(
           institutionForm.wouldUseFreePromotionPlatform,
-          true,
         ),
         consentCode: activeConsentTerm.code,
         consentAccepted: institutionForm.consentStats,
