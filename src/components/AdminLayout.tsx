@@ -10,7 +10,7 @@ const navSections = [
     items: [
       {
         to: '/painel-interno/dashboard',
-        label: 'Vis\u00e3o geral',
+        label: 'Visão geral',
         icon: Home,
       },
       {
@@ -20,17 +20,17 @@ const navSections = [
       },
       {
         to: '/painel-interno/dados',
-        label: 'Dados e an\u00e1lises',
+        label: 'Dados e análises',
         icon: BarChart3,
       },
       {
         to: '/painel-interno/exportacoes',
-        label: 'Exporta\u00e7\u00f5es',
+        label: 'Exportações',
         icon: Download,
       },
       {
         to: '/painel-interno/acessos',
-        label: 'Seguran\u00e7a e LGPD',
+        label: 'Segurança e LGPD',
         icon: ShieldCheck,
       },
     ],
@@ -53,19 +53,19 @@ export default function AdminLayout() {
     <div className="admin-app-shell">
       <Seo
         title="Painel interno da ONG"
-        description="Ambiente interno do Banco Nacional de Dados da Dan\u00e7a do Brasil para consulta da base, an\u00e1lises, exporta\u00e7\u00f5es e seguran\u00e7a."
+        description="Ambiente interno do Banco Nacional de Dados da Dança do Brasil para consulta da base, análises, exportações e segurança."
         robots="noindex,nofollow"
       />
       <aside className="admin-sidebar">
         <div className="admin-sidebar-brand">
-          <p className="eyebrow">SIBRADAN\u00c7A</p>
+          <p className="eyebrow">SIBRADANÇA</p>
           <h1>Painel interno da ONG</h1>
           <p className="admin-sidebar-text">
             Base, cadastros, exportações e segurança em um único ambiente de trabalho.
           </p>
         </div>
 
-        <nav className="admin-sidebar-nav" aria-label="Navega\u00e7\u00e3o do painel interno">
+        <nav className="admin-sidebar-nav" aria-label="Navegação do painel interno">
           {navSections.map((section) => (
             <div key={section.title} className="admin-sidebar-group">
               <p className="admin-sidebar-group-title">{section.title}</p>

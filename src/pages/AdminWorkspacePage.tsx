@@ -5,9 +5,7 @@ import { Card } from '../components/Card'
 import { AdminZeroState } from '../components/AdminZeroState'
 import { ChartPanel } from '../components/ChartPanel'
 import { MetricCard } from '../components/MetricCard'
-import {
-  getAdminBootstrap,
-} from '../services/admin.service'
+import { getAdminBootstrap } from '../services/admin.service'
 import type {
   AdminBiStateSummaryResponse,
   AdminInsightsDashboardResponse,
@@ -23,33 +21,33 @@ const workAreas = [
     description: 'Protocolos, fichas completas e consulta individual de cada resposta.',
     route: '/painel-interno/cadastros',
     actionLabel: 'Abrir cadastros',
-    outputs: ['Protocolos', 'Fichas completas', 'Atualiza\u00e7\u00f5es'],
+    outputs: ['Protocolos', 'Fichas completas', 'Atualizações'],
   },
   {
-    title: 'Dados e an\u00e1lises',
+    title: 'Dados e análises',
     audience: 'Leitura nacional',
     description:
-      'Recortes por setor, territ\u00f3rio, modalidade, forma\u00e7\u00e3o, renda e pol\u00edticas p\u00fablicas.',
+      'Recortes por setor, território, modalidade, formação, renda e políticas públicas.',
     route: '/painel-interno/dados',
     actionLabel: 'Abrir dados',
-    outputs: ['Indicadores', 'Territ\u00f3rio', 'Tabelas'],
+    outputs: ['Indicadores', 'Território', 'Tabelas'],
   },
   {
-    title: 'Exporta\u00e7\u00f5es',
-    audience: 'Sa\u00eddas da base',
-    description: 'Arquivos em PDF, Excel e CSV para rotina da equipe, apresenta\u00e7\u00f5es e Power BI.',
+    title: 'Exportações',
+    audience: 'Saídas da base',
+    description: 'Arquivos em PDF, Excel e CSV para rotina da equipe, apresentações e Power BI.',
     route: '/painel-interno/exportacoes',
-    actionLabel: 'Abrir exporta\u00e7\u00f5es',
+    actionLabel: 'Abrir exportações',
     outputs: ['PDF', 'Excel', 'CSV', 'BI'],
   },
   {
-    title: 'Seguran\u00e7a e LGPD',
-    audience: 'Prote\u00e7\u00e3o do ambiente',
+    title: 'Segurança e LGPD',
+    audience: 'Proteção do ambiente',
     description:
-      'Acessos, hist\u00f3rico de uso e regras para compartilhar recortes da base com seguran\u00e7a.',
+      'Acessos, histórico de uso e regras para compartilhar recortes da base com segurança.',
     route: '/painel-interno/acessos',
-    actionLabel: 'Abrir seguran\u00e7a',
-    outputs: ['Acessos', 'Hist\u00f3rico', 'LGPD'],
+    actionLabel: 'Abrir segurança',
+    outputs: ['Acessos', 'Histórico', 'LGPD'],
   },
 ] as const
 
@@ -123,7 +121,7 @@ export default function AdminWorkspacePage() {
         setError(
           loadError instanceof Error
             ? loadError.message
-            : 'N\u00e3o foi poss\u00edvel carregar o painel interno.',
+            : 'Não foi possível carregar o painel interno.',
         )
       } finally {
         setIsLoading(false)
@@ -137,7 +135,7 @@ export default function AdminWorkspacePage() {
     () => [
       { name: 'Jovens', value: overview?.totalYouth ?? 0 },
       { name: 'Profissionais', value: overview?.totalProfessionals ?? 0 },
-      { name: 'Institui\u00e7\u00f5es', value: overview?.totalInstitutions ?? 0 },
+      { name: 'Instituições', value: overview?.totalInstitutions ?? 0 },
     ],
     [overview],
   )
@@ -164,22 +162,22 @@ export default function AdminWorkspacePage() {
 
     const professionals = currentOverview.totalProfessionals
     const institutions = currentOverview.totalInstitutions
-    const familyFinanced = findChartValue(details.financingDistribution, 'Fam\u00edlia')
-    const publicCallParticipants = findChartValue(details.publicCallsParticipation, 'J\u00e1 participou')
+    const familyFinanced = findChartValue(details.financingDistribution, 'Família')
+    const publicCallParticipants = findChartValue(details.publicCallsParticipation, 'Já participou')
     const institutionsWithCnpj = findChartValue(details.institutionIndicators, 'Com CNPJ')
     const aboveOneMinimumWage =
-      sumChartValues(details.incomeDistribution) - findChartValue(details.incomeDistribution, 'At\u00e9 1 SM')
+      sumChartValues(details.incomeDistribution) - findChartValue(details.incomeDistribution, 'Até 1 SM')
 
     return [
       buildMetricCard(
-        'Profissionais acima de 1 sal\u00e1rio m\u00ednimo',
+        'Profissionais acima de 1 salário mínimo',
         aboveOneMinimumWage,
         professionals,
         'profissionais',
       ),
-      buildMetricCard('Custeados pela fam\u00edlia', familyFinanced, professionals, 'profissionais'),
-      buildMetricCard('Institui\u00e7\u00f5es com CNPJ', institutionsWithCnpj, institutions, 'institui\u00e7\u00f5es'),
-      buildMetricCard('Participa\u00e7\u00e3o em editais', publicCallParticipants, professionals, 'profissionais'),
+      buildMetricCard('Custeados pela família', familyFinanced, professionals, 'profissionais'),
+      buildMetricCard('Instituições com CNPJ', institutionsWithCnpj, institutions, 'instituições'),
+      buildMetricCard('Participação em editais', publicCallParticipants, professionals, 'profissionais'),
     ]
   }, [dashboard, overview])
 
@@ -196,22 +194,22 @@ export default function AdminWorkspacePage() {
       {
         label: 'Cobertura territorial',
         value: `${formatNumber(activeStates.length)} UFs`,
-        detail: `${formatPercent(activeStates.length, 27)} do territ\u00f3rio nacional j\u00e1 aparece na base.`,
+        detail: `${formatPercent(activeStates.length, 27)} do território nacional já aparece na base.`,
       },
       {
         label: 'Setores com registros',
         value: `${sectorDistribution.filter((item) => item.value > 0).length}/3`,
-        detail: 'Jovens, profissionais e institui\u00e7\u00f5es j\u00e1 est\u00e3o reunidos na base.',
+        detail: 'Jovens, profissionais e instituições já estão reunidos na base.',
       },
       {
-        label: '\u00daltimo cadastro',
+        label: 'Último cadastro',
         value: latestSubmission ? formatBackendDateTime(latestSubmission) : 'Sem registro',
         detail: 'Registro mais recente recebido pelo sistema.',
       },
       {
-        label: 'UF com maior presen\u00e7a',
+        label: 'UF com maior presença',
         value: topState ? `${topState.stateCode} (${formatNumber(topState.totalSubmissions)})` : 'Sem registro',
-        detail: `${formatNumber(totalResponses)} cadastros j\u00e1 comp\u00f5em a leitura atual da base.`,
+        detail: `${formatNumber(totalResponses)} cadastros já compõem a leitura atual da base.`,
       },
     ]
   }, [overview, sectorDistribution, stateSummary])
@@ -224,24 +222,24 @@ export default function AdminWorkspacePage() {
 
     return [
       {
-        label: 'Faixa et\u00e1ria em destaque',
+        label: 'Faixa etária em destaque',
         value: ageLeader ? `${ageLeader.name} (${formatNumber(ageLeader.value)})` : 'Sem leitura',
-        detail: 'Faixa et\u00e1ria mais presente na leitura atual da base.',
+        detail: 'Faixa etária mais presente na leitura atual da base.',
       },
       {
-        label: 'G\u00eanero em destaque',
+        label: 'Gênero em destaque',
         value: genderLeader ? `${genderLeader.name} (${formatNumber(genderLeader.value)})` : 'Sem leitura',
-        detail: 'Recorte de g\u00eanero mais presente entre os registros dispon\u00edveis.',
+        detail: 'Recorte de gênero mais presente entre os registros disponíveis.',
       },
       {
         label: 'Modalidade em destaque',
         value: modalityLeader ? `${modalityLeader.name} (${formatNumber(modalityLeader.value)})` : 'Sem leitura',
-        detail: 'Modalidade mais recorrente entre os formul\u00e1rios.',
+        detail: 'Modalidade mais recorrente entre os formulários.',
       },
       {
-        label: 'Editais e apoio p\u00fablico',
+        label: 'Editais e apoio público',
         value: callLeader ? `${callLeader.name} (${formatNumber(callLeader.value)})` : 'Sem leitura',
-        detail: 'Leitura mais presente nos recortes ligados a editais e pol\u00edticas p\u00fablicas.',
+        detail: 'Leitura mais presente nos recortes ligados a editais e políticas públicas.',
       },
     ]
   }, [dashboard])
@@ -253,10 +251,10 @@ export default function AdminWorkspacePage() {
       <header className="admin-page-header admin-page-header-compact">
         <div>
           <p className="eyebrow">Painel da ONG</p>
-          <h2>Banco Nacional de Dados da Dan\u00e7a do Brasil</h2>
+          <h2>Banco Nacional de Dados da Dança do Brasil</h2>
           <p className="admin-page-subtitle">
             A ONG consulta os cadastros, acompanha a leitura nacional da base e prepara os
-            arquivos institucionais em um \u00fanico ambiente.
+            arquivos institucionais em um único ambiente.
           </p>
         </div>
       </header>
@@ -283,25 +281,25 @@ export default function AdminWorkspacePage() {
         <Card className="admin-metric-card">
           <span className="eyebrow">Base total</span>
           <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalResponses) : '-'}</strong>
-          <p className="card-text">Cadastros dispon\u00edveis na base.</p>
+          <p className="card-text">Cadastros disponíveis na base.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Jovens</span>
           <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalYouth) : '-'}</strong>
-          <p className="card-text">Frente jovem da dan\u00e7a.</p>
+          <p className="card-text">Frente jovem da dança.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Profissionais</span>
           <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalProfessionals) : '-'}</strong>
-          <p className="card-text">Frente profissional da dan\u00e7a.</p>
+          <p className="card-text">Frente profissional da dança.</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Institui\u00e7\u00f5es</span>
+          <span className="eyebrow">Instituições</span>
           <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalInstitutions) : '-'}</strong>
-          <p className="card-text">Escolas, grupos, projetos e espa\u00e7os.</p>
+          <p className="card-text">Escolas, grupos, projetos e espaços.</p>
         </Card>
       </section>
 
@@ -310,14 +308,14 @@ export default function AdminWorkspacePage() {
           <section className="admin-section-grid">
             <AdminZeroState
               className="admin-panel-card-full"
-              title="A nova base ainda n\u00e3o recebeu cadastros"
-              description="O painel j\u00e1 est\u00e1 conectado ao banco novo, mas esta etapa ainda n\u00e3o recebeu formul\u00e1rios enviados. Assim que os primeiros protocolos entrarem, a leitura nacional come\u00e7a a aparecer aqui."
+              title="A nova base ainda não recebeu cadastros"
+              description="O painel já está conectado ao banco novo, mas esta etapa ainda não recebeu formulários enviados. Assim que os primeiros protocolos entrarem, a leitura nacional começa a aparecer aqui."
               items={[
-                'Os formul\u00e1rios p\u00fablicos j\u00e1 alimentam esta base nova.',
+                'Os formulários públicos já alimentam esta base nova.',
                 'As fichas completas aparecem conforme os cadastros entram.',
-                'Gr\u00e1ficos, tabelas e exporta\u00e7\u00f5es passam a refletir os protocolos recebidos.',
+                'Gráficos, tabelas e exportações passam a refletir os protocolos recebidos.',
               ]}
-              note="Enquanto a base est\u00e1 vazia, a equipe ainda pode acessar os m\u00f3dulos do sistema e preparar a rotina de trabalho."
+              note="Enquanto a base está vazia, a equipe ainda pode acessar os módulos do sistema e preparar a rotina de trabalho."
             />
           </section>
         ) : (
@@ -325,8 +323,8 @@ export default function AdminWorkspacePage() {
             <Card className="admin-panel-card">
               <div className="admin-panel-header">
                 <div>
-                  <p className="eyebrow">Base em opera\u00e7\u00e3o</p>
-                  <h2>Como a base est\u00e1 hoje</h2>
+                  <p className="eyebrow">Base em operação</p>
+                  <h2>Como a base está hoje</h2>
                 </div>
               </div>
 
@@ -371,7 +369,7 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">M\u00f3dulos do sistema</p>
+              <p className="eyebrow">Módulos do sistema</p>
               <h2>Onde a equipe trabalha a base</h2>
             </div>
           </div>
@@ -409,38 +407,38 @@ export default function AdminWorkspacePage() {
               data={sectorDistribution}
               eyebrowLabel="Base atual"
               isLoading={isLoading}
-              emptyMessage="Carregando distribui\u00e7\u00e3o dos setores..."
-              noDataMessage="Os gr\u00e1ficos come\u00e7am a aparecer quando a base receber os primeiros protocolos."
+              emptyMessage="Carregando distribuição dos setores..."
+              noDataMessage="Os gráficos começam a aparecer quando a base receber os primeiros protocolos."
             />
 
             <ChartPanel
-              title="Participa\u00e7\u00e3o por setor"
+              title="Participação por setor"
               data={sectorDistribution}
               type="pie"
               eyebrowLabel="Base atual"
               isLoading={isLoading}
-              emptyMessage="Carregando participa\u00e7\u00e3o dos setores..."
-              noDataMessage="Os gr\u00e1ficos come\u00e7am a aparecer quando a base receber os primeiros protocolos."
+              emptyMessage="Carregando participação dos setores..."
+              noDataMessage="Os gráficos começam a aparecer quando a base receber os primeiros protocolos."
             />
 
             <ChartPanel
-              title="Faixa et\u00e1ria"
+              title="Faixa etária"
               data={dashboard?.profile.ageDistribution ?? []}
               type="pie"
               eyebrowLabel="Pessoas"
               isLoading={isLoading}
-              emptyMessage="Carregando faixa et\u00e1ria..."
-              noDataMessage="Ainda n\u00e3o h\u00e1 cadastros suficientes para exibir este recorte."
+              emptyMessage="Carregando faixa etária..."
+              noDataMessage="Ainda não há cadastros suficientes para exibir este recorte."
             />
 
             <ChartPanel
-              title="G\u00eanero"
+              title="Gênero"
               data={dashboard?.profile.genderDistribution ?? []}
               type="pie"
               eyebrowLabel="Pessoas"
               isLoading={isLoading}
-              emptyMessage="Carregando g\u00eanero..."
-              noDataMessage="Ainda n\u00e3o h\u00e1 cadastros suficientes para exibir este recorte."
+              emptyMessage="Carregando gênero..."
+              noDataMessage="Ainda não há cadastros suficientes para exibir este recorte."
             />
           </section>
 
@@ -448,19 +446,19 @@ export default function AdminWorkspacePage() {
             <ChartPanel
               title="Modalidades em destaque"
               data={dashboard?.details.modalities ?? []}
-              eyebrowLabel="Dan\u00e7a"
+              eyebrowLabel="Dança"
               isLoading={isLoading}
               emptyMessage="Carregando modalidades..."
-              noDataMessage="As modalidades aparecem aqui assim que os primeiros formul\u00e1rios forem enviados."
+              noDataMessage="As modalidades aparecem aqui assim que os primeiros formulários forem enviados."
             />
 
             <ChartPanel
-              title="Estados com maior presen\u00e7a"
+              title="Estados com maior presença"
               data={topStates}
-              eyebrowLabel="Territ\u00f3rio"
+              eyebrowLabel="Território"
               isLoading={isLoading}
               emptyMessage="Carregando leitura territorial..."
-              noDataMessage="A leitura territorial aparece aqui conforme a base come\u00e7ar a receber cadastros."
+              noDataMessage="A leitura territorial aparece aqui conforme a base começar a receber cadastros."
             />
           </section>
         </>
@@ -471,7 +469,7 @@ export default function AdminWorkspacePage() {
           <Card className="admin-panel-card admin-panel-card-full">
             <div className="admin-panel-header">
               <div>
-                <p className="eyebrow">Indicadores r\u00e1pidos</p>
+                <p className="eyebrow">Indicadores rápidos</p>
                 <h2>Destaques da leitura nacional</h2>
               </div>
             </div>
@@ -495,7 +493,7 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Acesso r\u00e1pido</p>
+              <p className="eyebrow">Acesso rápido</p>
               <h2>Entradas principais da equipe</h2>
             </div>
           </div>
@@ -503,13 +501,13 @@ export default function AdminWorkspacePage() {
           <div className="admin-quick-actions admin-quick-actions-inline">
             <Button onClick={() => navigate('/painel-interno/cadastros')}>Abrir cadastros</Button>
             <Button variant="outline" onClick={() => navigate('/painel-interno/dados')}>
-              Abrir dados e an\u00e1lises
+              Abrir dados e análises
             </Button>
             <Button variant="outline" onClick={() => navigate('/painel-interno/exportacoes')}>
-              Abrir exporta\u00e7\u00f5es
+              Abrir exportações
             </Button>
             <Button variant="outline" onClick={() => navigate('/painel-interno/acessos')}>
-              Abrir seguran\u00e7a e LGPD
+              Abrir segurança e LGPD
             </Button>
           </div>
         </Card>

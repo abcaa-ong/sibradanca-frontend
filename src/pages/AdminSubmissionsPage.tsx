@@ -13,7 +13,7 @@ import { formatBackendDateTime } from '../utils/backend-date'
 function formatSector(value: string) {
   if (value === 'YOUTH') return 'Jovens'
   if (value === 'PROFESSIONAL') return 'Profissionais'
-  if (value === 'INSTITUTION') return 'Institui\u00e7\u00f5es'
+  if (value === 'INSTITUTION') return 'Instituições'
   return value
 }
 
@@ -43,7 +43,7 @@ export default function AdminSubmissionsPage() {
       setOverview(overviewData)
       setSubmissions(submissionsData)
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'N\u00e3o foi poss\u00edvel carregar os cadastros.')
+      setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar os cadastros.')
     } finally {
       setIsLoading(false)
     }
@@ -92,7 +92,7 @@ export default function AdminSubmissionsPage() {
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Institui\u00e7\u00f5es</span>
+          <span className="eyebrow">Instituições</span>
           <strong>{overview?.totalInstitutions ?? '-'}</strong>
         </Card>
 
@@ -127,7 +127,7 @@ export default function AdminSubmissionsPage() {
                 <option value="">Todos</option>
                 <option value="YOUTH">Jovens</option>
                 <option value="PROFESSIONAL">Profissionais</option>
-                <option value="INSTITUTION">Institui\u00e7\u00f5es</option>
+                <option value="INSTITUTION">Instituições</option>
               </select>
             </label>
 
@@ -153,7 +153,7 @@ export default function AdminSubmissionsPage() {
                     <th>Cidade</th>
                     <th>UF</th>
                     <th>Data</th>
-                    <th>A\u00e7\u00f5es</th>
+                    <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -189,9 +189,9 @@ export default function AdminSubmissionsPage() {
             <AdminZeroState
               eyebrow="Cadastros"
               title="Nenhum protocolo entrou nesta base ainda"
-              description="Assim que os formul\u00e1rios come\u00e7arem a ser enviados, os protocolos aparecem aqui para consulta individual, confer\u00eancia e abertura de ficha."
+              description="Assim que os formulários começarem a ser enviados, os protocolos aparecem aqui para consulta individual, conferência e abertura de ficha."
               items={[
-                'Jovens, profissionais e institui\u00e7\u00f5es entram nesta mesma base.',
+                'Jovens, profissionais e instituições entram nesta mesma base.',
                 'Cada envio gera protocolo, ficha completa e data de recebimento.',
                 'Os filtros passam a funcionar conforme os primeiros registros entram.',
               ]}

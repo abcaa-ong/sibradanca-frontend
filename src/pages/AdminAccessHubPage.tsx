@@ -232,9 +232,7 @@ export default function AdminAccessHubPage() {
               eyebrow="Histórico"
               title="Ainda não há movimentações registradas nesta base"
               description="O histórico passa a aparecer quando a equipe consulta fichas, abre módulos e trabalha os primeiros protocolos."
-              items={[
-                'As ações administrativas são registradas conforme o uso do sistema.',
-              ]}
+              items={['As ações administrativas são registradas conforme o uso do sistema.']}
             />
           )}
         </Card>
