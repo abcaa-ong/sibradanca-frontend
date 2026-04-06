@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AdminZeroState } from '../components/AdminZeroState'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { getAdminBootstrap } from '../services/admin.service'
@@ -99,8 +98,7 @@ export default function AdminDataHubPage() {
           <p className="eyebrow">Dados e análises</p>
           <h2>Leitura da base nacional</h2>
           <p className="admin-page-subtitle">
-            A equipe acompanha aqui os totais da base, os setores ativos, a distribuição por estado
-            e os principais recortes que entram pelos formulários.
+            Totais, setores e recortes principais da base em um só lugar.
           </p>
         </div>
       </header>
@@ -132,6 +130,16 @@ export default function AdminDataHubPage() {
           <p className="card-text">Escolas, grupos e projetos.</p>
         </Card>
       </section>
+
+      {isLoading ? (
+        <p className="admin-inline-note">Atualizando a leitura da base...</p>
+      ) : null}
+
+      {!isLoading && !error && !hasBaseData ? (
+        <p className="admin-inline-note">
+          A área de dados começa a preencher assim que os primeiros cadastros entrarem na base.
+        </p>
+      ) : null}
 
       <section className="admin-section-grid">
         <Card className="admin-panel-card">
@@ -214,36 +222,6 @@ export default function AdminDataHubPage() {
           </div>
         </Card>
       </section>
-
-      {isLoading ? (
-        <section className="admin-section-grid">
-          <AdminZeroState
-            className="admin-panel-card-full"
-            eyebrow="Carregando a base"
-            title="A leitura nacional está sendo preparada"
-            description="O sistema está reunindo totais, setores e território para abrir esta área com a visão atual da base."
-            items={[
-              'A primeira abertura pode demorar mais quando o backend sai de repouso no Render.',
-              'Assim que a resposta chega, as tabelas e os recortes aparecem nesta tela.',
-            ]}
-          />
-        </section>
-      ) : null}
-
-      {!isLoading && !hasBaseData ? (
-        <section className="admin-section-grid">
-          <AdminZeroState
-            className="admin-panel-card-full"
-            eyebrow="Base vazia"
-            title="A nova base ainda não recebeu cadastros"
-            description="Quando os formulários começarem a entrar, esta área passa a mostrar totais, território e recortes dos três setores."
-            items={[
-              'Os protocolos entram pelo frontend, passam pelo backend e aparecem aqui.',
-              'As exportações e o BI passam a refletir exatamente o que chegou na base.',
-            ]}
-          />
-        </section>
-      ) : null}
 
       {!isLoading && hasBaseData ? (
         <>

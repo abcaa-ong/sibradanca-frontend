@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
-import { AdminZeroState } from '../components/AdminZeroState'
 import { ChartPanel } from '../components/ChartPanel'
 import { MetricCard } from '../components/MetricCard'
 import { getAdminBootstrap } from '../services/admin.service'
@@ -26,8 +25,7 @@ const workAreas = [
   {
     title: 'Dados e análises',
     audience: 'Leitura nacional',
-    description:
-      'Recortes por setor, território, modalidade, formação, renda e políticas públicas.',
+    description: 'Indicadores por perfil, território, modalidades e recortes da base.',
     route: '/painel-interno/dados',
     actionLabel: 'Abrir dados',
     outputs: ['Indicadores', 'Território', 'Tabelas'],
@@ -35,7 +33,7 @@ const workAreas = [
   {
     title: 'Exportações',
     audience: 'Saídas da base',
-    description: 'Arquivos em PDF, Excel e CSV para rotina da equipe, apresentações e Power BI.',
+    description: 'Planilhas, PDFs e arquivos de apoio para a rotina da equipe.',
     route: '/painel-interno/exportacoes',
     actionLabel: 'Abrir exportações',
     outputs: ['PDF', 'Excel', 'CSV', 'BI'],
@@ -43,8 +41,7 @@ const workAreas = [
   {
     title: 'Segurança e LGPD',
     audience: 'Proteção do ambiente',
-    description:
-      'Acessos, histórico de uso e regras para compartilhar recortes da base com segurança.',
+    description: 'Acessos, histórico e regras do ambiente interno da ONG.',
     route: '/painel-interno/acessos',
     actionLabel: 'Abrir segurança',
     outputs: ['Acessos', 'Histórico', 'LGPD'],
@@ -253,29 +250,12 @@ export default function AdminWorkspacePage() {
           <p className="eyebrow">Painel da ONG</p>
           <h2>Banco Nacional de Dados da Dança do Brasil</h2>
           <p className="admin-page-subtitle">
-            A ONG consulta os cadastros, acompanha a leitura nacional da base e prepara os
-            arquivos institucionais em um único ambiente.
+            Cadastros, leituras e arquivos de trabalho da equipe em um só ambiente.
           </p>
         </div>
       </header>
 
       {error ? <Card className="admin-alert admin-alert-error">{error}</Card> : null}
-
-      {isLoading ? (
-        <section className="admin-section-grid">
-          <AdminZeroState
-            className="admin-panel-card-full"
-            eyebrow="Carregando o painel"
-            title="O dashboard interno está organizando a leitura da base"
-            description="O sistema está reunindo a visão geral, os recortes por setor e a leitura territorial do Banco Nacional de Dados da Dança do Brasil."
-            items={[
-              'O painel usa a mesma base que recebe os formulários públicos.',
-              'Quando o Render sai de repouso, a primeira abertura pode demorar um pouco mais.',
-              'Assim que a resposta chega, os módulos da ONG entram completos nesta tela.',
-            ]}
-          />
-        </section>
-      ) : null}
 
       <section className="admin-grid">
         <Card className="admin-metric-card">
@@ -303,21 +283,19 @@ export default function AdminWorkspacePage() {
         </Card>
       </section>
 
+      {isLoading ? (
+        <p className="admin-inline-note">Atualizando os números da base...</p>
+      ) : null}
+
+      {!isLoading && !error && !hasBaseData ? (
+        <p className="admin-inline-note">
+          Base nova. Os primeiros cadastros vão aparecer aqui assim que os formulários forem enviados.
+        </p>
+      ) : null}
+
       {!isLoading ? (
         !error && !hasBaseData ? (
-          <section className="admin-section-grid">
-            <AdminZeroState
-              className="admin-panel-card-full"
-              title="A nova base ainda não recebeu cadastros"
-              description="O painel já está conectado ao banco novo, mas esta etapa ainda não recebeu formulários enviados. Assim que os primeiros protocolos entrarem, a leitura nacional começa a aparecer aqui."
-              items={[
-                'Os formulários públicos já alimentam esta base nova.',
-                'As fichas completas aparecem conforme os cadastros entram.',
-                'Gráficos, tabelas e exportações passam a refletir os protocolos recebidos.',
-              ]}
-              note="Enquanto a base está vazia, a equipe ainda pode acessar os módulos do sistema e preparar a rotina de trabalho."
-            />
-          </section>
+          null
         ) : (
           <section className="admin-section-grid">
             <Card className="admin-panel-card">

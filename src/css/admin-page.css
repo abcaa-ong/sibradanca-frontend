@@ -348,8 +348,15 @@
 .admin-module-grid,
 .admin-governance-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 14px;
+}
+
+.admin-module-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.admin-governance-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .admin-module-card,
@@ -697,6 +704,13 @@
   margin: 0;
 }
 
+.admin-inline-note {
+  margin: -2px 0 4px;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
 .admin-filter-bar {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(180px, 220px) auto auto;
@@ -817,13 +831,16 @@
   .admin-summary-strip,
   .admin-section-grid,
   .admin-profile-grid,
-  .admin-module-grid,
   .admin-governance-grid,
   .admin-export-grid,
   .admin-bi-grid,
   .admin-kpi-grid,
   .admin-kpi-grid-wide,
   .admin-manifest-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-module-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
