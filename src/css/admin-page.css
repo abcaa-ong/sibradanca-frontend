@@ -675,6 +675,28 @@
   line-height: 1.7;
 }
 
+.admin-empty-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-empty-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.admin-empty-list li,
+.admin-empty-note {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.admin-empty-note {
+  margin: 0;
+}
+
 .admin-filter-bar {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(180px, 220px) auto auto;

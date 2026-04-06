@@ -24,6 +24,7 @@ type ChartPanelProps = {
   className?: string
   isLoading?: boolean
   emptyMessage?: string
+  noDataMessage?: string
   eyebrowLabel?: string
   summaryItems?: number
 }
@@ -65,11 +66,11 @@ export function ChartPanel({
   className = '',
   isLoading = false,
   emptyMessage = 'Carregando...',
+  noDataMessage = 'A base ainda não tem dados para este gráfico.',
   eyebrowLabel = 'Leitura',
   summaryItems = 0,
 }: ChartPanelProps) {
   const hasData = data.some((item) => item.value > 0)
-  const placeholderPieData = [{ name: 'Sem dados', value: 1 }]
   const summaryData =
     summaryItems > 0
       ? [...data].sort((left, right) => right.value - left.value).slice(0, summaryItems)
@@ -117,20 +118,35 @@ export function ChartPanel({
           >
             <p style={{ maxWidth: 320 }}>{emptyMessage}</p>
           </div>
+        ) : !hasData ? (
+          <div
+            style={{
+              height: '100%',
+              display: 'grid',
+              placeItems: 'center',
+              textAlign: 'center',
+              padding: '1rem',
+              color: '#475569',
+              fontWeight: 500,
+              lineHeight: 1.5,
+            }}
+          >
+            <p style={{ maxWidth: 340 }}>{noDataMessage}</p>
+          </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             {type === 'pie' ? (
               <PieChart>
                 {hasData ? <Tooltip content={<CustomTooltip />} /> : null}
                 <Pie
-                  data={hasData ? data : placeholderPieData}
+                  data={data}
                   dataKey="value"
                   nameKey="name"
                   outerRadius={90}
                   innerRadius={45}
                   isAnimationActive={false}
                 >
-                  {(hasData ? data : placeholderPieData).map((entry, index) => (
+                  {data.map((entry, index) => (
                     <Cell key={`${entry.name}-${index}`} fill={palette[index % palette.length]} />
                   ))}
                 </Pie>

@@ -12,7 +12,7 @@ import type {
 } from '../types/admin'
 import { clearAdminCredentials, getAdminAuthHeader } from './admin-auth.service'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080').trim()
 const ADMIN_CACHE_TTL_MS = 30_000
 
 type AdminFilters = {
@@ -61,7 +61,7 @@ async function performAdminRequest(input: RequestInfo | URL, init?: RequestInit)
   const authorization = getAdminAuthHeader()
 
   if (!authorization) {
-    throw new Error('Faca login no painel interno para continuar.')
+    throw new Error('Faça login no painel interno para continuar.')
   }
 
   try {
@@ -75,7 +75,7 @@ async function performAdminRequest(input: RequestInfo | URL, init?: RequestInit)
 
     if (response.status === 401 || response.status === 403) {
       clearAdminCredentials()
-      throw new Error('Sua sessao interna expirou ou nao possui permissao.')
+      throw new Error('Sua sessão interna expirou ou não possui permissão.')
     }
 
     return response
@@ -84,7 +84,7 @@ async function performAdminRequest(input: RequestInfo | URL, init?: RequestInit)
       throw error
     }
 
-    throw new Error('Nao foi possivel conectar ao painel interno no momento.')
+    throw new Error('Não foi possível conectar ao painel interno no momento.')
   }
 }
 
@@ -148,7 +148,7 @@ async function adminDownload(path: string) {
   const response = await performAdminRequest(buildUrl(path))
 
   if (!response.ok) {
-    throw new Error('Nao foi possivel gerar o arquivo solicitado.')
+    throw new Error('Não foi possível gerar o arquivo solicitado.')
   }
 
   return {
@@ -160,28 +160,28 @@ async function adminDownload(path: string) {
 export function getAdminOverview() {
   return cachedAdminGet<AdminInsightsOverviewResponse>(
     '/api/admin/insights/overview',
-    'Nao foi possivel carregar a visao geral do painel.'
+    'Não foi possível carregar a visão geral do painel.'
   )
 }
 
 export function getAdminDashboard() {
   return cachedAdminGet<AdminInsightsDashboardResponse>(
     '/api/admin/insights/dashboard',
-    'Nao foi possivel carregar o painel interno.'
+    'Não foi possível carregar o painel interno.'
   )
 }
 
 export function getAdminSubmissions(filters?: AdminFilters) {
   return adminGet<AdminSubmissionSummaryResponse[]>(
     `/api/admin/submissions${buildQuery(filters)}`,
-    'Nao foi possivel carregar os cadastros.'
+    'Não foi possível carregar os cadastros.'
   )
 }
 
 export function getAdminSubmissionDetail(protocol: string) {
   return adminGet<AdminSubmissionDetailResponse>(
     `/api/admin/submissions/${encodeURIComponent(protocol)}/detail`,
-    'Nao foi possivel carregar a ficha do cadastro.'
+    'Não foi possível carregar a ficha do cadastro.'
   )
 }
 
@@ -190,28 +190,28 @@ export function getAdminAudit(protocol?: string) {
 
   return cachedAdminGet<AdminAuditLogResponse[]>(
     `/api/admin/submissions/audit${query}`,
-    'Nao foi possivel carregar a auditoria.'
+    'Não foi possível carregar a auditoria.'
   )
 }
 
 export function getAdminSectorSummary() {
   return cachedAdminGet<AdminBiSectorSummaryResponse[]>(
     '/api/admin/bi/sector-summary',
-    'Nao foi possivel carregar o resumo por setor.'
+    'Não foi possível carregar o resumo por setor.'
   )
 }
 
 export function getAdminStateSummary() {
   return cachedAdminGet<AdminBiStateSummaryResponse[]>(
     '/api/admin/bi/state-summary',
-    'Nao foi possivel carregar o resumo por estado.'
+    'Não foi possível carregar o resumo por estado.'
   )
 }
 
 export function getAdminSubmissionDataset(filters?: AdminFilters) {
   return adminGet<AdminBiSubmissionRowResponse[]>(
     `/api/admin/bi/submissions${buildQuery(filters)}`,
-    'Nao foi possivel carregar a base interna.'
+    'Não foi possível carregar a base interna.'
   )
 }
 
@@ -268,12 +268,12 @@ export function getBackendHealthStatus() {
       }
 
       if (!payload?.status) {
-        throw new Error('Nao foi possivel carregar a saude do ambiente interno.')
+        throw new Error('Não foi possível carregar a saúde do ambiente interno.')
       }
 
       return payload
     } catch {
-      throw new Error('Nao foi possivel consultar o ambiente interno.')
+      throw new Error('Não foi possível consultar o ambiente interno.')
     }
   })().catch((error) => {
     adminResponseCache.delete(cacheKey)

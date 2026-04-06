@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
+import { AdminZeroState } from '../components/AdminZeroState'
 import { ChartPanel } from '../components/ChartPanel'
 import { MetricCard } from '../components/MetricCard'
 import {
@@ -252,6 +253,8 @@ export default function AdminWorkspacePage() {
     ]
   }, [dashboard])
 
+  const hasBaseData = (overview?.totalResponses ?? 0) > 0
+
   return (
     <div className="admin-page-content">
       <header className="admin-page-header admin-page-header-compact">
@@ -293,49 +296,65 @@ export default function AdminWorkspacePage() {
         </Card>
       </section>
 
-      <section className="admin-section-grid">
-        <Card className="admin-panel-card">
-          <div className="admin-panel-header">
-            <div>
-              <p className="eyebrow">Base em opera\u00e7\u00e3o</p>
-              <h2>Como a base est\u00e1 hoje</h2>
-            </div>
-          </div>
-
-          <div className="admin-system-list">
-            {operationalRows.map((item) => (
-              <div key={item.label} className="admin-system-row">
-                <div>
-                  <span className="admin-system-label">{item.label}</span>
-                  <p className="admin-system-detail">{item.detail}</p>
-                </div>
-                <strong className="admin-system-value">{item.value}</strong>
+      {!isLoading && !error && !hasBaseData ? (
+        <section className="admin-section-grid">
+          <AdminZeroState
+            className="admin-panel-card-full"
+            title="A nova base ainda n\u00e3o recebeu cadastros"
+            description="O painel j\u00e1 est\u00e1 conectado ao banco novo, mas esta etapa ainda n\u00e3o recebeu formul\u00e1rios enviados. Assim que os primeiros protocolos entrarem, a leitura nacional come\u00e7a a aparecer aqui."
+            items={[
+              'Os formul\u00e1rios p\u00fablicos j\u00e1 alimentam esta base nova.',
+              'As fichas completas aparecem conforme os cadastros entram.',
+              'Gr\u00e1ficos, tabelas e exporta\u00e7\u00f5es passam a refletir os protocolos recebidos.',
+            ]}
+            note="Enquanto a base est\u00e1 vazia, a equipe ainda pode acessar os m\u00f3dulos do sistema e preparar a rotina de trabalho."
+          />
+        </section>
+      ) : (
+        <section className="admin-section-grid">
+          <Card className="admin-panel-card">
+            <div className="admin-panel-header">
+              <div>
+                <p className="eyebrow">Base em opera\u00e7\u00e3o</p>
+                <h2>Como a base est\u00e1 hoje</h2>
               </div>
-            ))}
-          </div>
-        </Card>
-
-        <Card className="admin-panel-card">
-          <div className="admin-panel-header">
-            <div>
-              <p className="eyebrow">Leitura nacional</p>
-              <h2>O que mais aparece na base</h2>
             </div>
-          </div>
 
-          <div className="admin-system-list">
-            {executiveRows.map((item) => (
-              <div key={item.label} className="admin-system-row">
-                <div>
-                  <span className="admin-system-label">{item.label}</span>
-                  <p className="admin-system-detail">{item.detail}</p>
+            <div className="admin-system-list">
+              {operationalRows.map((item) => (
+                <div key={item.label} className="admin-system-row">
+                  <div>
+                    <span className="admin-system-label">{item.label}</span>
+                    <p className="admin-system-detail">{item.detail}</p>
+                  </div>
+                  <strong className="admin-system-value">{item.value}</strong>
                 </div>
-                <strong className="admin-system-value">{item.value}</strong>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="admin-panel-card">
+            <div className="admin-panel-header">
+              <div>
+                <p className="eyebrow">Leitura nacional</p>
+                <h2>O que mais aparece na base</h2>
               </div>
-            ))}
-          </div>
-        </Card>
-      </section>
+            </div>
+
+            <div className="admin-system-list">
+              {executiveRows.map((item) => (
+                <div key={item.label} className="admin-system-row">
+                  <div>
+                    <span className="admin-system-label">{item.label}</span>
+                    <p className="admin-system-detail">{item.detail}</p>
+                  </div>
+                  <strong className="admin-system-value">{item.value}</strong>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </section>
+      )}
 
       <section className="admin-section-grid">
         <Card className="admin-panel-card admin-panel-card-full">
@@ -371,62 +390,72 @@ export default function AdminWorkspacePage() {
         </Card>
       </section>
 
-      <section className="statistics-chart-grid two-columns">
-        <ChartPanel
-          title="Cadastros por setor"
-          data={sectorDistribution}
-          eyebrowLabel="Base atual"
-          isLoading={isLoading}
-          emptyMessage="Carregando distribui\u00e7\u00e3o dos setores..."
-        />
+      {hasBaseData ? (
+        <>
+          <section className="statistics-chart-grid two-columns">
+            <ChartPanel
+              title="Cadastros por setor"
+              data={sectorDistribution}
+              eyebrowLabel="Base atual"
+              isLoading={isLoading}
+              emptyMessage="Carregando distribui\u00e7\u00e3o dos setores..."
+              noDataMessage="Os gr\u00e1ficos come\u00e7am a aparecer quando a base receber os primeiros protocolos."
+            />
 
-        <ChartPanel
-          title="Participa\u00e7\u00e3o por setor"
-          data={sectorDistribution}
-          type="pie"
-          eyebrowLabel="Base atual"
-          isLoading={isLoading}
-          emptyMessage="Carregando participa\u00e7\u00e3o dos setores..."
-        />
+            <ChartPanel
+              title="Participa\u00e7\u00e3o por setor"
+              data={sectorDistribution}
+              type="pie"
+              eyebrowLabel="Base atual"
+              isLoading={isLoading}
+              emptyMessage="Carregando participa\u00e7\u00e3o dos setores..."
+              noDataMessage="Os gr\u00e1ficos come\u00e7am a aparecer quando a base receber os primeiros protocolos."
+            />
 
-        <ChartPanel
-          title="Faixa et\u00e1ria"
-          data={dashboard?.profile.ageDistribution ?? []}
-          type="pie"
-          eyebrowLabel="Pessoas"
-          isLoading={isLoading}
-          emptyMessage="Carregando faixa et\u00e1ria..."
-        />
+            <ChartPanel
+              title="Faixa et\u00e1ria"
+              data={dashboard?.profile.ageDistribution ?? []}
+              type="pie"
+              eyebrowLabel="Pessoas"
+              isLoading={isLoading}
+              emptyMessage="Carregando faixa et\u00e1ria..."
+              noDataMessage="Ainda n\u00e3o h\u00e1 cadastros suficientes para exibir este recorte."
+            />
 
-        <ChartPanel
-          title="G\u00eanero"
-          data={dashboard?.profile.genderDistribution ?? []}
-          type="pie"
-          eyebrowLabel="Pessoas"
-          isLoading={isLoading}
-          emptyMessage="Carregando g\u00eanero..."
-        />
-      </section>
+            <ChartPanel
+              title="G\u00eanero"
+              data={dashboard?.profile.genderDistribution ?? []}
+              type="pie"
+              eyebrowLabel="Pessoas"
+              isLoading={isLoading}
+              emptyMessage="Carregando g\u00eanero..."
+              noDataMessage="Ainda n\u00e3o h\u00e1 cadastros suficientes para exibir este recorte."
+            />
+          </section>
 
-      <section className="statistics-chart-grid two-columns">
-        <ChartPanel
-          title="Modalidades em destaque"
-          data={dashboard?.details.modalities ?? []}
-          eyebrowLabel="Dan\u00e7a"
-          isLoading={isLoading}
-          emptyMessage="Carregando modalidades..."
-        />
+          <section className="statistics-chart-grid two-columns">
+            <ChartPanel
+              title="Modalidades em destaque"
+              data={dashboard?.details.modalities ?? []}
+              eyebrowLabel="Dan\u00e7a"
+              isLoading={isLoading}
+              emptyMessage="Carregando modalidades..."
+              noDataMessage="As modalidades aparecem aqui assim que os primeiros formul\u00e1rios forem enviados."
+            />
 
-        <ChartPanel
-          title="Estados com maior presen\u00e7a"
-          data={topStates}
-          eyebrowLabel="Territ\u00f3rio"
-          isLoading={isLoading}
-          emptyMessage="Carregando leitura territorial..."
-        />
-      </section>
+            <ChartPanel
+              title="Estados com maior presen\u00e7a"
+              data={topStates}
+              eyebrowLabel="Territ\u00f3rio"
+              isLoading={isLoading}
+              emptyMessage="Carregando leitura territorial..."
+              noDataMessage="A leitura territorial aparece aqui conforme a base come\u00e7ar a receber cadastros."
+            />
+          </section>
+        </>
+      ) : null}
 
-      {strategicMetrics.length ? (
+      {hasBaseData && strategicMetrics.length ? (
         <section className="admin-section-grid">
           <Card className="admin-panel-card admin-panel-card-full">
             <div className="admin-panel-header">

@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AdminZeroState } from '../components/AdminZeroState'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { getAdminOverview, getAdminSubmissions } from '../services/admin.service'
@@ -63,6 +64,9 @@ export default function AdminSubmissionsPage() {
     setSectorFilter('')
     void loadData('', '')
   }
+
+  const hasAnySubmission = submissions.length > 0
+  const hasActiveFilters = Boolean(protocolFilter || sectorFilter)
 
   return (
     <div className="admin-page-content">
@@ -136,50 +140,65 @@ export default function AdminSubmissionsPage() {
             </Button>
           </form>
 
-          <div className="admin-table-wrap">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Protocolo</th>
-                  <th>Perfil</th>
-                  <th>Nome</th>
-                  <th>E-mail</th>
-                  <th>Telefone</th>
-                  <th>Cidade</th>
-                  <th>UF</th>
-                  <th>Data</th>
-                  <th>A\u00e7\u00f5es</th>
-                </tr>
-              </thead>
-              <tbody>
-                {submissions.map((item) => (
-                  <tr key={item.protocol}>
-                    <td>{item.protocol}</td>
-                    <td>{formatSector(item.sector)}</td>
-                    <td>{item.subjectName}</td>
-                    <td>{item.email || '-'}</td>
-                    <td>{item.phone || '-'}</td>
-                    <td>{item.city || '-'}</td>
-                    <td>{item.state || '-'}</td>
-                    <td>{formatBackendDateTime(item.submittedAt)}</td>
-                    <td>
-                      <div className="admin-table-actions">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => navigate(`/painel-interno/cadastros/${item.protocol}`)}
-                        >
-                          Ver ficha
-                        </Button>
-                      </div>
-                    </td>
+          {hasAnySubmission ? (
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Protocolo</th>
+                    <th>Perfil</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                    <th>Cidade</th>
+                    <th>UF</th>
+                    <th>Data</th>
+                    <th>A\u00e7\u00f5es</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {submissions.map((item) => (
+                    <tr key={item.protocol}>
+                      <td>{item.protocol}</td>
+                      <td>{formatSector(item.sector)}</td>
+                      <td>{item.subjectName}</td>
+                      <td>{item.email || '-'}</td>
+                      <td>{item.phone || '-'}</td>
+                      <td>{item.city || '-'}</td>
+                      <td>{item.state || '-'}</td>
+                      <td>{formatBackendDateTime(item.submittedAt)}</td>
+                      <td>
+                        <div className="admin-table-actions">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => navigate(`/painel-interno/cadastros/${item.protocol}`)}
+                          >
+                            Ver ficha
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : null}
 
-          {!submissions.length && !isLoading ? (
+          {!hasAnySubmission && !isLoading && !hasActiveFilters ? (
+            <AdminZeroState
+              eyebrow="Cadastros"
+              title="Nenhum protocolo entrou nesta base ainda"
+              description="Assim que os formul\u00e1rios come\u00e7arem a ser enviados, os protocolos aparecem aqui para consulta individual, confer\u00eancia e abertura de ficha."
+              items={[
+                'Jovens, profissionais e institui\u00e7\u00f5es entram nesta mesma base.',
+                'Cada envio gera protocolo, ficha completa e data de recebimento.',
+                'Os filtros passam a funcionar conforme os primeiros registros entram.',
+              ]}
+            />
+          ) : null}
+
+          {!hasAnySubmission && !isLoading && hasActiveFilters ? (
             <p className="admin-empty-state">Nenhum cadastro encontrado para os filtros informados.</p>
           ) : null}
         </Card>

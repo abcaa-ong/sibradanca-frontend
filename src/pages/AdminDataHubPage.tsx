@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Download } from 'lucide-react'
+import { AdminZeroState } from '../components/AdminZeroState'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import {
@@ -348,6 +349,8 @@ export default function AdminDataHubPage() {
     [latestRecordAt, overview, sectorSummary.length, stateSummary],
   )
 
+  const hasBaseData = (overview?.totalResponses ?? 0) > 0
+
   return (
     <div className="admin-page-content">
       <header className="admin-page-header">
@@ -431,6 +434,24 @@ export default function AdminDataHubPage() {
         </Card>
       </section>
 
+      {!hasBaseData ? (
+        <section className="admin-section-grid">
+          <AdminZeroState
+            className="admin-panel-card-full"
+            eyebrow="Leituras e arquivos"
+            title="Os relat\u00f3rios come\u00e7am quando a base receber os primeiros cadastros"
+            description="A \u00e1rea de dados j\u00e1 est\u00e1 pronta para organizar os protocolos, montar planilhas, PDFs, CSVs e recortes para BI. Como esta base nova ainda est\u00e1 vazia, os indicadores e arquivos ser\u00e3o preenchidos conforme os formul\u00e1rios forem enviados."
+            items={[
+              'Cada cadastro passa a aparecer na base, nas tabelas e nos recortes do painel.',
+              'As sa\u00eddas em PDF, Excel, CSV e BI refletem exatamente os protocolos recebidos.',
+              'A equipe pode usar esta \u00e1rea para acompanhar a entrada dos primeiros registros.',
+            ]}
+          />
+        </section>
+      ) : null}
+
+      {hasBaseData ? (
+        <>
       <section className="admin-section-grid">
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
@@ -559,7 +580,11 @@ export default function AdminDataHubPage() {
           rows={operationalDownloadRows}
           onDownload={handleDownload}
         />
+        </section>
+        </>
+      ) : null}
 
+      <section className="admin-section-stack">
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { AdminZeroState } from '../components/AdminZeroState'
 import { Card } from '../components/Card'
 import { getAdminAudit, getBackendHealthStatus } from '../services/admin.service'
 import type { AdminAuditLogResponse, BackendHealthStatusResponse } from '../types/admin'
@@ -199,30 +200,42 @@ export default function AdminAccessHubPage() {
             </div>
           </div>
 
-          <div className="admin-table-wrap">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>A\u00e7\u00e3o</th>
-                  <th>Respons\u00e1vel</th>
-                  <th>\u00c1rea</th>
-                  <th>Detalhe</th>
-                  <th>Data</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentAudit.map((item, index) => (
-                  <tr key={`${item.targetKey}-${index}`}>
-                    <td>{item.action}</td>
-                    <td>{item.actor}</td>
-                    <td>{item.targetKey}</td>
-                    <td>{item.details}</td>
-                    <td>{formatBackendDateTime(item.createdAt)}</td>
+          {recentAudit.length ? (
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>A\u00e7\u00e3o</th>
+                    <th>Respons\u00e1vel</th>
+                    <th>\u00c1rea</th>
+                    <th>Detalhe</th>
+                    <th>Data</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {recentAudit.map((item, index) => (
+                    <tr key={`${item.targetKey}-${index}`}>
+                      <td>{item.action}</td>
+                      <td>{item.actor}</td>
+                      <td>{item.targetKey}</td>
+                      <td>{item.details}</td>
+                      <td>{formatBackendDateTime(item.createdAt)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <AdminZeroState
+              eyebrow="Hist\u00f3rico recente"
+              title="Ainda n\u00e3o h\u00e1 movimenta\u00e7\u00f5es registradas nesta base"
+              description="O hist\u00f3rico de uso come\u00e7a a aparecer quando a equipe acessa o ambiente, consulta fichas e trabalha os primeiros protocolos."
+              items={[
+                'As a\u00e7\u00f5es administrativas passam a ser registradas conforme o uso do sistema.',
+                'O acompanhamento ajuda a equipe a revisar acessos, consultas e rotinas internas.',
+              ]}
+            />
+          )}
         </Card>
       </section>
     </div>
