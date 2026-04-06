@@ -6,24 +6,24 @@ import type { AdminAuditLogResponse, BackendHealthStatusResponse } from '../type
 import { formatBackendDateTime } from '../utils/backend-date'
 
 const roles = [
-  ['Coordena\u00e7\u00e3o da ONG', 'Vis\u00e3o geral e decis\u00f5es institucionais'],
-  ['Equipe de opera\u00e7\u00e3o', 'Cadastros, protocolos e base'],
-  ['Equipe de dados', 'Indicadores, cruzamentos e materiais'],
-  ['Controle interno', 'Confer\u00eancia e hist\u00f3rico de uso'],
+  ['Coordenação da ONG', 'Visão geral e decisões institucionais'],
+  ['Operação', 'Cadastros, protocolos e conferência diária'],
+  ['Dados', 'Indicadores, cruzamentos e materiais analíticos'],
+  ['Controle interno', 'Histórico de uso, acessos e rastreabilidade'],
 ] as const
 
-const controls = [
-  ['Acesso ao painel', 'Restrito \u00e0 equipe da ONG'],
-  ['Exporta\u00e7\u00f5es', 'Feitas apenas pela equipe interna'],
-  ['Hist\u00f3rico de uso', 'Acompanhado no ambiente interno'],
-  ['Compartilhamento externo', 'Sempre mediado pela ONG'],
+const accessRules = [
+  ['Painel interno', 'Acesso restrito à equipe da ONG.'],
+  ['Exportações', 'Geradas apenas dentro do ambiente administrativo.'],
+  ['Dados pessoais', 'Permanecem no ambiente interno.'],
+  ['Materiais externos', 'Saem apenas em recortes preparados pela ONG.'],
 ] as const
 
-const lgpdPrinciples = [
-  'Dados pessoais e fichas individuais ficam apenas no ambiente interno da ONG.',
-  'Parceiros e apoiadores n\u00e3o acessam o sistema administrativo.',
-  'A ONG exporta e compartilha apenas o recorte adequado.',
-  'Materiais externos usam n\u00fameros gerais, sem identifica\u00e7\u00e3o pessoal.',
+const lgpdItems = [
+  'Fichas completas e dados nominais ficam internos.',
+  'Parceiros não acessam o painel administrativo.',
+  'A ONG define o recorte antes de qualquer compartilhamento.',
+  'Materiais externos usam números gerais, sem identificação pessoal.',
 ] as const
 
 export default function AdminAccessHubPage() {
@@ -51,7 +51,7 @@ export default function AdminAccessHubPage() {
         setError(
           auditResult.reason instanceof Error
             ? auditResult.reason.message
-            : 'N\u00e3o foi poss\u00edvel carregar a \u00e1rea de seguran\u00e7a.',
+            : 'Não foi possível carregar a área de segurança.',
         )
       }
 
@@ -71,10 +71,11 @@ export default function AdminAccessHubPage() {
     <div className="admin-page-content">
       <header className="admin-page-header admin-page-header-compact">
         <div>
-          <p className="eyebrow">Seguran\u00e7a e LGPD</p>
-          <h2>Acessos, prote\u00e7\u00e3o da base e regras de compartilhamento</h2>
+          <p className="eyebrow">Segurança e LGPD</p>
+          <h2>Acesso, proteção da base e compartilhamento</h2>
           <p className="admin-page-subtitle">
-            Quem acessa o sistema, o que fica interno e como a ONG compartilha a base com seguran\u00e7a.
+            Esta área mostra quem usa o sistema, o status do ambiente e as regras para manter a
+            base protegida.
           </p>
         </div>
       </header>
@@ -89,7 +90,6 @@ export default function AdminAccessHubPage() {
             title="A área de segurança está reunindo acessos e status do ambiente"
             description="O sistema está consultando o histórico recente e a saúde do backend para abrir esta tela com a leitura mais atual."
             items={[
-              'A equipe vê aqui o que fica interno, o que pode ser exportado e como a base deve ser tratada.',
               'Quando o backend sai de repouso, a primeira consulta pode demorar um pouco mais.',
             ]}
           />
@@ -104,21 +104,21 @@ export default function AdminAccessHubPage() {
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Uso interno</span>
+          <span className="eyebrow">Acesso</span>
           <strong>Exclusivo</strong>
-          <p className="card-text">Acesso reservado \u00e0 ONG.</p>
+          <p className="card-text">Uso reservado à equipe da ONG.</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">\u00daltima movimenta\u00e7\u00e3o</span>
-          <strong>{formatBackendDateTime(lastAudit)}</strong>
-          <p className="card-text">Registro mais recente do ambiente.</p>
+          <span className="eyebrow">Última movimentação</span>
+          <strong>{isLoading ? '...' : formatBackendDateTime(lastAudit)}</strong>
+          <p className="card-text">Evento mais recente do ambiente.</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Compartilhamento externo</span>
+          <span className="eyebrow">Compartilhamento</span>
           <strong>Mediado</strong>
-          <p className="card-text">A ONG exporta os recortes necess\u00e1rios.</p>
+          <p className="card-text">Recortes sempre preparados pela ONG.</p>
         </Card>
       </section>
 
@@ -126,8 +126,8 @@ export default function AdminAccessHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Quem usa o sistema</p>
-              <h2>Perfis de acesso da equipe</h2>
+              <p className="eyebrow">Perfis de acesso</p>
+              <h2>Quem usa o painel</h2>
             </div>
           </div>
 
@@ -168,10 +168,10 @@ export default function AdminAccessHubPage() {
                 </tr>
               </thead>
               <tbody>
-                {controls.map(([label, status]) => (
+                {accessRules.map(([label, rule]) => (
                   <tr key={label}>
                     <td>{label}</td>
-                    <td>{status}</td>
+                    <td>{rule}</td>
                   </tr>
                 ))}
               </tbody>
@@ -184,13 +184,13 @@ export default function AdminAccessHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">LGPD na pr\u00e1tica</p>
+              <p className="eyebrow">LGPD</p>
               <h2>O que fica interno e o que pode sair</h2>
             </div>
           </div>
 
           <ul className="admin-purpose-list">
-            {lgpdPrinciples.map((item) => (
+            {lgpdItems.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
@@ -199,26 +199,8 @@ export default function AdminAccessHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Rotina da ONG</p>
-              <h2>Fluxo esperado de uso</h2>
-            </div>
-          </div>
-
-          <ul className="admin-purpose-list">
-            <li>Acompanhar os cadastros e consultar a base completa dentro do sistema.</li>
-            <li>Montar relat\u00f3rios e materiais de decis\u00e3o a partir dos recortes internos.</li>
-            <li>Baixar arquivos adequados para uso institucional e reuni\u00f5es externas.</li>
-            <li>Preservar fichas completas e dados pessoais no ambiente restrito da ONG.</li>
-          </ul>
-        </Card>
-      </section>
-
-      <section className="admin-section-grid">
-        <Card className="admin-panel-card admin-panel-card-full">
-          <div className="admin-panel-header">
-            <div>
-              <p className="eyebrow">Hist\u00f3rico recente</p>
-              <h2>Movimenta\u00e7\u00f5es acompanhadas no ambiente interno</h2>
+              <p className="eyebrow">Histórico recente</p>
+              <h2>Movimentações do ambiente</h2>
             </div>
           </div>
 
@@ -227,10 +209,9 @@ export default function AdminAccessHubPage() {
               <table className="admin-table">
                 <thead>
                   <tr>
-                    <th>A\u00e7\u00e3o</th>
-                    <th>Respons\u00e1vel</th>
-                    <th>\u00c1rea</th>
-                    <th>Detalhe</th>
+                    <th>Ação</th>
+                    <th>Responsável</th>
+                    <th>Área</th>
                     <th>Data</th>
                   </tr>
                 </thead>
@@ -240,7 +221,6 @@ export default function AdminAccessHubPage() {
                       <td>{item.action}</td>
                       <td>{item.actor}</td>
                       <td>{item.targetKey}</td>
-                      <td>{item.details}</td>
                       <td>{formatBackendDateTime(item.createdAt)}</td>
                     </tr>
                   ))}
@@ -249,12 +229,11 @@ export default function AdminAccessHubPage() {
             </div>
           ) : (
             <AdminZeroState
-              eyebrow="Hist\u00f3rico recente"
-              title="Ainda n\u00e3o h\u00e1 movimenta\u00e7\u00f5es registradas nesta base"
-              description="O hist\u00f3rico de uso come\u00e7a a aparecer quando a equipe acessa o ambiente, consulta fichas e trabalha os primeiros protocolos."
+              eyebrow="Histórico"
+              title="Ainda não há movimentações registradas nesta base"
+              description="O histórico passa a aparecer quando a equipe consulta fichas, abre módulos e trabalha os primeiros protocolos."
               items={[
-                'As a\u00e7\u00f5es administrativas passam a ser registradas conforme o uso do sistema.',
-                'O acompanhamento ajuda a equipe a revisar acessos, consultas e rotinas internas.',
+                'As ações administrativas são registradas conforme o uso do sistema.',
               ]}
             />
           )}

@@ -4,11 +4,9 @@ import { Button } from './Button'
 import { Seo } from './Seo'
 import { clearAdminCredentials, hasAdminSession } from '../services/admin-auth.service'
 
-const SYSTEM_TITLE = 'Banco Nacional de Dados da Dan\u00e7a do Brasil'
-
 const navSections = [
   {
-    title: SYSTEM_TITLE,
+    title: 'Módulos do sistema',
     items: [
       {
         to: '/painel-interno/dashboard',
@@ -63,8 +61,7 @@ export default function AdminLayout() {
           <p className="eyebrow">SIBRADAN\u00c7A</p>
           <h1>Painel interno da ONG</h1>
           <p className="admin-sidebar-text">
-            Base nacional, leitura anal\u00edtica, exporta\u00e7\u00f5es e prote\u00e7\u00e3o do ambiente
-            em um \u00fanico sistema.
+            Base, cadastros, exportações e segurança em um único ambiente de trabalho.
           </p>
         </div>
 

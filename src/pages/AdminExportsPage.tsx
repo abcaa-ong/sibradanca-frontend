@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Download } from 'lucide-react'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
@@ -15,10 +15,22 @@ import {
 
 type DownloadAction = () => Promise<{ blob: Blob; filename: string | null }>
 
-const exportGroups = [
+type ExportItem = {
+  name: string
+  format: 'PDF' | 'XLSX' | 'CSV'
+  purpose: string
+  actionLabel: string
+  action: DownloadAction
+}
+
+const exportGroups: Array<{
+  title: string
+  description: string
+  items: ExportItem[]
+}> = [
   {
-    title: 'Leitura completa da equipe',
-    description: 'Arquivos completos da base para consulta interna.',
+    title: 'Base detalhada',
+    description: 'Consulta completa da base para uso interno da equipe.',
     items: [
       {
         name: 'Fichas por protocolo',
@@ -30,125 +42,73 @@ const exportGroups = [
       {
         name: 'Base completa da equipe',
         format: 'XLSX',
-        purpose: 'Planilha completa da base.',
+        purpose: 'Planilha detalhada da base.',
         actionLabel: 'Baixar Excel',
         action: downloadAdminSubmissionsDetailedXlsx,
       },
       {
         name: 'Base completa em CSV',
         format: 'CSV',
-        purpose: 'Base detalhada em linhas.',
+        purpose: 'Linhas prontas para cruzamentos.',
         actionLabel: 'Baixar CSV',
         action: downloadAdminSubmissionsDetailedCsv,
       },
     ],
   },
   {
-    title: 'Opera\u00e7\u00e3o do dia a dia',
-    description: 'Arquivos r\u00e1pidos para rotina de consulta e confer\u00eancia.',
+    title: 'Operação diária',
+    description: 'Arquivos rápidos para rotina da equipe.',
     items: [
       {
         name: 'Cadastros do dia a dia',
         format: 'XLSX',
-        purpose: 'Consulta r\u00e1pida por protocolo.',
+        purpose: 'Conferência rápida por protocolo.',
         actionLabel: 'Baixar Excel',
         action: downloadAdminSubmissionsXlsx,
       },
       {
         name: 'Cadastros do dia a dia',
         format: 'CSV',
-        purpose: 'Confer\u00eancia r\u00e1pida da base.',
+        purpose: 'Consulta leve da base operacional.',
         actionLabel: 'Baixar CSV',
         action: downloadAdminSubmissionsCsv,
       },
     ],
   },
   {
-    title: 'An\u00e1lises e apresenta\u00e7\u00f5es',
-    description: 'Arquivos para leitura institucional, dashboards e BI.',
+    title: 'Indicadores e BI',
+    description: 'Arquivos institucionais, dashboards e leitura analítica.',
     items: [
       {
-        name: 'Relat\u00f3rio geral da base',
+        name: 'Relatório geral da base',
         format: 'PDF',
-        purpose: 'Resumo visual da base.',
+        purpose: 'Resumo institucional da base.',
         actionLabel: 'Baixar PDF',
         action: downloadAdminStatisticsPdf,
       },
       {
         name: 'Indicadores da base',
         format: 'XLSX',
-        purpose: 'Recortes da base para relat\u00f3rios e BI.',
+        purpose: 'Recortes para estudos e BI.',
         actionLabel: 'Baixar Excel',
         action: downloadAdminStatisticsXlsx,
       },
       {
         name: 'Indicadores em CSV',
         format: 'CSV',
-        purpose: 'Recortes para dashboards e cruzamentos.',
+        purpose: 'Recortes leves para dashboards.',
         actionLabel: 'Baixar CSV',
         action: downloadAdminStatisticsCsv,
       },
     ],
   },
-] as const
-
-const deliveryGuide = [
-  {
-    file: 'Fichas por protocolo',
-    content: 'Mostram o cadastro inteiro por protocolo.',
-    use: 'Revis\u00e3o, atendimento e leitura institucional.',
-    sharing: 'N\u00e3o saem para fora da ONG.',
-  },
-  {
-    file: 'Base completa da equipe',
-    content: 'Re\u00fane a leitura total da base.',
-    use: 'Estudos internos e cruzamentos.',
-    sharing: 'Sai apenas em recortes preparados pela ONG.',
-  },
-  {
-    file: 'Cadastros do dia a dia',
-    content: 'Mostram consulta r\u00e1pida por protocolo.',
-    use: 'Rotina da equipe e acompanhamento operacional.',
-    sharing: 'Uso interno da equipe.',
-  },
-  {
-    file: 'Relat\u00f3rio geral da base',
-    content: 'Apresenta os principais n\u00fameros da base.',
-    use: 'Reuni\u00f5es, diretorias, eventos e alinhamentos institucionais.',
-    sharing: 'Pode ser apresentado sem dados pessoais.',
-  },
-  {
-    file: 'Indicadores para Power BI e dashboards',
-    content: 'Levam recortes por tema, territ\u00f3rio e perfil.',
-    use: 'Power BI e dashboards.',
-    sharing: 'Pode sair em materiais sem dados pessoais.',
-  },
-] as const
+]
 
 const exportRules = [
-  ['Uso interno da equipe', 'Fichas completas, base detalhada e revis\u00e3o por protocolo.'],
-  ['Uso institucional', 'Relat\u00f3rios, gr\u00e1ficos e recortes preparados pela ONG.'],
-  ['Uso com parceiros', 'Somente materiais enviados pela ONG, sem acesso ao sistema.'],
-  ['Dados pessoais', 'Ficam no ambiente interno e n\u00e3o saem em materiais p\u00fablicos.'],
-] as const
-
-const handoffFlow = [
-  {
-    title: 'Ler a base',
-    text: 'A equipe consulta a base e define o recorte.',
-  },
-  {
-    title: 'Escolher o arquivo',
-    text: 'A ONG escolhe ficha, planilha, CSV ou relat\u00f3rio.',
-  },
-  {
-    title: 'Preparar o material',
-    text: 'Os arquivos s\u00e3o revisados antes do envio.',
-  },
-  {
-    title: 'Compartilhar com seguran\u00e7a',
-    text: 'A ONG envia apenas o recorte adequado.',
-  },
+  ['Fichas completas', 'Uso interno da ONG. Não saem para parceiros.'],
+  ['Planilhas detalhadas', 'Usadas pela equipe para conferência e cruzamentos.'],
+  ['PDFs institucionais', 'Podem ser apresentados sem dados pessoais.'],
+  ['CSV e BI', 'Saem apenas em recortes preparados pela ONG.'],
 ] as const
 
 function triggerDownload(blob: Blob, filename: string | null) {
@@ -164,6 +124,10 @@ function triggerDownload(blob: Blob, filename: string | null) {
 
 export default function AdminExportsPage() {
   const [downloadError, setDownloadError] = useState('')
+  const totalFiles = useMemo(
+    () => exportGroups.reduce((total, group) => total + group.items.length, 0),
+    [],
+  )
 
   async function handleDownload(action: DownloadAction) {
     setDownloadError('')
@@ -175,7 +139,7 @@ export default function AdminExportsPage() {
       setDownloadError(
         downloadActionError instanceof Error
           ? downloadActionError.message
-          : 'N\u00e3o foi poss\u00edvel gerar o arquivo solicitado.',
+          : 'Não foi possível gerar o arquivo solicitado.',
       )
     }
   }
@@ -184,30 +148,55 @@ export default function AdminExportsPage() {
     <div className="admin-page-content">
       <header className="admin-page-header">
         <div>
-          <p className="eyebrow">Exporta\u00e7\u00f5es</p>
-          <h2>Arquivos que saem do Banco Nacional de Dados da Dan\u00e7a</h2>
+          <p className="eyebrow">Exportações</p>
+          <h2>Arquivos da base interna</h2>
           <p className="admin-page-subtitle">
-            Arquivos da base para leitura interna, relat\u00f3rios, dashboards e materiais preparados pela ONG.
+            A equipe da ONG baixa aqui fichas, planilhas, PDFs institucionais e arquivos para BI.
           </p>
         </div>
       </header>
 
       {downloadError ? <Card className="admin-alert admin-alert-error">{downloadError}</Card> : null}
 
+      <section className="admin-grid">
+        <Card className="admin-metric-card">
+          <span className="eyebrow">Arquivos</span>
+          <strong>{totalFiles}</strong>
+          <p className="card-text">Saídas disponíveis no painel.</p>
+        </Card>
+
+        <Card className="admin-metric-card">
+          <span className="eyebrow">Base detalhada</span>
+          <strong>PDF · XLSX · CSV</strong>
+          <p className="card-text">Consulta completa da equipe.</p>
+        </Card>
+
+        <Card className="admin-metric-card">
+          <span className="eyebrow">Operação</span>
+          <strong>XLSX · CSV</strong>
+          <p className="card-text">Rotina rápida da equipe.</p>
+        </Card>
+
+        <Card className="admin-metric-card">
+          <span className="eyebrow">Indicadores</span>
+          <strong>PDF · XLSX · CSV</strong>
+          <p className="card-text">Leitura institucional e BI.</p>
+        </Card>
+      </section>
+
       <section className="admin-section-stack">
         {exportGroups.map((group) => (
           <Card key={group.title} className="admin-panel-card">
             <div className="admin-panel-header">
               <div>
-                <p className="eyebrow">Download</p>
-                <h2>{group.title}</h2>
-                <p className="admin-section-text">{group.description}</p>
+                <p className="eyebrow">{group.title}</p>
+                <h2>{group.description}</h2>
               </div>
             </div>
 
             <div className="admin-export-grid">
               {group.items.map((item) => (
-                <div key={`${group.title}-${item.name}`} className="admin-export-card">
+                <div key={`${group.title}-${item.name}-${item.format}`} className="admin-export-card">
                   <div>
                     <p className="admin-export-audience">{item.format}</p>
                     <h3>{item.name}</h3>
@@ -228,40 +217,24 @@ export default function AdminExportsPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Leitura dos arquivos</p>
-              <h2>O que sai em cada arquivo</h2>
+              <p className="eyebrow">Uso dos arquivos</p>
+              <h2>Qual arquivo usar em cada situação</h2>
             </div>
           </div>
 
-          <div className="admin-table-wrap">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Arquivo</th>
-                  <th>O que entrega</th>
-                  <th>Quando usar</th>
-                  <th>Compartilhamento</th>
-                </tr>
-              </thead>
-              <tbody>
-                {deliveryGuide.map((item) => (
-                  <tr key={item.file}>
-                    <td>{item.file}</td>
-                    <td>{item.content}</td>
-                    <td>{item.use}</td>
-                    <td>{item.sharing}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ul className="admin-purpose-list">
+            <li>PDF por protocolo: leitura integral de um cadastro específico.</li>
+            <li>Excel detalhado: conferência, cruzamento e trabalho interno da equipe.</li>
+            <li>CSV detalhado: BI, dashboards e integração analítica.</li>
+            <li>PDF institucional: apresentações, reuniões e materiais da ONG.</li>
+          </ul>
         </Card>
 
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Regras de sa\u00edda</p>
-              <h2>Como cada material deve sair</h2>
+              <p className="eyebrow">Regras de saída</p>
+              <h2>O que fica interno e o que pode sair</h2>
             </div>
           </div>
 
@@ -269,67 +242,19 @@ export default function AdminExportsPage() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Situa\u00e7\u00e3o</th>
+                  <th>Material</th>
                   <th>Diretriz</th>
                 </tr>
               </thead>
               <tbody>
-                {exportRules.map(([situation, rule]) => (
-                  <tr key={situation}>
-                    <td>{situation}</td>
+                {exportRules.map(([material, rule]) => (
+                  <tr key={material}>
+                    <td>{material}</td>
                     <td>{rule}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-        </Card>
-      </section>
-
-      <section className="admin-section-grid">
-        <Card className="admin-panel-card">
-          <div className="admin-panel-header">
-            <div>
-              <p className="eyebrow">Fluxo recomendado</p>
-              <h2>Da base ao envio</h2>
-            </div>
-          </div>
-
-          <div className="admin-governance-grid">
-            {handoffFlow.map((item) => (
-              <div key={item.title} className="admin-governance-card">
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        <Card className="admin-panel-card">
-          <div className="admin-panel-header">
-            <div>
-              <p className="eyebrow">Uso institucional</p>
-              <h2>Como a ONG leva a base para fora</h2>
-            </div>
-          </div>
-
-          <div className="admin-governance-grid">
-            <div className="admin-governance-card">
-              <h3>Apresenta\u00e7\u00f5es e reuni\u00f5es</h3>
-              <p>Relat\u00f3rios em PDF e indicadores gerais apoiam reuni\u00f5es e apresenta\u00e7\u00f5es.</p>
-            </div>
-            <div className="admin-governance-card">
-              <h3>Planilhas e Power BI</h3>
-              <p>Excel e CSV levam a base para dashboards, cruzamentos e BI.</p>
-            </div>
-            <div className="admin-governance-card">
-              <h3>Parceiros externos</h3>
-              <p>Parceiros recebem somente recortes preparados pela ONG.</p>
-            </div>
-            <div className="admin-governance-card">
-              <h3>Dados pessoais</h3>
-              <p>Informa\u00e7\u00f5es nominais seguem protegidas no ambiente interno.</p>
-            </div>
           </div>
         </Card>
       </section>
