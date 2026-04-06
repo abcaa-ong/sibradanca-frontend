@@ -681,7 +681,7 @@
   .access-grid > :last-child:nth-child(odd) {
     grid-column: 1 / -1;
     justify-self: center;
-    width: min(100%, calc((100% - 20px) / 2));
+    width: min(100%, 420px);
   }
 
   .hero-artwork {
@@ -691,6 +691,17 @@
 }
 
 @media (max-width: 960px) {
+  .access-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .access-grid > *,
+  .access-grid > :last-child:nth-child(odd) {
+    grid-column: span 1;
+    justify-self: stretch;
+    width: 100%;
+  }
+
   .partners-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
