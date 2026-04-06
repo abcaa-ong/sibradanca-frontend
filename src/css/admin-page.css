@@ -204,6 +204,7 @@
   justify-content: space-between;
   gap: 20px;
   align-items: flex-start;
+  min-width: 0;
 }
 
 .admin-page-header-compact {
@@ -264,8 +265,7 @@
 
 .admin-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 240px));
-  justify-content: center;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -319,6 +319,7 @@
   align-items: flex-start;
   margin-bottom: 18px;
   flex-wrap: wrap;
+  min-width: 0;
 }
 
 .admin-panel-header h2 {
@@ -787,8 +788,11 @@
     align-items: center;
   }
 
+  .admin-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .admin-summary-strip,
-  .admin-grid,
   .admin-section-grid,
   .admin-profile-grid,
   .admin-module-grid,

@@ -24,20 +24,21 @@ const workAreas = [
     description: 'Protocolos, fichas completas e consulta individual de cada resposta.',
     route: '/painel-interno/cadastros',
     actionLabel: 'Abrir cadastros',
-    outputs: ['Protocolos', 'Fichas completas', 'Atualização'],
+    outputs: ['Protocolos', 'Fichas completas', 'Atualiza\u00e7\u00f5es'],
   },
   {
     title: 'Dados e an\u00e1lises',
     audience: 'Leitura nacional',
-    description: 'Recortes por setor, território, modalidade, formação, renda e políticas públicas.',
+    description:
+      'Recortes por setor, territ\u00f3rio, modalidade, forma\u00e7\u00e3o, renda e pol\u00edticas p\u00fablicas.',
     route: '/painel-interno/dados',
     actionLabel: 'Abrir dados',
-    outputs: ['Indicadores', 'Território', 'Tabelas'],
+    outputs: ['Indicadores', 'Territ\u00f3rio', 'Tabelas'],
   },
   {
     title: 'Exporta\u00e7\u00f5es',
     audience: 'Sa\u00eddas da base',
-    description: 'Arquivos em PDF, Excel e CSV para rotina da equipe, apresentações e Power BI.',
+    description: 'Arquivos em PDF, Excel e CSV para rotina da equipe, apresenta\u00e7\u00f5es e Power BI.',
     route: '/painel-interno/exportacoes',
     actionLabel: 'Abrir exporta\u00e7\u00f5es',
     outputs: ['PDF', 'Excel', 'CSV', 'BI'],
@@ -45,10 +46,11 @@ const workAreas = [
   {
     title: 'Seguran\u00e7a e LGPD',
     audience: 'Prote\u00e7\u00e3o do ambiente',
-    description: 'Acessos, histórico de uso e regras para compartilhar recortes da base com segurança.',
+    description:
+      'Acessos, hist\u00f3rico de uso e regras para compartilhar recortes da base com seguran\u00e7a.',
     route: '/painel-interno/acessos',
     actionLabel: 'Abrir seguran\u00e7a',
-    outputs: ['Acessos', 'Histórico', 'LGPD'],
+    outputs: ['Acessos', 'Hist\u00f3rico', 'LGPD'],
   },
 ] as const
 
@@ -200,12 +202,12 @@ export default function AdminWorkspacePage() {
       {
         label: 'Cobertura territorial',
         value: `${formatNumber(activeStates.length)} UFs`,
-        detail: `${formatPercent(activeStates.length, 27)} do território nacional já aparece na base.`,
+        detail: `${formatPercent(activeStates.length, 27)} do territ\u00f3rio nacional j\u00e1 aparece na base.`,
       },
       {
         label: 'Setores com registros',
         value: `${sectorDistribution.filter((item) => item.value > 0).length}/3`,
-        detail: 'Jovens, profissionais e instituições já estão reunidos na base.',
+        detail: 'Jovens, profissionais e institui\u00e7\u00f5es j\u00e1 est\u00e3o reunidos na base.',
       },
       {
         label: '\u00daltimo cadastro',
@@ -230,22 +232,22 @@ export default function AdminWorkspacePage() {
       {
         label: 'Faixa et\u00e1ria em destaque',
         value: ageLeader ? `${ageLeader.name} (${formatNumber(ageLeader.value)})` : 'Sem leitura',
-        detail: 'Faixa etária mais presente na leitura atual da base.',
+        detail: 'Faixa et\u00e1ria mais presente na leitura atual da base.',
       },
       {
         label: 'G\u00eanero em destaque',
         value: genderLeader ? `${genderLeader.name} (${formatNumber(genderLeader.value)})` : 'Sem leitura',
-        detail: 'Recorte de gênero mais presente entre os registros disponíveis.',
+        detail: 'Recorte de g\u00eanero mais presente entre os registros dispon\u00edveis.',
       },
       {
         label: 'Modalidade em destaque',
         value: modalityLeader ? `${modalityLeader.name} (${formatNumber(modalityLeader.value)})` : 'Sem leitura',
-        detail: 'Modalidade mais recorrente entre os formulários.',
+        detail: 'Modalidade mais recorrente entre os formul\u00e1rios.',
       },
       {
-        label: 'Editais e apoio público',
+        label: 'Editais e apoio p\u00fablico',
         value: callLeader ? `${callLeader.name} (${formatNumber(callLeader.value)})` : 'Sem leitura',
-        detail: 'Leitura mais presente nos recortes ligados a editais e políticas públicas.',
+        detail: 'Leitura mais presente nos recortes ligados a editais e pol\u00edticas p\u00fablicas.',
       },
     ]
   }, [dashboard])
@@ -258,7 +260,7 @@ export default function AdminWorkspacePage() {
           <h2>Banco Nacional de Dados da Dan\u00e7a do Brasil</h2>
           <p className="admin-page-subtitle">
             A ONG consulta os cadastros, acompanha a leitura nacional da base e prepara os
-            arquivos institucionais em um único ambiente.
+            arquivos institucionais em um \u00fanico ambiente.
           </p>
         </div>
       </header>
@@ -268,25 +270,25 @@ export default function AdminWorkspacePage() {
       <section className="admin-grid">
         <Card className="admin-metric-card">
           <span className="eyebrow">Base total</span>
-          <strong>{overview?.totalResponses ?? '-'}</strong>
+          <strong>{overview ? formatNumber(overview.totalResponses) : '-'}</strong>
           <p className="card-text">Cadastros dispon\u00edveis na base.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Jovens</span>
-          <strong>{overview?.totalYouth ?? '-'}</strong>
+          <strong>{overview ? formatNumber(overview.totalYouth) : '-'}</strong>
           <p className="card-text">Frente jovem da dan\u00e7a.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Profissionais</span>
-          <strong>{overview?.totalProfessionals ?? '-'}</strong>
+          <strong>{overview ? formatNumber(overview.totalProfessionals) : '-'}</strong>
           <p className="card-text">Frente profissional da dan\u00e7a.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Institui\u00e7\u00f5es</span>
-          <strong>{overview?.totalInstitutions ?? '-'}</strong>
+          <strong>{overview ? formatNumber(overview.totalInstitutions) : '-'}</strong>
           <p className="card-text">Escolas, grupos, projetos e espa\u00e7os.</p>
         </Card>
       </section>
@@ -375,16 +377,16 @@ export default function AdminWorkspacePage() {
           data={sectorDistribution}
           eyebrowLabel="Base atual"
           isLoading={isLoading}
-          emptyMessage="Carregando distribuição dos setores..."
+          emptyMessage="Carregando distribui\u00e7\u00e3o dos setores..."
         />
 
         <ChartPanel
-          title="Participação por setor"
+          title="Participa\u00e7\u00e3o por setor"
           data={sectorDistribution}
           type="pie"
           eyebrowLabel="Base atual"
           isLoading={isLoading}
-          emptyMessage="Carregando participação dos setores..."
+          emptyMessage="Carregando participa\u00e7\u00e3o dos setores..."
         />
 
         <ChartPanel
@@ -416,7 +418,7 @@ export default function AdminWorkspacePage() {
         />
 
         <ChartPanel
-          title="Estados com maior presença"
+          title="Estados com maior presen\u00e7a"
           data={topStates}
           eyebrowLabel="Territ\u00f3rio"
           isLoading={isLoading}

@@ -185,7 +185,7 @@ export default function AdminExportsPage() {
       <header className="admin-page-header">
         <div>
           <p className="eyebrow">Exporta\u00e7\u00f5es</p>
-          <h2>Arquivos que saem do Banco Nacional da Dan\u00e7a</h2>
+          <h2>Arquivos que saem do Banco Nacional de Dados da Dan\u00e7a</h2>
           <p className="admin-page-subtitle">
             Arquivos da base para leitura interna, relat\u00f3rios, dashboards e materiais preparados pela ONG.
           </p>

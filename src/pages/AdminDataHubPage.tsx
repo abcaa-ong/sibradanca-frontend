@@ -102,22 +102,22 @@ const operationalDownloadRows: DownloadRow[] = [
 const formJourneyCards = [
   {
     title: 'Jovens da dan\u00e7a',
-    description: 'Identificação, território, prática, custos e conteúdos do setor jovem.',
+    description: 'Identifica\u00e7\u00e3o, territ\u00f3rio, pr\u00e1tica, custos e conte\u00fados do setor jovem.',
     outputs: 'Painel / PDF / Excel',
   },
   {
     title: 'Profissionais da dan\u00e7a',
-    description: 'Atuação profissional, renda, custos, formação e editais.',
+    description: 'Atua\u00e7\u00e3o profissional, renda, custos, forma\u00e7\u00e3o e editais.',
     outputs: 'Painel / PDF / Excel / Power BI',
   },
   {
     title: 'Institui\u00e7\u00f5es da dan\u00e7a',
-    description: 'Estrutura, equipe, território, público atendido e gestão.',
+    description: 'Estrutura, equipe, territ\u00f3rio, p\u00fablico atendido e gest\u00e3o.',
     outputs: 'Painel / PDF / Excel / Power BI',
   },
   {
     title: 'Leitura nacional consolidada',
-    description: 'Leitura conjunta dos três setores do Banco Nacional de Dados da Dança.',
+    description: 'Leitura conjunta dos tr\u00eas setores do Banco Nacional de Dados da Dan\u00e7a.',
     outputs: 'Painel / PDF / XLSX / CSV',
   },
 ] as const
@@ -125,22 +125,22 @@ const formJourneyCards = [
 const internalFlowRows = [
   {
     stage: 'Cadastro recebido',
-    detail: 'O formulário entra na base com protocolo e data de envio.',
+    detail: 'O formul\u00e1rio entra na base com protocolo e data de envio.',
     use: 'Acompanhamento do dia a dia.',
   },
   {
     stage: 'Ficha individual',
-    detail: 'Cada protocolo fica disponível para leitura completa.',
+    detail: 'Cada protocolo fica dispon\u00edvel para leitura completa.',
     use: 'Confer\u00eancia, atendimento e revis\u00e3o.',
   },
   {
     stage: 'Planilha da base',
-    detail: 'A base sai organizada em linhas e colunas para estudo, conferência e cruzamento.',
+    detail: 'A base sai organizada em linhas e colunas para estudo, confer\u00eancia e cruzamento.',
     use: 'Excel, cruzamentos e relat\u00f3rios.',
   },
   {
     stage: 'Arquivo para BI',
-    detail: 'Os recortes saem prontos para dashboards, Power BI e leitura analítica.',
+    detail: 'Os recortes saem prontos para dashboards, Power BI e leitura anal\u00edtica.',
     use: 'Leitura anal\u00edtica e apresenta\u00e7\u00f5es.',
   },
   {
@@ -286,7 +286,11 @@ export default function AdminDataHubPage() {
         setSectorSummary(sectorData)
         setStateSummary(stateData)
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : 'N\u00e3o foi poss\u00edvel carregar a \u00e1rea de dados.')
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : 'N\u00e3o foi poss\u00edvel carregar a \u00e1rea de dados.',
+        )
       }
     }
 
@@ -349,9 +353,10 @@ export default function AdminDataHubPage() {
       <header className="admin-page-header">
         <div>
           <p className="eyebrow">Dados</p>
-          <h2>Base nacional, análises e arquivos de trabalho</h2>
+          <h2>Base nacional, leituras e arquivos de trabalho</h2>
           <p className="admin-page-subtitle">
-            Tudo o que entra pelos formulários, aparece no painel e sai em planilha, PDF, CSV e BI.
+            Tudo o que entra pelos formul\u00e1rios passa para a base, aparece no painel e pode sair
+            em planilha, PDF, CSV e BI.
           </p>
         </div>
       </header>
@@ -361,25 +366,25 @@ export default function AdminDataHubPage() {
       <section className="admin-grid">
         <Card className="admin-metric-card">
           <span className="eyebrow">Base total</span>
-          <strong>{overview?.totalResponses ?? '-'}</strong>
+          <strong>{overview ? formatNumber(overview.totalResponses) : '-'}</strong>
           <p className="card-text">Cadastros na base.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Jovens</span>
-          <strong>{overview?.totalYouth ?? '-'}</strong>
+          <strong>{overview ? formatNumber(overview.totalYouth) : '-'}</strong>
           <p className="card-text">Registros da frente jovem.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Profissionais</span>
-          <strong>{overview?.totalProfessionals ?? '-'}</strong>
+          <strong>{overview ? formatNumber(overview.totalProfessionals) : '-'}</strong>
           <p className="card-text">Registros da frente profissional.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Institui\u00e7\u00f5es</span>
-          <strong>{overview?.totalInstitutions ?? '-'}</strong>
+          <strong>{overview ? formatNumber(overview.totalInstitutions) : '-'}</strong>
           <p className="card-text">Registros de escolas, grupos e projetos.</p>
         </Card>
       </section>
@@ -410,7 +415,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Entrada da base</p>
-              <h2>Como os formulários alimentam a base</h2>
+              <h2>Como os formul\u00e1rios alimentam a base</h2>
             </div>
           </div>
 
@@ -449,8 +454,8 @@ export default function AdminDataHubPage() {
                 {sectorSummary.map((item) => (
                   <tr key={item.sector}>
                     <td>{item.sectorLabel}</td>
-                    <td>{item.totalSubmissions}</td>
-                    <td>{item.totalStates}</td>
+                    <td>{formatNumber(item.totalSubmissions)}</td>
+                    <td>{formatNumber(item.totalStates)}</td>
                     <td>{formatBackendDateTime(item.lastSubmissionAt)}</td>
                   </tr>
                 ))}
@@ -482,10 +487,10 @@ export default function AdminDataHubPage() {
                 {stateTopList.map((item) => (
                   <tr key={item.stateCode}>
                     <td>{item.stateCode}</td>
-                    <td>{item.totalSubmissions}</td>
-                    <td>{item.totalYouth}</td>
-                    <td>{item.totalProfessionals}</td>
-                    <td>{item.totalInstitutions}</td>
+                    <td>{formatNumber(item.totalSubmissions)}</td>
+                    <td>{formatNumber(item.totalYouth)}</td>
+                    <td>{formatNumber(item.totalProfessionals)}</td>
+                    <td>{formatNumber(item.totalInstitutions)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -534,14 +539,14 @@ export default function AdminDataHubPage() {
       <section className="admin-section-stack">
         <DownloadTable
           eyebrow="Base completa"
-          title="Arquivos completos do Banco Nacional da Dança"
+          title="Arquivos completos do Banco Nacional de Dados da Dan\u00e7a"
           rows={completeDownloadRows}
           onDownload={handleDownload}
         />
 
         <DownloadTable
           eyebrow="Indicadores"
-          title="Arquivos para análises, dashboards e apresentações"
+          title="Arquivos para an\u00e1lises, dashboards e apresenta\u00e7\u00f5es"
           rows={statisticsDownloadRows}
           onDownload={handleDownload}
         />
