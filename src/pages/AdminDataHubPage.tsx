@@ -102,22 +102,22 @@ const operationalDownloadRows: DownloadRow[] = [
 const formJourneyCards = [
   {
     title: 'Jovens da dan\u00e7a',
-    description: 'Identidade, territ\u00f3rio, modalidades, forma\u00e7\u00e3o e perman\u00eancia.',
+    description: 'Identificação, território, prática, custos e conteúdos do setor jovem.',
     outputs: 'Painel / PDF / Excel',
   },
   {
     title: 'Profissionais da dan\u00e7a',
-    description: 'Trajet\u00f3ria, trabalho, renda, circula\u00e7\u00e3o e apoio p\u00fablico.',
+    description: 'Atuação profissional, renda, custos, formação e editais.',
     outputs: 'Painel / PDF / Excel / Power BI',
   },
   {
     title: 'Institui\u00e7\u00f5es da dan\u00e7a',
-    description: 'Estrutura, a\u00e7\u00e3o formativa, territ\u00f3rio e rotina de atividades.',
+    description: 'Estrutura, equipe, território, público atendido e gestão.',
     outputs: 'Painel / PDF / Excel / Power BI',
   },
   {
     title: 'Leitura nacional consolidada',
-    description: 'Leitura conjunta das tr\u00eas frentes da base.',
+    description: 'Leitura conjunta dos três setores do Banco Nacional de Dados da Dança.',
     outputs: 'Painel / PDF / XLSX / CSV',
   },
 ] as const
@@ -125,27 +125,27 @@ const formJourneyCards = [
 const internalFlowRows = [
   {
     stage: 'Cadastro recebido',
-    detail: 'O formul\u00e1rio entra na base com protocolo e data de envio.',
+    detail: 'O formulário entra na base com protocolo e data de envio.',
     use: 'Acompanhamento do dia a dia.',
   },
   {
     stage: 'Ficha individual',
-    detail: 'Cada protocolo fica dispon\u00edvel para leitura completa.',
+    detail: 'Cada protocolo fica disponível para leitura completa.',
     use: 'Confer\u00eancia, atendimento e revis\u00e3o.',
   },
   {
     stage: 'Planilha da base',
-    detail: 'A base sai organizada em linhas e colunas para trabalho interno.',
+    detail: 'A base sai organizada em linhas e colunas para estudo, conferência e cruzamento.',
     use: 'Excel, cruzamentos e relat\u00f3rios.',
   },
   {
     stage: 'Arquivo para BI',
-    detail: 'Os recortes saem prontos para dashboards e Power BI.',
+    detail: 'Os recortes saem prontos para dashboards, Power BI e leitura analítica.',
     use: 'Leitura anal\u00edtica e apresenta\u00e7\u00f5es.',
   },
   {
     stage: 'Material externo',
-    detail: 'A ONG escolhe o recorte que pode ser compartilhado.',
+    detail: 'A ONG escolhe o recorte que pode ser compartilhado sem expor dados pessoais.',
     use: 'Reuni\u00f5es, parceiros e apresenta\u00e7\u00f5es.',
   },
 ] as const
@@ -349,9 +349,9 @@ export default function AdminDataHubPage() {
       <header className="admin-page-header">
         <div>
           <p className="eyebrow">Dados</p>
-          <h2>Dados, an\u00e1lises e sa\u00eddas da base</h2>
+          <h2>Base nacional, análises e arquivos de trabalho</h2>
           <p className="admin-page-subtitle">
-            Tudo o que entra pelos formul\u00e1rios e sai em leitura, planilha, PDF, CSV e BI.
+            Tudo o que entra pelos formulários, aparece no painel e sai em planilha, PDF, CSV e BI.
           </p>
         </div>
       </header>
@@ -410,7 +410,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Entrada da base</p>
-              <h2>Como os formul\u00e1rios entram no sistema</h2>
+              <h2>Como os formulários alimentam a base</h2>
             </div>
           </div>
 
@@ -499,7 +499,7 @@ export default function AdminDataHubPage() {
           <div className="admin-panel-header">
             <div>
               <p className="eyebrow">Destaques</p>
-              <h2>Leituras r\u00e1pidas da base</h2>
+              <h2>Leituras centrais da base</h2>
             </div>
           </div>
 
@@ -534,14 +534,14 @@ export default function AdminDataHubPage() {
       <section className="admin-section-stack">
         <DownloadTable
           eyebrow="Base completa"
-          title="Arquivos completos da base nacional"
+          title="Arquivos completos do Banco Nacional da Dança"
           rows={completeDownloadRows}
           onDownload={handleDownload}
         />
 
         <DownloadTable
           eyebrow="Indicadores"
-          title="Arquivos para an\u00e1lises e apresenta\u00e7\u00f5es"
+          title="Arquivos para análises, dashboards e apresentações"
           rows={statisticsDownloadRows}
           onDownload={handleDownload}
         />
