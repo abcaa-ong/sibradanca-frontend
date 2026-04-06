@@ -236,3 +236,10 @@ export interface BackendHealthStatusResponse {
 
 export type AdminInsightsOverviewResponse = StatisticsOverviewResponse
 export type AdminInsightsDashboardResponse = StatisticsDashboardResponse
+
+export interface AdminInsightsBootstrapResponse {
+  overview: AdminInsightsOverviewResponse
+  dashboard: AdminInsightsDashboardResponse
+  sectorSummary: AdminBiSectorSummaryResponse[]
+  stateSummary: AdminBiStateSummaryResponse[]
+}

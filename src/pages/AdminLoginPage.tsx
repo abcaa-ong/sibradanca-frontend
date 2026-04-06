@@ -9,7 +9,7 @@ import {
   hasAdminSession,
   saveAdminCredentials,
 } from '../services/admin-auth.service'
-import { getAdminOverview } from '../services/admin.service'
+import { getAdminBootstrap } from '../services/admin.service'
 
 export default function AdminLoginPage() {
   const navigate = useNavigate()
@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
 
     try {
       saveAdminCredentials({ username, password })
-      await getAdminOverview()
+      await getAdminBootstrap()
       navigate('/painel-interno/dashboard', { replace: true })
     } catch (submitError) {
       clearAdminCredentials()
@@ -49,7 +49,7 @@ export default function AdminLoginPage() {
     <div className="admin-shell">
       <Seo
         title="Acesso ao painel interno"
-        description="Login da \u00e1rea interna do SIBRADAN\u00c7A para a equipe da ONG."
+        description="Login da área interna do SIBRADANÇA para a equipe da ONG."
         robots="noindex,nofollow"
       />
       <div className="admin-container admin-login-container">
@@ -58,12 +58,12 @@ export default function AdminLoginPage() {
             <LockKeyhole size={24} />
           </div>
           <p className="eyebrow">Central administrativa</p>
-          <h1>{'\u00c1rea restrita da ONG'}</h1>
-          <p className="card-text">{'Entre com as credenciais do painel interno.'}</p>
+          <h1>Área restrita da ONG</h1>
+          <p className="card-text">Entre com as credenciais do painel interno.</p>
 
           <form className="admin-login-form" onSubmit={handleSubmit}>
             <label className="admin-field">
-              <span>{'Usu\u00e1rio'}</span>
+              <span>Usuário</span>
               <input
                 value={username}
                 placeholder="Ex: ong.admin"

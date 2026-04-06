@@ -6,9 +6,7 @@ import { AdminZeroState } from '../components/AdminZeroState'
 import { ChartPanel } from '../components/ChartPanel'
 import { MetricCard } from '../components/MetricCard'
 import {
-  getAdminDashboard,
-  getAdminOverview,
-  getAdminStateSummary,
+  getAdminBootstrap,
 } from '../services/admin.service'
 import type {
   AdminBiStateSummaryResponse,
@@ -117,15 +115,10 @@ export default function AdminWorkspacePage() {
       setIsLoading(true)
 
       try {
-        const [overviewData, dashboardData, stateData] = await Promise.all([
-          getAdminOverview(),
-          getAdminDashboard(),
-          getAdminStateSummary(),
-        ])
-
-        setOverview(overviewData)
-        setDashboard(dashboardData)
-        setStateSummary(stateData)
+        const bootstrap = await getAdminBootstrap()
+        setOverview(bootstrap.overview)
+        setDashboard(bootstrap.dashboard)
+        setStateSummary(bootstrap.stateSummary)
       } catch (loadError) {
         setError(
           loadError instanceof Error
@@ -270,91 +263,109 @@ export default function AdminWorkspacePage() {
 
       {error ? <Card className="admin-alert admin-alert-error">{error}</Card> : null}
 
+      {isLoading ? (
+        <section className="admin-section-grid">
+          <AdminZeroState
+            className="admin-panel-card-full"
+            eyebrow="Carregando o painel"
+            title="O dashboard interno está organizando a leitura da base"
+            description="O sistema está reunindo a visão geral, os recortes por setor e a leitura territorial do Banco Nacional de Dados da Dança do Brasil."
+            items={[
+              'O painel usa a mesma base que recebe os formulários públicos.',
+              'Quando o Render sai de repouso, a primeira abertura pode demorar um pouco mais.',
+              'Assim que a resposta chega, os módulos da ONG entram completos nesta tela.',
+            ]}
+          />
+        </section>
+      ) : null}
+
       <section className="admin-grid">
         <Card className="admin-metric-card">
           <span className="eyebrow">Base total</span>
-          <strong>{overview ? formatNumber(overview.totalResponses) : '-'}</strong>
+          <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalResponses) : '-'}</strong>
           <p className="card-text">Cadastros dispon\u00edveis na base.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Jovens</span>
-          <strong>{overview ? formatNumber(overview.totalYouth) : '-'}</strong>
+          <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalYouth) : '-'}</strong>
           <p className="card-text">Frente jovem da dan\u00e7a.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Profissionais</span>
-          <strong>{overview ? formatNumber(overview.totalProfessionals) : '-'}</strong>
+          <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalProfessionals) : '-'}</strong>
           <p className="card-text">Frente profissional da dan\u00e7a.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Institui\u00e7\u00f5es</span>
-          <strong>{overview ? formatNumber(overview.totalInstitutions) : '-'}</strong>
+          <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalInstitutions) : '-'}</strong>
           <p className="card-text">Escolas, grupos, projetos e espa\u00e7os.</p>
         </Card>
       </section>
 
-      {!isLoading && !error && !hasBaseData ? (
-        <section className="admin-section-grid">
-          <AdminZeroState
-            className="admin-panel-card-full"
-            title="A nova base ainda n\u00e3o recebeu cadastros"
-            description="O painel j\u00e1 est\u00e1 conectado ao banco novo, mas esta etapa ainda n\u00e3o recebeu formul\u00e1rios enviados. Assim que os primeiros protocolos entrarem, a leitura nacional come\u00e7a a aparecer aqui."
-            items={[
-              'Os formul\u00e1rios p\u00fablicos j\u00e1 alimentam esta base nova.',
-              'As fichas completas aparecem conforme os cadastros entram.',
-              'Gr\u00e1ficos, tabelas e exporta\u00e7\u00f5es passam a refletir os protocolos recebidos.',
-            ]}
-            note="Enquanto a base est\u00e1 vazia, a equipe ainda pode acessar os m\u00f3dulos do sistema e preparar a rotina de trabalho."
-          />
-        </section>
-      ) : (
-        <section className="admin-section-grid">
-          <Card className="admin-panel-card">
-            <div className="admin-panel-header">
-              <div>
-                <p className="eyebrow">Base em opera\u00e7\u00e3o</p>
-                <h2>Como a base est\u00e1 hoje</h2>
-              </div>
-            </div>
-
-            <div className="admin-system-list">
-              {operationalRows.map((item) => (
-                <div key={item.label} className="admin-system-row">
-                  <div>
-                    <span className="admin-system-label">{item.label}</span>
-                    <p className="admin-system-detail">{item.detail}</p>
-                  </div>
-                  <strong className="admin-system-value">{item.value}</strong>
+      {!isLoading ? (
+        !error && !hasBaseData ? (
+          <section className="admin-section-grid">
+            <AdminZeroState
+              className="admin-panel-card-full"
+              title="A nova base ainda n\u00e3o recebeu cadastros"
+              description="O painel j\u00e1 est\u00e1 conectado ao banco novo, mas esta etapa ainda n\u00e3o recebeu formul\u00e1rios enviados. Assim que os primeiros protocolos entrarem, a leitura nacional come\u00e7a a aparecer aqui."
+              items={[
+                'Os formul\u00e1rios p\u00fablicos j\u00e1 alimentam esta base nova.',
+                'As fichas completas aparecem conforme os cadastros entram.',
+                'Gr\u00e1ficos, tabelas e exporta\u00e7\u00f5es passam a refletir os protocolos recebidos.',
+              ]}
+              note="Enquanto a base est\u00e1 vazia, a equipe ainda pode acessar os m\u00f3dulos do sistema e preparar a rotina de trabalho."
+            />
+          </section>
+        ) : (
+          <section className="admin-section-grid">
+            <Card className="admin-panel-card">
+              <div className="admin-panel-header">
+                <div>
+                  <p className="eyebrow">Base em opera\u00e7\u00e3o</p>
+                  <h2>Como a base est\u00e1 hoje</h2>
                 </div>
-              ))}
-            </div>
-          </Card>
-
-          <Card className="admin-panel-card">
-            <div className="admin-panel-header">
-              <div>
-                <p className="eyebrow">Leitura nacional</p>
-                <h2>O que mais aparece na base</h2>
               </div>
-            </div>
 
-            <div className="admin-system-list">
-              {executiveRows.map((item) => (
-                <div key={item.label} className="admin-system-row">
-                  <div>
-                    <span className="admin-system-label">{item.label}</span>
-                    <p className="admin-system-detail">{item.detail}</p>
+              <div className="admin-system-list">
+                {operationalRows.map((item) => (
+                  <div key={item.label} className="admin-system-row">
+                    <div>
+                      <span className="admin-system-label">{item.label}</span>
+                      <p className="admin-system-detail">{item.detail}</p>
+                    </div>
+                    <strong className="admin-system-value">{item.value}</strong>
                   </div>
-                  <strong className="admin-system-value">{item.value}</strong>
+                ))}
+              </div>
+            </Card>
+
+            <Card className="admin-panel-card">
+              <div className="admin-panel-header">
+                <div>
+                  <p className="eyebrow">Leitura nacional</p>
+                  <h2>O que mais aparece na base</h2>
                 </div>
-              ))}
-            </div>
-          </Card>
-        </section>
-      )}
+              </div>
+
+              <div className="admin-system-list">
+                {executiveRows.map((item) => (
+                  <div key={item.label} className="admin-system-row">
+                    <div>
+                      <span className="admin-system-label">{item.label}</span>
+                      <p className="admin-system-detail">{item.detail}</p>
+                    </div>
+                    <strong className="admin-system-value">{item.value}</strong>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </section>
+        )
+      ) : null}
 
       <section className="admin-section-grid">
         <Card className="admin-panel-card admin-panel-card-full">

@@ -4,6 +4,7 @@ import type {
   AdminBiSectorSummaryResponse,
   AdminBiStateSummaryResponse,
   AdminBiSubmissionRowResponse,
+  AdminInsightsBootstrapResponse,
   AdminInsightsDashboardResponse,
   AdminInsightsOverviewResponse,
   AdminSubmissionDetailResponse,
@@ -140,7 +141,7 @@ function getFilenameFromDisposition(headerValue: string | null) {
     return decodeURIComponent(utf8Match[1])
   }
 
-  const fallbackMatch = headerValue.match(/filename="?([^";]+)"?/i)
+  const fallbackMatch = headerValue.match(/filename=\"?([^\";]+)\"?/i)
   return fallbackMatch?.[1] ?? null
 }
 
@@ -157,31 +158,38 @@ async function adminDownload(path: string) {
   } satisfies AdminDownloadResponse
 }
 
+export function getAdminBootstrap() {
+  return cachedAdminGet<AdminInsightsBootstrapResponse>(
+    '/api/admin/insights/bootstrap',
+    'Não foi possível carregar o painel interno.',
+  )
+}
+
 export function getAdminOverview() {
   return cachedAdminGet<AdminInsightsOverviewResponse>(
     '/api/admin/insights/overview',
-    'Não foi possível carregar a visão geral do painel.'
+    'Não foi possível carregar a visão geral do painel.',
   )
 }
 
 export function getAdminDashboard() {
   return cachedAdminGet<AdminInsightsDashboardResponse>(
     '/api/admin/insights/dashboard',
-    'Não foi possível carregar o painel interno.'
+    'Não foi possível carregar o painel interno.',
   )
 }
 
 export function getAdminSubmissions(filters?: AdminFilters) {
   return adminGet<AdminSubmissionSummaryResponse[]>(
     `/api/admin/submissions${buildQuery(filters)}`,
-    'Não foi possível carregar os cadastros.'
+    'Não foi possível carregar os cadastros.',
   )
 }
 
 export function getAdminSubmissionDetail(protocol: string) {
   return adminGet<AdminSubmissionDetailResponse>(
     `/api/admin/submissions/${encodeURIComponent(protocol)}/detail`,
-    'Não foi possível carregar a ficha do cadastro.'
+    'Não foi possível carregar a ficha do cadastro.',
   )
 }
 
@@ -190,28 +198,28 @@ export function getAdminAudit(protocol?: string) {
 
   return cachedAdminGet<AdminAuditLogResponse[]>(
     `/api/admin/submissions/audit${query}`,
-    'Não foi possível carregar a auditoria.'
+    'Não foi possível carregar a auditoria.',
   )
 }
 
 export function getAdminSectorSummary() {
   return cachedAdminGet<AdminBiSectorSummaryResponse[]>(
     '/api/admin/bi/sector-summary',
-    'Não foi possível carregar o resumo por setor.'
+    'Não foi possível carregar o resumo por setor.',
   )
 }
 
 export function getAdminStateSummary() {
   return cachedAdminGet<AdminBiStateSummaryResponse[]>(
     '/api/admin/bi/state-summary',
-    'Não foi possível carregar o resumo por estado.'
+    'Não foi possível carregar o resumo por estado.',
   )
 }
 
 export function getAdminSubmissionDataset(filters?: AdminFilters) {
   return adminGet<AdminBiSubmissionRowResponse[]>(
     `/api/admin/bi/submissions${buildQuery(filters)}`,
-    'Não foi possível carregar a base interna.'
+    'Não foi possível carregar a base interna.',
   )
 }
 

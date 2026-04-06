@@ -30,6 +30,7 @@ export default function AdminAccessHubPage() {
   const [auditLogs, setAuditLogs] = useState<AdminAuditLogResponse[]>([])
   const [health, setHealth] = useState<BackendHealthStatusResponse | null>(null)
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
 
   const recentAudit = useMemo(() => auditLogs.slice(0, 8), [auditLogs])
   const lastAudit = recentAudit[0]?.createdAt ?? null
@@ -37,24 +38,30 @@ export default function AdminAccessHubPage() {
   useEffect(() => {
     async function loadData() {
       setError('')
+      setIsLoading(true)
 
-      try {
-        const auditData = await getAdminAudit()
-        setAuditLogs(auditData)
-      } catch (loadError) {
+      const [auditResult, healthResult] = await Promise.allSettled([
+        getAdminAudit(),
+        getBackendHealthStatus(),
+      ])
+
+      if (auditResult.status === 'fulfilled') {
+        setAuditLogs(auditResult.value)
+      } else {
         setError(
-          loadError instanceof Error
-            ? loadError.message
+          auditResult.reason instanceof Error
+            ? auditResult.reason.message
             : 'N\u00e3o foi poss\u00edvel carregar a \u00e1rea de seguran\u00e7a.',
         )
       }
 
-      try {
-        const healthData = await getBackendHealthStatus()
-        setHealth(healthData)
-      } catch {
+      if (healthResult.status === 'fulfilled') {
+        setHealth(healthResult.value)
+      } else {
         setHealth({ status: 'Sem resposta' })
       }
+
+      setIsLoading(false)
     }
 
     void loadData()
@@ -74,10 +81,25 @@ export default function AdminAccessHubPage() {
 
       {error ? <Card className="admin-alert admin-alert-error">{error}</Card> : null}
 
+      {isLoading ? (
+        <section className="admin-section-grid">
+          <AdminZeroState
+            className="admin-panel-card-full"
+            eyebrow="Carregando a área"
+            title="A área de segurança está reunindo acessos e status do ambiente"
+            description="O sistema está consultando o histórico recente e a saúde do backend para abrir esta tela com a leitura mais atual."
+            items={[
+              'A equipe vê aqui o que fica interno, o que pode ser exportado e como a base deve ser tratada.',
+              'Quando o backend sai de repouso, a primeira consulta pode demorar um pouco mais.',
+            ]}
+          />
+        </section>
+      ) : null}
+
       <section className="admin-grid">
         <Card className="admin-metric-card">
           <span className="eyebrow">Sistema</span>
-          <strong>{health?.status ?? '-'}</strong>
+          <strong>{isLoading ? '...' : health?.status ?? '-'}</strong>
           <p className="card-text">Status do ambiente interno.</p>
         </Card>
 

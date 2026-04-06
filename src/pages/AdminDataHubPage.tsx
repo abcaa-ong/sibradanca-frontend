@@ -7,15 +7,12 @@ import {
   downloadAdminStatisticsCsv,
   downloadAdminStatisticsPdf,
   downloadAdminStatisticsXlsx,
+  getAdminBootstrap,
   downloadAdminSubmissionsCsv,
   downloadAdminSubmissionsDetailedCsv,
   downloadAdminSubmissionsDetailedPdf,
   downloadAdminSubmissionsDetailedXlsx,
   downloadAdminSubmissionsXlsx,
-  getAdminDashboard,
-  getAdminOverview,
-  getAdminSectorSummary,
-  getAdminStateSummary,
 } from '../services/admin.service'
 import type {
   AdminBiSectorSummaryResponse,
@@ -264,6 +261,7 @@ export default function AdminDataHubPage() {
   const [sectorSummary, setSectorSummary] = useState<AdminBiSectorSummaryResponse[]>([])
   const [stateSummary, setStateSummary] = useState<AdminBiStateSummaryResponse[]>([])
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
 
   const stateTopList = useMemo(
     () => [...stateSummary].sort((left, right) => right.totalSubmissions - left.totalSubmissions).slice(0, 8),
@@ -273,25 +271,22 @@ export default function AdminDataHubPage() {
   useEffect(() => {
     async function loadData() {
       setError('')
+      setIsLoading(true)
 
       try {
-        const [overviewData, dashboardData, sectorData, stateData] = await Promise.all([
-          getAdminOverview(),
-          getAdminDashboard(),
-          getAdminSectorSummary(),
-          getAdminStateSummary(),
-        ])
-
-        setOverview(overviewData)
-        setDashboard(dashboardData)
-        setSectorSummary(sectorData)
-        setStateSummary(stateData)
+        const bootstrap = await getAdminBootstrap()
+        setOverview(bootstrap.overview)
+        setDashboard(bootstrap.dashboard)
+        setSectorSummary(bootstrap.sectorSummary)
+        setStateSummary(bootstrap.stateSummary)
       } catch (loadError) {
         setError(
           loadError instanceof Error
             ? loadError.message
             : 'N\u00e3o foi poss\u00edvel carregar a \u00e1rea de dados.',
         )
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -366,28 +361,44 @@ export default function AdminDataHubPage() {
 
       {error ? <Card className="admin-alert admin-alert-error">{error}</Card> : null}
 
+      {isLoading ? (
+        <section className="admin-section-grid">
+          <AdminZeroState
+            className="admin-panel-card-full"
+            eyebrow="Carregando a base"
+            title="A base interna está sendo organizada para a equipe"
+            description="O sistema está reunindo a visão geral, a leitura territorial e os arquivos de trabalho desta área. Assim que a resposta chegar, a base aparece completa neste painel."
+            items={[
+              'Os dados entram pelo formulário, passam pelo backend e chegam nesta área.',
+              'As tabelas, leituras e exportações abrem assim que o carregamento termina.',
+              'Se o backend saiu de repouso no Render, a primeira abertura pode levar um pouco mais.',
+            ]}
+          />
+        </section>
+      ) : null}
+
       <section className="admin-grid">
         <Card className="admin-metric-card">
           <span className="eyebrow">Base total</span>
-          <strong>{overview ? formatNumber(overview.totalResponses) : '-'}</strong>
+          <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalResponses) : '-'}</strong>
           <p className="card-text">Cadastros na base.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Jovens</span>
-          <strong>{overview ? formatNumber(overview.totalYouth) : '-'}</strong>
+          <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalYouth) : '-'}</strong>
           <p className="card-text">Registros da frente jovem.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Profissionais</span>
-          <strong>{overview ? formatNumber(overview.totalProfessionals) : '-'}</strong>
+          <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalProfessionals) : '-'}</strong>
           <p className="card-text">Registros da frente profissional.</p>
         </Card>
 
         <Card className="admin-metric-card">
           <span className="eyebrow">Institui\u00e7\u00f5es</span>
-          <strong>{overview ? formatNumber(overview.totalInstitutions) : '-'}</strong>
+          <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalInstitutions) : '-'}</strong>
           <p className="card-text">Registros de escolas, grupos e projetos.</p>
         </Card>
       </section>
@@ -434,7 +445,7 @@ export default function AdminDataHubPage() {
         </Card>
       </section>
 
-      {!hasBaseData ? (
+      {!isLoading && !hasBaseData ? (
         <section className="admin-section-grid">
           <AdminZeroState
             className="admin-panel-card-full"
@@ -450,7 +461,7 @@ export default function AdminDataHubPage() {
         </section>
       ) : null}
 
-      {hasBaseData ? (
+      {!isLoading && hasBaseData ? (
         <>
       <section className="admin-section-grid">
         <Card className="admin-panel-card">
