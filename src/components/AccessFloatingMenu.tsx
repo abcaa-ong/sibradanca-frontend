@@ -979,7 +979,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   }, [captchaToken, formStartedAt, honeypotValue, open, view])
 
   useEffect(() => {
-    if (!open || !['minor-flow', 'adult-flow', 'institution-flow'].includes(view)) {
+    if (!open) {
       return
     }
 
@@ -989,7 +989,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
     let isMounted = true
 
-    async function loadMinorReferences() {
+    async function loadReferenceData() {
       try {
         setIsMinorLoadingReferences(true)
         const [states, modalities, contents, consentTerm] = await Promise.all([
@@ -1025,12 +1025,12 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       }
     }
 
-    loadMinorReferences()
+    loadReferenceData()
 
     return () => {
       isMounted = false
     }
-  }, [hasLoadedReferences, open, view])
+  }, [hasLoadedReferences, open])
 
   useEffect(() => {
     if (view !== 'minor-flow' || !minorForm.state) {
