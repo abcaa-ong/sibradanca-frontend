@@ -21,7 +21,7 @@
   line-height: 1.06;
   letter-spacing: -0.035em;
   font-weight: 900;
-  max-inline-size: 12ch;
+  max-inline-size: 14ch;
   text-wrap: balance;
 }
 
@@ -102,7 +102,7 @@
 }
 
 .statistics-metric-card {
-  min-height: 186px;
+  min-height: 172px;
 }
 
 .statistics-metric-title {

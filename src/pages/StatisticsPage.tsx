@@ -41,22 +41,22 @@ const headlineCards = [
   {
     label: 'Presen\u00e7a fora do eixo Rio-S\u00e3o Paulo',
     percent: '72%',
-    detail: 'A base se espalha por todas as regi\u00f5es e refor\u00e7a a presen\u00e7a nacional da dan\u00e7a.',
+    detail: 'A leitura da base alcan\u00e7a todas as regi\u00f5es do pa\u00eds.',
   },
   {
     label: 'Forma\u00e7\u00e3o em destaque',
     percent: '68%',
-    detail: 'Cursos, aulas e processos de aprendizagem aparecem em toda a leitura da base.',
+    detail: 'Cursos, aulas e processos de aprendizagem aparecem em toda a base.',
   },
   {
     label: 'Institui\u00e7\u00f5es com atua\u00e7\u00e3o cont\u00ednua',
     percent: '61%',
-    detail: 'Escolas, grupos, projetos e companhias mant\u00eam atividade recorrente ao longo do ano.',
+    detail: 'Escolas, grupos, projetos e companhias mant\u00eam rotina ao longo do ano.',
   },
   {
-    label: 'Modalidades mais citadas',
+    label: 'Modalidades mais presentes',
     percent: 'Ballet e urbanas',
-    detail: 'As duas frentes lideram a leitura p\u00fablica atual e puxam a movimenta\u00e7\u00e3o da base.',
+    detail: 'As modalidades lideram a leitura p\u00fablica atual da base.',
   },
 ]
 
@@ -116,20 +116,20 @@ const modalityDistribution: ChartItem[] = [
   { name: 'Dan\u00e7a de sal\u00e3o', value: 520 },
 ]
 
-const trainingDistribution: ChartItem[] = [
-  { name: 'Em forma\u00e7\u00e3o', value: 1430 },
-  { name: 'Autodidatas', value: 860 },
-  { name: 'Cursos t\u00e9cnicos', value: 720 },
-  { name: 'Gradua\u00e7\u00e3o', value: 480 },
-  { name: 'P\u00f3s-gradua\u00e7\u00e3o', value: 170 },
+const financingDistribution: ChartItem[] = [
+  { name: 'Fam\u00edlia', value: 1420 },
+  { name: 'Pr\u00f3pria pessoa', value: 1190 },
+  { name: 'Escola ou grupo', value: 760 },
+  { name: 'Edital ou bolsa', value: 540 },
+  { name: 'Patroc\u00ednio e apoio', value: 330 },
 ]
 
-const supportDistribution: ChartItem[] = [
-  { name: 'Cursos e forma\u00e7\u00e3o', value: 940 },
-  { name: 'Festivais e eventos', value: 860 },
-  { name: 'Editais e oportunidades', value: 790 },
-  { name: 'Conte\u00fado digital', value: 650 },
-  { name: 'Gest\u00e3o e carreira', value: 520 },
+const costDistribution: ChartItem[] = [
+  { name: 'At\u00e9 R$ 100', value: 930 },
+  { name: 'De R$ 101 a R$ 250', value: 1180 },
+  { name: 'De R$ 251 a R$ 500', value: 920 },
+  { name: 'De R$ 501 a R$ 900', value: 610 },
+  { name: 'Acima de R$ 900', value: 340 },
 ]
 
 const institutionStructureDistribution: ChartItem[] = [
@@ -216,7 +216,7 @@ export default function StatisticsPage() {
               <Badge dark>Estat\u00edsticas nacionais</Badge>
               <h1>Banco Nacional de Dados da Dan\u00e7a do Brasil</h1>
               <p className="statistics-hero-description">
-                Vis\u00e3o nacional da dan\u00e7a no Brasil com base nos formul\u00e1rios da plataforma.
+                Painel nacional com indicadores p\u00fablicos da dan\u00e7a no Brasil.
               </p>
             </div>
 
@@ -242,8 +242,8 @@ export default function StatisticsPage() {
           <div className="container">
             <SectionTitle
               badge="Painel nacional"
-              title="Panorama da base"
-              description="Totais principais da leitura p\u00fablica do sistema."
+              title="Vis\u00e3o geral da base"
+              description="Totais principais do sistema."
             />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
@@ -290,7 +290,7 @@ export default function StatisticsPage() {
             <SectionTitle
               badge="Territ\u00f3rio"
               title="Presen\u00e7a da dan\u00e7a no pa\u00eds"
-              description="Estados e cidades com maior movimenta\u00e7\u00e3o na leitura atual."
+              description="Estados e cidades com maior movimenta\u00e7\u00e3o."
             />
 
             <div className="statistics-chart-grid two-columns">
@@ -327,7 +327,7 @@ export default function StatisticsPage() {
             <SectionTitle
               badge="Perfis e modalidades"
               title="Quem aparece nesta leitura"
-              description="Faixa et\u00e1ria, g\u00eanero e modalidades mais presentes na base."
+              description="Faixa et\u00e1ria, g\u00eanero e modalidades."
             />
 
             <div className="statistics-chart-grid three-columns">
@@ -358,22 +358,22 @@ export default function StatisticsPage() {
         <section className="section-space">
           <div className="container">
             <SectionTitle
-              badge="Forma\u00e7\u00e3o e estrutura"
-              title="Percursos, temas e institui\u00e7\u00f5es"
-              description="Uma leitura das trajet\u00f3rias, interesses e organiza\u00e7\u00e3o da base."
+              badge="Economia e estrutura"
+              title="Como a base mostra a pr\u00e1tica da dan\u00e7a"
+              description="Financiamento, custos e estrutura das institui\u00e7\u00f5es."
             />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
-                title="Forma\u00e7\u00e3o"
-                data={trainingDistribution}
-                eyebrowLabel="Percursos"
+                title="Quem financia a pr\u00e1tica"
+                data={financingDistribution}
+                eyebrowLabel="Economia"
                 summaryItems={5}
               />
               <ChartPanel
-                title="Interesses mais frequentes"
-                data={supportDistribution}
-                eyebrowLabel="Temas"
+                title="Investimento mensal com dan\u00e7a"
+                data={costDistribution}
+                eyebrowLabel="Custos"
                 summaryItems={5}
               />
               <ChartPanel
