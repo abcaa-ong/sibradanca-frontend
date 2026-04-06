@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import { Badge } from './Badge'
@@ -822,28 +822,33 @@ function resolveSubmissionError(flow: ActiveFlow, error: unknown, fallbackStep: 
 }
 
 function formatMinorSubmissionError(message: string) {
-  if (message.includes('seguranca') || message.includes('segurança') || message.includes('captcha')) {
-    return 'Confirme a verificacao de seguranca e tente novamente.'
+  if (
+    message.includes('seguranca') ||
+    message.includes('segurança') ||
+    message.includes('seguranÃ§a') ||
+    message.includes('captcha')
+  ) {
+    return 'Confirme a verificação de segurança e tente novamente.'
   }
 
   if (message.includes('Aguarde alguns segundos')) {
-    return 'Aguarde alguns segundos antes de enviar o formulario.'
+    return 'Aguarde alguns segundos antes de enviar o formulário.'
   }
 
   if (message.includes('Cidade')) {
-    return 'Selecione uma cidade valida na lista.'
+    return 'Selecione uma cidade válida na lista.'
   }
 
   if (message.includes('modalidade')) {
-    return 'Selecione pelo menos uma modalidade valida.'
+    return 'Selecione pelo menos uma modalidade válida.'
   }
 
   if (message.includes('consentimento')) {
-    return 'Nao foi possivel validar o termo de consentimento ativo. Tente novamente.'
+    return 'Não foi possível validar o termo de consentimento ativo. Tente novamente.'
   }
 
-  if (message.includes('Tempo de pratica')) {
-    return 'Informe os anos de pratica da danca com um numero valido.'
+  if (message.includes('Tempo de pratica') || message.includes('Tempo de prática')) {
+    return 'Informe os anos de prática da dança com um número válido.'
   }
 
   return message
@@ -905,6 +910,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const [adultSubmission, setAdultSubmission] = useState<ProfessionalFormResponse | null>(null)
   const [isInstitutionSubmitting, setIsInstitutionSubmitting] = useState(false)
   const [institutionSubmission, setInstitutionSubmission] = useState<InstitutionFormResponse | null>(null)
+  const [isStepTransitionPending, startStepTransition] = useTransition()
   const [formStartedAt, setFormStartedAt] = useState(() => new Date().toISOString())
   const [honeypotValue, setHoneypotValue] = useState('')
   const [captchaToken, setCaptchaToken] = useState('')
@@ -1010,7 +1016,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         setStepError(
           error instanceof Error
             ? formatMinorSubmissionError(error.message)
-            : 'Nao foi possivel carregar os dados de apoio do formulario.'
+            : 'Não foi possível carregar os dados de apoio do formulário.'
         )
       } finally {
         if (isMounted) {
@@ -1055,7 +1061,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         setStepError(
           error instanceof Error
             ? formatMinorSubmissionError(error.message)
-            : 'Nao foi possivel carregar as cidades do estado selecionado.'
+            : 'Não foi possível carregar as cidades do estado selecionado.'
         )
       }
     }
@@ -1096,7 +1102,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         setStepError(
           error instanceof Error
             ? formatMinorSubmissionError(error.message)
-            : 'Nao foi possivel carregar as cidades do estado selecionado.'
+            : 'Não foi possível carregar as cidades do estado selecionado.'
         )
       }
     }
@@ -1137,7 +1143,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         setStepError(
           error instanceof Error
             ? formatMinorSubmissionError(error.message)
-            : 'Nao foi possivel carregar as cidades do estado selecionado.'
+            : 'Não foi possível carregar as cidades do estado selecionado.'
         )
       }
     }
@@ -1342,7 +1348,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return
     }
 
-    setCurrentStep((prev) => prev - 1)
+    startStepTransition(() => {
+      setCurrentStep((prev) => prev - 1)
+    })
   }
 
   const handleTopBack = handlePrevious
@@ -1420,7 +1428,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (currentStep === 5 && !minorForm.consentStats) {
-      setStepError('? necessário autorizar o uso estatístico.')
+      setStepError('É necessário autorizar o uso estatístico dos dados.')
       return false
     }
 
@@ -1572,7 +1580,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       currentStep === 7 &&
       (!adultForm.participatedPublicCalls || !adultForm.wasSelected || !adultForm.appliedNotSelected)
     ) {
-      setStepError('Informe a participação em editais, seleção e inscrições não contempladas.')
+      setStepError('Informe a participação em editais, seleção, aprovação e inscrições não contempladas.')
       return false
     }
 
@@ -1582,7 +1590,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (currentStep === 8 && !adultForm.consentStats) {
-      setStepError('? necessário autorizar o uso estatístico.')
+      setStepError('É necessário autorizar o uso estatístico dos dados.')
       return false
     }
 
@@ -1684,12 +1692,12 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (currentStep === 7 && !institutionForm.consentStats) {
-      setStepError('? necessário autorizar o uso estatístico.')
+      setStepError('É necessário autorizar o uso estatístico dos dados.')
       return false
     }
 
     if (currentStep === 7 && !institutionForm.consentContact) {
-      setStepError('? necessário autorizar o contato.')
+      setStepError('É necessário autorizar o contato institucional.')
       return false
     }
 
@@ -1906,7 +1914,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (currentStep === 7 && !institutionForm.consentStats) {
-      setStepError('? necessário autorizar o uso estatístico.')
+      setStepError('É necessário autorizar o uso estatístico dos dados.')
       return false
     }
 
@@ -1929,7 +1937,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (currentStep === totalSteps - 1 && antiBotEnabled && !captchaToken) {
-      setStepError('Conclua a validação de segurança antes de enviar o cadastro.')
+      setStepError('Conclua a verificação de segurança antes de enviar o cadastro.')
       return false
     }
 
@@ -2224,7 +2232,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     if (!validateCurrentStep()) return
 
     if (currentStep < totalSteps - 1) {
-      setCurrentStep((prev) => prev + 1)
+      startStepTransition(() => {
+        setCurrentStep((prev) => prev + 1)
+      })
       return
     }
 
@@ -2326,9 +2336,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <label className="access-field">
-              <span>Regiao *</span>
+              <span>Região *</span>
               <select value={minorForm.region} onChange={(e) => updateMinorField('region', e.target.value)}>
-                <option value="">Selecione a regiao</option>
+                <option value="">Selecione a região</option>
                 {renderRegionOptions()}
               </select>
             </label>
@@ -2398,7 +2408,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
 
             <div className="access-field access-field-full">
-              <span>Modalidades de danca *</span>
+              <span>Modalidades de dança *</span>
               <small>Selecione todas que se aplicam</small>
               <div className="access-checkbox-grid">
                 {minorModalities.map((item) => (
@@ -2474,7 +2484,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
 
             <div className="access-field">
-              <span>Tem interesse em seguir carreira na danca? *</span>
+              <span>Tem interesse em seguir carreira na dança? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', minorForm.careerInterest, (value) => updateMinorField('careerInterest', value))}
                 {renderChoiceCard('nao', minorForm.careerInterest, (value) => updateMinorField('careerInterest', value))}
@@ -2482,7 +2492,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </div>
 
             <div className="access-field">
-              <span>Pesquisa conteudos sobre danca na internet? *</span>
+              <span>Pesquisa conteúdos sobre dança na internet? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', minorForm.searchesContent, (value) => updateMinorField('searchesContent', value))}
                 {renderChoiceCard('nao', minorForm.searchesContent, (value) => updateMinorField('searchesContent', value))}
@@ -2490,7 +2500,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </div>
 
             <div className="access-field access-field-full">
-              <span>Quem banca os custos da danca? *</span>
+              <span>Quem banca os custos da dança? *</span>
               <small>Selecione todas que se aplicam</small>
               <div className="access-checkbox-grid access-checkbox-grid-compact">
                 {youthWhoPaysOptions.map((item) => (
@@ -2537,9 +2547,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             <label className="access-consent-card">
               <div className="access-consent-copy">
                 <strong>
-                  Autorizo o uso estatistico e anonimizado dos dados fornecidos para fins de pesquisa, politicas publicas e desenvolvimento do setor da danca.
+                  Autorizo o uso estatístico e anonimizado dos dados fornecidos para fins de pesquisa, políticas públicas e desenvolvimento do setor da dança.
                 </strong>
-                <small>E necessario autorizar o uso estatistico</small>
+                <small>É necessário autorizar o uso estatístico.</small>
               </div>
               <input
                 type="checkbox"
@@ -2551,7 +2561,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             <label className="access-consent-card">
               <div className="access-consent-copy">
                 <strong>
-                  Autorizo o contato por email e WhatsApp para informacoes sobre o SIBRADANCA e oportunidades no setor da danca.
+                  Autorizo o contato por email e WhatsApp para informações sobre o SIBRADANÇA e oportunidades no setor da dança.
                 </strong>
                 <small>Opcional</small>
               </div>
@@ -2595,9 +2605,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <label className="access-field">
-              <span>Regiao *</span>
+              <span>Região *</span>
               <select value={adultForm.region} onChange={(e) => updateAdultField('region', e.target.value)}>
-                <option value="">Selecione a regiao</option>
+                <option value="">Selecione a região</option>
                 {renderRegionOptions()}
               </select>
             </label>
@@ -2651,7 +2661,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </select>
             </label>
             <div className="access-field access-field-full">
-              <span>Modalidades de danca *</span>
+              <span>Modalidades de dança *</span>
               <small>Selecione todas que se aplicam</small>
               <div className="access-checkbox-grid">
                 {minorModalities.map((item) => (
@@ -2668,7 +2678,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <div className="access-field">
-              <span>Atua profissionalmente com danca? *</span>
+              <span>Atua profissionalmente com dança? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.worksProfessionally, (value) => updateAdultField('worksProfessionally', value))}
                 {renderChoiceCard('nao', adultForm.worksProfessionally, (value) => updateAdultField('worksProfessionally', value))}
@@ -2682,7 +2692,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <div className="access-field">
-              <span>Atua atualmente na danca? *</span>
+              <span>Atua atualmente na dança? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.currentlyWorks, (value) => updateAdultField('currentlyWorks', value))}
                 {renderChoiceCard('nao', adultForm.currentlyWorks, (value) => updateAdultField('currentlyWorks', value))}
@@ -2696,7 +2706,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <div className="access-field access-field-full">
-              <span>Funcoes na danca *</span>
+              <span>Funções na dança *</span>
               <small>Selecione todas que se aplicam</small>
               <div className="access-checkbox-grid">
                 {adultRolesOptions.map((item) => (
@@ -2736,7 +2746,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <input type="text" inputMode="decimal" placeholder="Ex: 1200,00" value={adultForm.danceIncome} onChange={(e) => updateAdultField('danceIncome', e.target.value)} />
             </label>
             <div className="access-field">
-              <span>A danca e sua renda principal? *</span>
+              <span>A dança é sua renda principal? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.danceMainIncomeChoice, (value) => updateAdultField('danceMainIncomeChoice', value))}
                 {renderChoiceCard('nao', adultForm.danceMainIncomeChoice, (value) => updateAdultField('danceMainIncomeChoice', value))}
@@ -2765,7 +2775,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             <label className="access-field"><span>Viagens e deslocamentos</span><input type="text" inputMode="decimal" placeholder="Ex: 110,00" value={adultForm.travel} onChange={(e) => updateAdultField('travel', e.target.value)} /></label>
             <label className="access-field"><span>Outros</span><input type="text" inputMode="decimal" placeholder="Ex: 60,00" value={adultForm.otherCosts} onChange={(e) => updateAdultField('otherCosts', e.target.value)} /></label>
             <div className="access-field access-field-full">
-              <span>Quem banca os custos da danca?</span>
+              <span>Quem banca os custos da dança?</span>
               <small>Selecione todas que se aplicam</small>
               <div className="access-checkbox-grid access-checkbox-grid-compact">
                 {adultWhoPaysOptions.map((item) => (
@@ -2827,14 +2837,14 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </select>
             </label>
             <div className="access-field">
-              <span>Estuda danca atualmente?</span>
+              <span>Estuda dança atualmente?</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.studiesDanceNow, (value) => updateAdultField('studiesDanceNow', value))}
                 {renderChoiceCard('nao', adultForm.studiesDanceNow, (value) => updateAdultField('studiesDanceNow', value))}
               </div>
             </div>
             <div className="access-field">
-              <span>Pretende estudar danca formalmente?</span>
+              <span>Pretende estudar dança formalmente?</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.wantsFormalDanceStudy, (value) => updateAdultField('wantsFormalDanceStudy', value))}
                 {renderChoiceCard('nao', adultForm.wantsFormalDanceStudy, (value) => updateAdultField('wantsFormalDanceStudy', value))}
@@ -2864,7 +2874,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <div className="access-field access-field-full">
-              <span>Se inscreveu e nao foi contemplado(a)?</span>
+              <span>Se inscreveu e não foi contemplado(a)?</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.appliedNotSelected, (value) => updateAdultField('appliedNotSelected', value))}
                 {renderChoiceCard('nao', adultForm.appliedNotSelected, (value) => updateAdultField('appliedNotSelected', value))}
@@ -2886,14 +2896,14 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </div>
             <label className="access-consent-card">
               <div className="access-consent-copy">
-                <strong>Autorizo o uso estatistico e anonimizado dos dados fornecidos para fins de pesquisa, politicas publicas e desenvolvimento do setor da danca.</strong>
-                <small>E necessario autorizar o uso estatistico</small>
+                <strong>Autorizo o uso estatístico e anonimizado dos dados fornecidos para fins de pesquisa, políticas públicas e desenvolvimento do setor da dança.</strong>
+                <small>É necessário autorizar o uso estatístico.</small>
               </div>
               <input type="checkbox" checked={adultForm.consentStats} onChange={(e) => updateAdultField('consentStats', e.target.checked)} />
             </label>
             <label className="access-consent-card">
               <div className="access-consent-copy">
-                <strong>Autorizo o contato por email e WhatsApp para informacoes sobre o SIBRADANCA e oportunidades no setor da danca.</strong>
+                <strong>Autorizo o contato por email e WhatsApp para informações sobre o SIBRADANÇA e oportunidades no setor da dança.</strong>
                 <small>Opcional</small>
               </div>
               <input type="checkbox" checked={adultForm.consentContact} onChange={(e) => updateAdultField('consentContact', e.target.checked)} />
@@ -3285,7 +3295,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 <small>
                   {activeConsentTerm
                     ? activeConsentTerm.title
-                    : '? necessário autorizar o uso estatístico'}
+                    : 'É necessário autorizar o uso estatístico.'}
                 </small>
               </div>
               <input type="checkbox" checked={institutionForm.consentStats} onChange={(e) => updateInstitutionField('consentStats', e.target.checked)} />
@@ -3403,7 +3413,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                   <>
                     {renderCurrentStep()}
                     <label className="access-honeypot" aria-hidden="true">
-                      <span>Campo de validação</span>
+                      <span>Campo de verificação</span>
                       <input
                         tabIndex={-1}
                         autoComplete="off"
@@ -3413,13 +3423,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                     </label>
                     {currentStep === totalSteps - 1 && antiBotEnabled ? (
                       <div className="access-security-card">
-                        <span className="access-security-label">Validação de segurança</span>
+                        <span className="access-security-label">Confirmação de segurança</span>
                         <TurnstileWidget
                           key={captchaRenderKey}
                           siteKey={TURNSTILE_SITE_KEY}
                           onTokenChange={setCaptchaToken}
                         />
-                        <small>Conclua a validação para liberar o envio do cadastro.</small>
+                        <small>Conclua a verificação para liberar o envio do cadastro.</small>
                       </div>
                     ) : null}
                     {stepError && <p className="access-step-error">{stepError}</p>}
@@ -3437,11 +3447,14 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                           isInstitutionSubmitting ||
                           ((view === 'minor-flow' || view === 'adult-flow' || view === 'institution-flow') &&
                             isMinorLoadingReferences) ||
-                          (currentStep === totalSteps - 1 && antiBotEnabled && !captchaToken)
+                          (currentStep === totalSteps - 1 && antiBotEnabled && !captchaToken) ||
+                          isStepTransitionPending
                         }
                       >
                         {isMinorSubmitting || isAdultSubmitting || isInstitutionSubmitting
                           ? 'Enviando...'
+                          : isStepTransitionPending
+                            ? 'Abrindo...'
                           : currentStep === totalSteps - 1
                             ? 'Finalizar Cadastro'
                             : 'Próximo'}
