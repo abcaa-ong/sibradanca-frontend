@@ -678,6 +678,12 @@
     grid-column: span 1;
   }
 
+  .access-grid > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(100%, calc((100% - 20px) / 2));
+  }
+
   .hero-artwork {
     width: min(100%, 720px);
     margin: 0 auto;
