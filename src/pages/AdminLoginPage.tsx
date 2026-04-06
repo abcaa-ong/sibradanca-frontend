@@ -1,8 +1,9 @@
 import { FormEvent, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { LockKeyhole } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
+import { Seo } from '../components/Seo'
 import {
   clearAdminCredentials,
   hasAdminSession,
@@ -12,8 +13,8 @@ import { getAdminOverview } from '../services/admin.service'
 
 export default function AdminLoginPage() {
   const navigate = useNavigate()
-  const [username, setUsername] = useState('ong.hml')
-  const [password, setPassword] = useState('PainelOng2026!')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -46,19 +47,28 @@ export default function AdminLoginPage() {
 
   return (
     <div className="admin-shell">
+      <Seo
+        title="Acesso ao painel interno"
+        description="Login da \u00e1rea interna do SIBRADAN\u00c7A para a equipe da ONG."
+        robots="noindex,nofollow"
+      />
       <div className="admin-container admin-login-container">
         <Card className="admin-login-card">
           <div className="admin-login-icon">
             <LockKeyhole size={24} />
           </div>
           <p className="eyebrow">Central administrativa</p>
-          <h1>Área restrita da ONG</h1>
-          <p className="card-text">Entrar na área interna.</p>
+          <h1>{'\u00c1rea restrita da ONG'}</h1>
+          <p className="card-text">{'Entre com as credenciais do painel interno.'}</p>
 
           <form className="admin-login-form" onSubmit={handleSubmit}>
             <label className="admin-field">
-              <span>Usuário</span>
-              <input value={username} onChange={(event) => setUsername(event.target.value)} />
+              <span>{'Usu\u00e1rio'}</span>
+              <input
+                value={username}
+                placeholder="Ex: ong.admin"
+                onChange={(event) => setUsername(event.target.value)}
+              />
             </label>
 
             <label className="admin-field">
@@ -66,6 +76,7 @@ export default function AdminLoginPage() {
               <input
                 type="password"
                 value={password}
+                placeholder="Digite sua senha"
                 onChange={(event) => setPassword(event.target.value)}
               />
             </label>

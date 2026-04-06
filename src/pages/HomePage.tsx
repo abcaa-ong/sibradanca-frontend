@@ -20,6 +20,7 @@ import logo from '../assets/logo-sibradanca.png'
 import { Badge } from '../components/Badge'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
+import { Seo } from '../components/Seo'
 import { SectionTitle } from '../components/SectionTitle'
 
 const colors = {
@@ -188,6 +189,11 @@ export default function HomePage() {
 
   return (
     <div className="page-shell">
+      <Seo
+        title="SIBRADAN\u00c7A \u2014 Banco Nacional de Dados da Dan\u00e7a do Brasil"
+        description="Conhe\u00e7a a plataforma p\u00fablica do SIBRADAN\u00c7A, acesse os formul\u00e1rios de jovens, profissionais e institui\u00e7\u00f5es e acompanhe a apresenta\u00e7\u00e3o nacional do projeto."
+        path="/"
+      />
       <FloatingShapes />
       <header className="site-header">
         <div className="container header-inner">

@@ -1,6 +1,7 @@
 import { BarChart3, Download, FileSpreadsheet, Home, LogOut, ShieldCheck } from 'lucide-react'
 import { NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { Button } from './Button'
+import { Seo } from './Seo'
 import { clearAdminCredentials, hasAdminSession } from '../services/admin-auth.service'
 
 const SYSTEM_TITLE = 'Banco Nacional de Dados da Dan\u00e7a do Brasil'
@@ -52,6 +53,11 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-app-shell">
+      <Seo
+        title="Painel interno da ONG"
+        description="Ambiente interno do Banco Nacional de Dados da Dan\u00e7a do Brasil para consulta da base, an\u00e1lises, exporta\u00e7\u00f5es e seguran\u00e7a."
+        robots="noindex,nofollow"
+      />
       <aside className="admin-sidebar">
         <div className="admin-sidebar-brand">
           <p className="eyebrow">SIBRADAN\u00c7A</p>

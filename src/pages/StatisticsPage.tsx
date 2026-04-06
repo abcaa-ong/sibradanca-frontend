@@ -6,6 +6,7 @@ import logo from '../assets/logo-sibradanca.png'
 import { Badge } from '../components/Badge'
 import { ChartPanel } from '../components/ChartPanel'
 import { SectionTitle } from '../components/SectionTitle'
+import { Seo } from '../components/Seo'
 
 type ChartItem = {
   name: string
@@ -24,22 +25,22 @@ type StatusCard = {
 
 const overviewCards: OverviewCard[] = [
   { label: 'Cadastros totais', value: '5.240' },
-  { label: 'Jovens da dança', value: '2.380' },
-  { label: 'Profissionais da dança', value: '1.960' },
+  { label: 'Jovens da dan\u00e7a', value: '2.380' },
+  { label: 'Profissionais da dan\u00e7a', value: '1.960' },
   { label: 'Escolas, grupos e companhias', value: '900' },
 ]
 
 const statusCards: StatusCard[] = [
-  { label: 'Regiões', value: '5 regiões' },
+  { label: 'Regi\u00f5es', value: '5 regi\u00f5es' },
   { label: 'Estados', value: '27 UFs' },
-  { label: 'Municípios', value: '5.570 cidades' },
+  { label: 'Munic\u00edpios', value: '5.570 cidades' },
   { label: 'Setores', value: '3 frentes' },
 ]
 
 const profileDistribution: ChartItem[] = [
   { name: 'Jovens', value: 2380 },
   { name: 'Profissionais', value: 1960 },
-  { name: 'Instituições', value: 900 },
+  { name: 'Institui\u00e7\u00f5es', value: 900 },
 ]
 
 const regionDistribution: ChartItem[] = [
@@ -51,7 +52,7 @@ const regionDistribution: ChartItem[] = [
 ]
 
 const stateDistribution: ChartItem[] = [
-  { name: 'São Paulo', value: 620 },
+  { name: 'S\u00e3o Paulo', value: 620 },
   { name: 'Bahia', value: 510 },
   { name: 'Pernambuco', value: 470 },
   { name: 'Rio de Janeiro', value: 455 },
@@ -64,12 +65,12 @@ const cityHighlights: ChartItem[] = [
   { name: 'Recife', value: 185 },
   { name: 'Belo Horizonte', value: 172 },
   { name: 'Rio de Janeiro', value: 168 },
-  { name: 'São Paulo', value: 160 },
-  { name: 'Belém', value: 132 },
+  { name: 'S\u00e3o Paulo', value: 160 },
+  { name: 'Bel\u00e9m', value: 132 },
 ]
 
 const ageDistribution: ChartItem[] = [
-  { name: 'Até 17 anos', value: 2290 },
+  { name: 'At\u00e9 17 anos', value: 2290 },
   { name: '18 a 24 anos', value: 980 },
   { name: '25 a 34 anos', value: 1135 },
   { name: '35 a 49 anos', value: 610 },
@@ -79,29 +80,29 @@ const ageDistribution: ChartItem[] = [
 const genderDistribution: ChartItem[] = [
   { name: 'Mulheres', value: 2810 },
   { name: 'Homens', value: 1710 },
-  { name: 'Não binário', value: 290 },
-  { name: 'Outro ou não informado', value: 430 },
+  { name: 'N\u00e3o bin\u00e1rio', value: 290 },
+  { name: 'Outro ou n\u00e3o informado', value: 430 },
 ]
 
 const modalityDistribution: ChartItem[] = [
-  { name: 'Ballet clássico', value: 960 },
-  { name: 'Danças urbanas', value: 890 },
-  { name: 'Dança contemporânea', value: 780 },
-  { name: 'Danças populares', value: 710 },
+  { name: 'Ballet cl\u00e1ssico', value: 960 },
+  { name: 'Dan\u00e7as urbanas', value: 890 },
+  { name: 'Dan\u00e7a contempor\u00e2nea', value: 780 },
+  { name: 'Dan\u00e7as populares', value: 710 },
   { name: 'Jazz', value: 655 },
-  { name: 'Dança de salão', value: 520 },
+  { name: 'Dan\u00e7a de sal\u00e3o', value: 520 },
 ]
 
 const financingDistribution: ChartItem[] = [
-  { name: 'Família', value: 1420 },
-  { name: 'Própria pessoa', value: 1190 },
+  { name: 'Fam\u00edlia', value: 1420 },
+  { name: 'Pr\u00f3pria pessoa', value: 1190 },
   { name: 'Escola ou grupo', value: 760 },
   { name: 'Edital ou bolsa', value: 540 },
-  { name: 'Patrocínio e apoio', value: 330 },
+  { name: 'Patroc\u00ednio e apoio', value: 330 },
 ]
 
 const costDistribution: ChartItem[] = [
-  { name: 'Até R$ 100', value: 930 },
+  { name: 'At\u00e9 R$ 100', value: 930 },
   { name: 'De R$ 101 a R$ 250', value: 1180 },
   { name: 'De R$ 251 a R$ 500', value: 920 },
   { name: 'De R$ 501 a R$ 900', value: 610 },
@@ -110,17 +111,17 @@ const costDistribution: ChartItem[] = [
 
 const institutionStructureDistribution: ChartItem[] = [
   { name: 'Com aulas regulares', value: 710 },
-  { name: 'Atuação em periferias', value: 520 },
-  { name: 'Uso de espaço público', value: 430 },
-  { name: 'Sede própria', value: 390 },
+  { name: 'Atua\u00e7\u00e3o em periferias', value: 520 },
+  { name: 'Uso de espa\u00e7o p\u00fablico', value: 430 },
+  { name: 'Sede pr\u00f3pria', value: 390 },
   { name: 'Com bolsas ativas', value: 265 },
 ]
 
 const publicPolicyDistribution: ChartItem[] = [
-  { name: 'Já participou de edital', value: 760 },
-  { name: 'Já foi contemplado', value: 410 },
-  { name: 'Tentou e não foi contemplado', value: 580 },
-  { name: 'Não sabe como acessar', value: 295 },
+  { name: 'J\u00e1 participou de edital', value: 760 },
+  { name: 'J\u00e1 foi contemplado', value: 410 },
+  { name: 'Tentou e n\u00e3o foi contemplado', value: 580 },
+  { name: 'N\u00e3o sabe como acessar', value: 295 },
 ]
 
 function formatNumber(value: number) {
@@ -132,17 +133,22 @@ export default function StatisticsPage() {
 
   return (
     <div className="page-shell">
+      <Seo
+        title="Estat\u00edsticas nacionais do SIBRADAN\u00c7A"
+        description="Painel p\u00fablico do Banco Nacional de Dados da Dan\u00e7a do Brasil com leitura por territ\u00f3rio, perfis, modalidades, custos e estrutura institucional."
+        path="/estatisticas-nacionais"
+      />
       <header className="site-header">
         <div className="container header-inner">
           <div className="brand-mini">
             <div className="brand-mini-icon">
-              <img src={logo} alt="Logo SIBRADANÇA" />
+              <img src={logo} alt="Logo SIBRADAN\u00c7A" />
             </div>
           </div>
 
           <nav className="desktop-nav">
-            <Link to="/">Página inicial</Link>
-            <Link to="/">Formulários</Link>
+            <Link to="/">{'P\u00e1gina inicial'}</Link>
+            <Link to="/">{'Formul\u00e1rios'}</Link>
             <a
               href="https://www.instagram.com/sibradanca"
               target="_blank"
@@ -170,12 +176,12 @@ export default function StatisticsPage() {
           <div className="mobile-menu">
             <Link to="/" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
               <House size={18} />
-              <span>Página inicial</span>
+              <span>{'P\u00e1gina inicial'}</span>
             </Link>
 
             <Link to="/" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
               <ClipboardList size={18} />
-              <span>Formulários</span>
+              <span>{'Formul\u00e1rios'}</span>
             </Link>
 
             <a
@@ -196,17 +202,19 @@ export default function StatisticsPage() {
         <section className="statistics-hero section-space">
           <div className="container">
             <div className="statistics-hero-copy">
-              <Badge dark>Estatísticas nacionais</Badge>
-              <h1>Banco Nacional de Dados da Dança do Brasil</h1>
+              <Badge dark>{'Estat\u00edsticas nacionais'}</Badge>
+              <h1>{'Banco Nacional de Dados da Dan\u00e7a do Brasil'}</h1>
               <p className="statistics-hero-description">
-                Um retrato nacional da dança com leitura por território, perfis, modalidades e instituições.
+                {
+                  'Um retrato nacional da dan\u00e7a com leitura por territ\u00f3rio, perfis, modalidades e institui\u00e7\u00f5es.'
+                }
               </p>
             </div>
 
             <div className="statistics-hero-actions">
               <Link to="/" className="btn btn-primary btn-large">
                 <ArrowLeft size={18} />
-                Voltar para os formulários
+                {'Voltar para os formul\u00e1rios'}
               </Link>
             </div>
 
@@ -223,7 +231,7 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Brasil em números" title="Panorama nacional da dança" />
+            <SectionTitle badge={'Brasil em n\u00fameros'} title={'Panorama nacional da dan\u00e7a'} />
 
             <div className="statistics-kpi-grid statistics-kpi-grid--four">
               {overviewCards.map((item) => (
@@ -237,15 +245,15 @@ export default function StatisticsPage() {
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
-                title="Cadastros por setor"
+                title={'Cadastros por setor'}
                 data={profileDistribution}
                 eyebrowLabel="Setores"
                 summaryItems={3}
               />
               <ChartPanel
-                title="Cadastros por região"
+                title={'Cadastros por regi\u00e3o'}
                 data={regionDistribution}
-                eyebrowLabel="Território"
+                eyebrowLabel={'Territ\u00f3rio'}
                 summaryItems={5}
               />
             </div>
@@ -254,11 +262,11 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Território" title="Onde a dança aparece no país" />
+            <SectionTitle badge={'Territ\u00f3rio'} title={'Onde a dan\u00e7a aparece no pa\u00eds'} />
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
-                title="Estados com mais registros"
+                title={'Estados com mais registros'}
                 data={stateDistribution}
                 eyebrowLabel="Estados"
                 summaryItems={6}
@@ -267,8 +275,8 @@ export default function StatisticsPage() {
               <div className="card statistics-compact-panel">
                 <div className="panel-top">
                   <div>
-                    <span className="eyebrow">Municípios</span>
-                    <h3 className="statistics-compact-title">Cidades com maior presença</h3>
+                    <span className="eyebrow">{'Munic\u00edpios'}</span>
+                    <h3 className="statistics-compact-title">{'Cidades com maior presen\u00e7a'}</h3>
                   </div>
                 </div>
 
@@ -287,25 +295,25 @@ export default function StatisticsPage() {
 
         <section className="section-space">
           <div className="container">
-            <SectionTitle badge="Perfis" title="Quem aparece neste retrato nacional" />
+            <SectionTitle badge="Perfis" title={'Quem aparece neste retrato nacional'} />
 
             <div className="statistics-chart-grid three-columns">
               <ChartPanel
-                title="Faixa etária"
+                title={'Faixa et\u00e1ria'}
                 data={ageDistribution}
                 type="pie"
                 eyebrowLabel="Idades"
                 summaryItems={5}
               />
               <ChartPanel
-                title="Gênero"
+                title={'G\u00eanero'}
                 data={genderDistribution}
                 type="pie"
                 eyebrowLabel="Perfis"
                 summaryItems={4}
               />
               <ChartPanel
-                title="Modalidades mais presentes"
+                title={'Modalidades mais presentes'}
                 data={modalityDistribution}
                 eyebrowLabel="Modalidades"
                 summaryItems={6}
@@ -317,33 +325,33 @@ export default function StatisticsPage() {
         <section className="section-space">
           <div className="container">
             <SectionTitle
-              badge="Economia e instituições"
-              title="Custos, apoio e estrutura da dança"
+              badge={'Economia e institui\u00e7\u00f5es'}
+              title={'Custos, apoio e estrutura da dan\u00e7a'}
             />
 
             <div className="statistics-chart-grid two-columns">
               <ChartPanel
-                title="Quem financia a prática"
+                title={'Quem financia a pr\u00e1tica'}
                 data={financingDistribution}
                 eyebrowLabel="Economia"
                 summaryItems={5}
               />
               <ChartPanel
-                title="Quanto custa praticar dança"
+                title={'Quanto custa praticar dan\u00e7a'}
                 data={costDistribution}
                 eyebrowLabel="Custos"
                 summaryItems={5}
               />
               <ChartPanel
-                title="Estrutura das instituições"
+                title={'Estrutura das institui\u00e7\u00f5es'}
                 data={institutionStructureDistribution}
-                eyebrowLabel="Instituições"
+                eyebrowLabel={'Institui\u00e7\u00f5es'}
                 summaryItems={5}
               />
               <ChartPanel
-                title="Editais e políticas públicas"
+                title={'Editais e pol\u00edticas p\u00fablicas'}
                 data={publicPolicyDistribution}
-                eyebrowLabel="Acesso público"
+                eyebrowLabel={'Acesso p\u00fablico'}
                 summaryItems={4}
               />
             </div>
@@ -354,20 +362,20 @@ export default function StatisticsPage() {
       <footer className="site-footer">
         <div className="container footer-inner">
           <div className="footer-brand">
-            <img src={logo} alt="Logo SIBRADANÇA" />
+            <img src={logo} alt="Logo SIBRADAN\u00c7A" />
             <p>
-              <strong>SIBRADANÇA – Sistema Brasileiro de Evidências da Dança</strong>
+              <strong>{'SIBRADAN\u00c7A \u2014 Sistema Brasileiro de Evid\u00eancias da Dan\u00e7a'}</strong>
             </p>
           </div>
 
           <div className="footer-links">
-            <Link to="/">Formulários</Link>
-            <a href="#">Política de privacidade</a>
+            <Link to="/">{'Formul\u00e1rios'}</Link>
+            <a href="#">{'Pol\u00edtica de privacidade'}</a>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} SIBRADANÇA · Todos os direitos reservados</p>
+          <p>{`\u00a9 ${new Date().getFullYear()} SIBRADAN\u00c7A \u00b7 Todos os direitos reservados`}</p>
         </div>
       </footer>
     </div>
