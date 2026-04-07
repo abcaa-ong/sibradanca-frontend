@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import { Badge } from './Badge'
 import { TurnstileWidget } from './TurnstileWidget'
-import { useCleanUiTextTree } from '../hooks/useCleanUiTextTree'
 import { ApiRequestError } from '../services/api'
 import { listCities, listStates } from '../services/geo.services'
 import { submitInstitutionForm, submitProfessionalForm, submitYouthForm } from '../services/forms.service'
@@ -187,6 +186,7 @@ type InstitutionFormData = {
 type OptionItem = { value: string; label: string }
 type BirthDatePartKey = 'year' | 'month' | 'day'
 type BirthDateParts = Record<BirthDatePartKey, string>
+type ParsedDateInputParts = { year: number; month: number; day: number }
 
 const TURNSTILE_SITE_KEY = (import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '').trim()
 const MAX_CURRENCY_INTEGER_DIGITS = 9
@@ -632,6 +632,100 @@ function getBirthDateYearOptions(minDate: string, maxDate: string) {
   return Array.from({ length: maxYear - minYear + 1 }, (_, index) => String(maxYear - index))
 }
 
+function parseDateInputParts(value: string): ParsedDateInputParts | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value.trim())
+
+  if (!match) {
+    return null
+  }
+
+  const [, year, month, day] = match
+  return {
+    year: Number(year),
+    month: Number(month),
+    day: Number(day),
+  }
+}
+
+function getBirthDateMonthOptions(selectedYear: string, minDate: string, maxDate: string) {
+  const parsedYear = Number(selectedYear)
+
+  if (!parsedYear) {
+    return birthDateMonthOptions
+  }
+
+  const minParts = parseDateInputParts(minDate)
+  const maxParts = parseDateInputParts(maxDate)
+
+  let firstMonth = 1
+  let lastMonth = 12
+
+  if (minParts && parsedYear === minParts.year) {
+    firstMonth = minParts.month
+  }
+
+  if (maxParts && parsedYear === maxParts.year) {
+    lastMonth = maxParts.month
+  }
+
+  if (firstMonth > lastMonth) {
+    return []
+  }
+
+  return birthDateMonthOptions.filter((option) => {
+    const month = Number(option.value)
+    return month >= firstMonth && month <= lastMonth
+  })
+}
+
+function getBirthDateDayOptions(selectedYear: string, selectedMonth: string, minDate: string, maxDate: string) {
+  const parsedYear = Number(selectedYear)
+  const parsedMonth = Number(selectedMonth)
+
+  if (!parsedYear || !parsedMonth) {
+    return []
+  }
+
+  const minParts = parseDateInputParts(minDate)
+  const maxParts = parseDateInputParts(maxDate)
+
+  let firstDay = 1
+  let lastDay = getDaysInMonth(selectedYear, selectedMonth)
+
+  if (minParts && parsedYear === minParts.year && parsedMonth === minParts.month) {
+    firstDay = minParts.day
+  }
+
+  if (maxParts && parsedYear === maxParts.year && parsedMonth === maxParts.month) {
+    lastDay = Math.min(lastDay, maxParts.day)
+  }
+
+  if (firstDay > lastDay) {
+    return []
+  }
+
+  return Array.from({ length: lastDay - firstDay + 1 }, (_, index) => String(firstDay + index).padStart(2, '0'))
+}
+
+function clampBirthDatePartsToRange(parts: BirthDateParts, minDate: string, maxDate: string) {
+  const nextParts = { ...parts }
+  const monthOptions = getBirthDateMonthOptions(nextParts.year, minDate, maxDate)
+
+  if (nextParts.month && !monthOptions.some((option) => option.value === nextParts.month)) {
+    nextParts.month = ''
+    nextParts.day = ''
+    return nextParts
+  }
+
+  const dayOptions = getBirthDateDayOptions(nextParts.year, nextParts.month, minDate, maxDate)
+
+  if (nextParts.day && !dayOptions.includes(nextParts.day)) {
+    nextParts.day = ''
+  }
+
+  return nextParts
+}
+
 function getDaysInMonth(year: string, month: string) {
   const parsedYear = Number(year)
   const parsedMonth = Number(month)
@@ -995,7 +1089,6 @@ function renderRegionOptions() {
 }
 
 export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'menu' }: AccessFloatingMenuProps) {
-  const panelRef = useRef<HTMLDivElement | null>(null)
   const [view, setView] = useState<FlowMode>(initialView)
   const [currentStep, setCurrentStep] = useState(0)
   const [stepError, setStepError] = useState('')
@@ -1008,6 +1101,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const [minorCityOptions, setMinorCityOptions] = useState<CityResponse[]>([])
   const [adultCityOptions, setAdultCityOptions] = useState<CityResponse[]>([])
   const [institutionCityOptions, setInstitutionCityOptions] = useState<CityResponse[]>([])
+  const [isMinorLoadingCities, setIsMinorLoadingCities] = useState(false)
+  const [isAdultLoadingCities, setIsAdultLoadingCities] = useState(false)
+  const [isInstitutionLoadingCities, setIsInstitutionLoadingCities] = useState(false)
   const [minorModalities, setMinorModalities] = useState<ReferenceItemResponse[]>([])
   const [minorContents, setMinorContents] = useState<ReferenceItemResponse[]>([])
   const [activeConsentTerm, setActiveConsentTerm] = useState<ActiveConsentTermResponse | null>(null)
@@ -1027,37 +1123,38 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const previousInitialViewRef = useRef(initialView)
   const antiBotEnabled = Boolean(TURNSTILE_SITE_KEY)
 
-  useCleanUiTextTree(panelRef, [open, view, currentStep, stepError, minorSubmission, adultSubmission, institutionSubmission])
-
   const earliestBirthDate = '1900-01-01'
   const todayInBrazilDateInput = useMemo(() => getCurrentBrazilDateInputValue(), [])
   const currentBrazilYear = useMemo(() => Number(todayInBrazilDateInput.slice(0, 4)), [todayInBrazilDateInput])
+  const latestBirthDate = todayInBrazilDateInput
   const adultBirthDateMax = useMemo(() => shiftDateInputValue(todayInBrazilDateInput, { years: -18 }), [todayInBrazilDateInput])
-  const youthBirthDateMax = useMemo(
+  const youthBirthDateMin = useMemo(
     () => shiftDateInputValue(todayInBrazilDateInput, { years: -18, days: 1 }),
     [todayInBrazilDateInput],
   )
   const minorBirthYearOptions = useMemo(
-    () => getBirthDateYearOptions(earliestBirthDate, youthBirthDateMax),
-    [earliestBirthDate, youthBirthDateMax],
+    () => getBirthDateYearOptions(youthBirthDateMin, latestBirthDate),
+    [latestBirthDate, youthBirthDateMin],
   )
   const adultBirthYearOptions = useMemo(
     () => getBirthDateYearOptions(earliestBirthDate, adultBirthDateMax),
     [adultBirthDateMax, earliestBirthDate],
   )
+  const minorBirthMonthOptions = useMemo(
+    () => getBirthDateMonthOptions(minorBirthDateDraft.year, youthBirthDateMin, latestBirthDate),
+    [latestBirthDate, minorBirthDateDraft.year, youthBirthDateMin],
+  )
+  const adultBirthMonthOptions = useMemo(
+    () => getBirthDateMonthOptions(adultBirthDateDraft.year, earliestBirthDate, adultBirthDateMax),
+    [adultBirthDateDraft.year, adultBirthDateMax, earliestBirthDate],
+  )
   const minorBirthDayOptions = useMemo(
-    () =>
-      Array.from({ length: getDaysInMonth(minorBirthDateDraft.year, minorBirthDateDraft.month) }, (_, index) =>
-        String(index + 1).padStart(2, '0'),
-      ),
-    [minorBirthDateDraft.month, minorBirthDateDraft.year],
+    () => getBirthDateDayOptions(minorBirthDateDraft.year, minorBirthDateDraft.month, youthBirthDateMin, latestBirthDate),
+    [latestBirthDate, minorBirthDateDraft.month, minorBirthDateDraft.year, youthBirthDateMin],
   )
   const adultBirthDayOptions = useMemo(
-    () =>
-      Array.from({ length: getDaysInMonth(adultBirthDateDraft.year, adultBirthDateDraft.month) }, (_, index) =>
-        String(index + 1).padStart(2, '0'),
-      ),
-    [adultBirthDateDraft.month, adultBirthDateDraft.year],
+    () => getBirthDateDayOptions(adultBirthDateDraft.year, adultBirthDateDraft.month, earliestBirthDate, adultBirthDateMax),
+    [adultBirthDateDraft.month, adultBirthDateDraft.year, adultBirthDateMax, earliestBirthDate],
   )
 
   const currentMeta = useMemo(() => {
@@ -1176,6 +1273,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   useEffect(() => {
     if (view !== 'minor-flow' || !minorForm.state) {
       setMinorCityOptions([])
+      setIsMinorLoadingCities(false)
       if (minorForm.city) {
         updateMinorField('city', '')
       }
@@ -1185,6 +1283,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     let isMounted = true
 
     async function loadMinorCities() {
+      if (isMounted) {
+        setIsMinorLoadingCities(true)
+        setMinorCityOptions([])
+      }
+
       try {
         const cities = await listCities(minorForm.state)
 
@@ -1204,6 +1307,10 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             ? formatMinorSubmissionError(error.message)
             : 'Não foi possível carregar as cidades do estado selecionado.'
         )
+      } finally {
+        if (isMounted) {
+          setIsMinorLoadingCities(false)
+        }
       }
     }
 
@@ -1217,6 +1324,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   useEffect(() => {
     if (view !== 'adult-flow' || !adultForm.state) {
       setAdultCityOptions([])
+      setIsAdultLoadingCities(false)
       if (adultForm.city) {
         updateAdultField('city', '')
       }
@@ -1226,6 +1334,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     let isMounted = true
 
     async function loadAdultCities() {
+      if (isMounted) {
+        setIsAdultLoadingCities(true)
+        setAdultCityOptions([])
+      }
+
       try {
         const cities = await listCities(adultForm.state)
 
@@ -1245,6 +1358,10 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             ? formatMinorSubmissionError(error.message)
             : 'Não foi possível carregar as cidades do estado selecionado.'
         )
+      } finally {
+        if (isMounted) {
+          setIsAdultLoadingCities(false)
+        }
       }
     }
 
@@ -1258,6 +1375,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   useEffect(() => {
     if (view !== 'institution-flow' || !institutionForm.state) {
       setInstitutionCityOptions([])
+      setIsInstitutionLoadingCities(false)
       if (institutionForm.city) {
         updateInstitutionField('city', '')
       }
@@ -1267,6 +1385,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     let isMounted = true
 
     async function loadInstitutionCities() {
+      if (isMounted) {
+        setIsInstitutionLoadingCities(true)
+        setInstitutionCityOptions([])
+      }
+
       try {
         const cities = await listCities(institutionForm.state)
 
@@ -1286,6 +1409,10 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             ? formatMinorSubmissionError(error.message)
             : 'Não foi possível carregar as cidades do estado selecionado.'
         )
+      } finally {
+        if (isMounted) {
+          setIsInstitutionLoadingCities(false)
+        }
       }
     }
 
@@ -1297,6 +1424,10 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   }, [institutionForm.state, view])
 
   const totalSteps = currentMeta?.totalSteps ?? 0
+  const isCurrentStepWaitingForCities =
+    (view === 'minor-flow' && currentStep === 1 && isMinorLoadingCities) ||
+    (view === 'adult-flow' && currentStep === 1 && isAdultLoadingCities) ||
+    (view === 'institution-flow' && currentStep === 2 && isInstitutionLoadingCities)
 
   const progress = useMemo(() => {
     if (totalSteps === 0) return 0
@@ -1339,6 +1470,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     setMinorCityOptions([])
     setAdultCityOptions([])
     setInstitutionCityOptions([])
+    setIsMinorLoadingCities(false)
+    setIsAdultLoadingCities(false)
+    setIsInstitutionLoadingCities(false)
     setIsMinorLoadingReferences(false)
     setIsMinorSubmitting(false)
     setMinorSubmission(null)
@@ -1458,11 +1592,12 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       nextParts.day = ''
     }
 
-    setMinorBirthDateDraft(nextParts)
+    const clampedParts = clampBirthDatePartsToRange(nextParts, youthBirthDateMin, latestBirthDate)
+    setMinorBirthDateDraft(clampedParts)
 
-    const nextBirthDate = buildBirthDateValue(nextParts)
+    const nextBirthDate = buildBirthDateValue(clampedParts)
     const isBirthDateInRange =
-      Boolean(nextBirthDate) && nextBirthDate >= earliestBirthDate && nextBirthDate <= youthBirthDateMax
+      Boolean(nextBirthDate) && nextBirthDate >= youthBirthDateMin && nextBirthDate <= latestBirthDate
 
     updateMinorField('birthDate', isBirthDateInRange ? nextBirthDate : '')
   }
@@ -1485,9 +1620,10 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       nextParts.day = ''
     }
 
-    setAdultBirthDateDraft(nextParts)
+    const clampedParts = clampBirthDatePartsToRange(nextParts, earliestBirthDate, adultBirthDateMax)
+    setAdultBirthDateDraft(clampedParts)
 
-    const nextBirthDate = buildBirthDateValue(nextParts)
+    const nextBirthDate = buildBirthDateValue(clampedParts)
     const isBirthDateInRange =
       Boolean(nextBirthDate) && nextBirthDate >= earliestBirthDate && nextBirthDate <= adultBirthDateMax
 
@@ -1602,6 +1738,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
+    if (currentStep === 1 && isMinorLoadingCities) {
+      setStepError('Aguarde o carregamento das cidades para continuar.')
+      return false
+    }
+
     if (currentStep === 1 && (!minorForm.region || !minorForm.state || !minorForm.city)) {
       setStepError('Preencha região, estado e cidade.')
       return false
@@ -1700,6 +1841,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
     if (currentStep === 0 && adultForm.cpf && !isValidCpf(adultForm.cpf)) {
       setStepError('Confira o CPF informado antes de continuar.')
+      return false
+    }
+
+    if (currentStep === 1 && isAdultLoadingCities) {
+      setStepError('Aguarde o carregamento das cidades para continuar.')
       return false
     }
 
@@ -2037,6 +2183,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         setStepError(integerError)
         return false
       }
+    }
+
+    if (currentStep === 2 && isInstitutionLoadingCities) {
+      setStepError('Aguarde o carregamento das cidades para continuar.')
+      return false
     }
 
     if (currentStep === 2 && (!institutionForm.state || !institutionForm.city || !institutionForm.locationType)) {
@@ -2638,9 +2789,17 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <select
                 value={minorForm.city}
                 onChange={(e) => updateMinorField('city', e.target.value)}
-                disabled={!minorForm.state}
+                disabled={!minorForm.state || isMinorLoadingCities}
               >
-                <option value="">{minorForm.state ? 'Selecione a cidade' : 'Selecione um estado primeiro'}</option>
+                <option value="">
+                  {!minorForm.state
+                    ? 'Selecione um estado primeiro'
+                    : isMinorLoadingCities
+                      ? 'Carregando cidades...'
+                      : minorCityOptions.length === 0
+                        ? 'Nenhuma cidade disponível'
+                        : 'Selecione a cidade'}
+                </option>
                 {minorCityOptions.map((item) => (
                   <option key={item.id} value={item.name}>
                     {item.name}
@@ -2680,7 +2839,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                     disabled={!minorBirthDateDraft.year}
                   >
                     <option value="">Selecione</option>
-                    {renderSelectOptions(birthDateMonthOptions)}
+                    {renderSelectOptions(minorBirthMonthOptions)}
                   </select>
                 </label>
 
@@ -2945,9 +3104,17 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <select
                 value={adultForm.city}
                 onChange={(e) => updateAdultField('city', e.target.value)}
-                disabled={!adultForm.state}
+                disabled={!adultForm.state || isAdultLoadingCities}
               >
-                <option value="">{adultForm.state ? 'Selecione a cidade' : 'Selecione um estado primeiro'}</option>
+                <option value="">
+                  {!adultForm.state
+                    ? 'Selecione um estado primeiro'
+                    : isAdultLoadingCities
+                      ? 'Carregando cidades...'
+                      : adultCityOptions.length === 0
+                        ? 'Nenhuma cidade disponível'
+                        : 'Selecione a cidade'}
+                </option>
                 {adultCityOptions.map((item) => (
                   <option key={item.id} value={item.name}>
                     {item.name}
@@ -2987,7 +3154,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                     disabled={!adultBirthDateDraft.year}
                   >
                     <option value="">Selecione</option>
-                    {renderSelectOptions(birthDateMonthOptions)}
+                    {renderSelectOptions(adultBirthMonthOptions)}
                   </select>
                 </label>
 
@@ -3376,8 +3543,20 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
             <label className="access-field">
               <span>Cidade *</span>
-              <select value={institutionForm.city} onChange={(e) => updateInstitutionField('city', e.target.value)} disabled={!institutionForm.state}>
-                <option value="">{institutionForm.state ? 'Selecione a cidade' : 'Selecione o estado antes'}</option>
+              <select
+                value={institutionForm.city}
+                onChange={(e) => updateInstitutionField('city', e.target.value)}
+                disabled={!institutionForm.state || isInstitutionLoadingCities}
+              >
+                <option value="">
+                  {!institutionForm.state
+                    ? 'Selecione o estado antes'
+                    : isInstitutionLoadingCities
+                      ? 'Carregando cidades...'
+                      : institutionCityOptions.length === 0
+                        ? 'Nenhuma cidade disponível'
+                        : 'Selecione a cidade'}
+                </option>
                 {institutionCityOptions.map((item) => (
                   <option key={item.id} value={item.name}>
                     {item.name}
@@ -3711,7 +3890,6 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         >
           <motion.div
             className={`access-floating-panel ${view !== 'menu' ? 'is-form-mode' : ''}`}
-            ref={panelRef}
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 18, scale: 0.96 }}
@@ -3820,11 +3998,14 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                           isInstitutionSubmitting ||
                           ((view === 'minor-flow' || view === 'adult-flow' || view === 'institution-flow') &&
                             isMinorLoadingReferences) ||
+                          isCurrentStepWaitingForCities ||
                           (currentStep === totalSteps - 1 && antiBotEnabled && !captchaToken)
                         }
                       >
                         {isMinorSubmitting || isAdultSubmitting || isInstitutionSubmitting
                           ? 'Enviando...'
+                          : isCurrentStepWaitingForCities
+                            ? 'Carregando cidades...'
                           : currentStep === totalSteps - 1
                             ? 'Finalizar Cadastro'
                             : 'Próximo'}
