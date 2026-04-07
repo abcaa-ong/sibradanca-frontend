@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   ArrowRight,
@@ -22,6 +22,7 @@ import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Seo } from '../components/Seo'
 import { SectionTitle } from '../components/SectionTitle'
+import { useCleanUiTextTree } from '../hooks/useCleanUiTextTree'
 
 const colors = {
   yellow: '#f4eb00',
@@ -176,8 +177,11 @@ function HeroArtwork() {
 }
 
 export default function HomePage() {
+  const rootRef = useRef<HTMLDivElement | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const navigate = useNavigate()
+
+  useCleanUiTextTree(rootRef, [mobileMenuOpen])
 
   const scrollToForms = () => {
     document.getElementById('formularios')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -188,7 +192,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="page-shell">
+    <div className="page-shell" ref={rootRef}>
       <Seo
         title="SIBRADANÇA — Banco Nacional de Dados da Dança do Brasil"
         description="Conheça a plataforma pública do SIBRADANÇA, acesse os formulários de jovens, profissionais e instituições e acompanhe a apresentação nacional do projeto."

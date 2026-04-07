@@ -33,5 +33,7 @@ export default defineConfig({
         environment: 'node',
         globals: true,
         clearMocks: true,
+        include: ['src/**/*.test.ts'],
+        exclude: ['e2e/**'],
     },
 });

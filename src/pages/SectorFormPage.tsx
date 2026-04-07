@@ -1,7 +1,8 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { AccessFloatingMenu } from '../components/AccessFloatingMenu'
 import { Seo } from '../components/Seo'
+import { useCleanUiTextTree } from '../hooks/useCleanUiTextTree'
 
 const sectorRouteMap = {
   jovens: 'minor-flow',
@@ -12,8 +13,10 @@ const sectorRouteMap = {
 type SectorSlug = keyof typeof sectorRouteMap
 
 export default function SectorFormPage() {
+  const rootRef = useRef<HTMLDivElement | null>(null)
   const { sector } = useParams<{ sector: string }>()
   const navigate = useNavigate()
+  useCleanUiTextTree(rootRef, [sector])
 
   const initialView = useMemo(() => {
     if (!sector) return null
@@ -38,7 +41,7 @@ export default function SectorFormPage() {
   }
 
   return (
-    <>
+    <div ref={rootRef}>
       <Seo
         title={pageTitle}
         description="Área de preenchimento dos formulários públicos do SIBRADANÇA para o Banco Nacional de Dados da Dança do Brasil."
@@ -49,6 +52,6 @@ export default function SectorFormPage() {
         initialView={initialView}
         onClose={() => navigate('/', { replace: true })}
       />
-    </>
+    </div>
   )
 }

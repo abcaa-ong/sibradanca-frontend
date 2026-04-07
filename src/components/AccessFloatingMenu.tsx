@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import { Badge } from './Badge'
 import { TurnstileWidget } from './TurnstileWidget'
+import { useCleanUiTextTree } from '../hooks/useCleanUiTextTree'
 import { ApiRequestError } from '../services/api'
 import { listCities, listStates } from '../services/geo.services'
 import { submitInstitutionForm, submitProfessionalForm, submitYouthForm } from '../services/forms.service'
@@ -1171,6 +1172,7 @@ function renderRegionOptions() {
 }
 
 export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'menu' }: AccessFloatingMenuProps) {
+  const rootRef = useRef<HTMLDivElement | null>(null)
   const [view, setView] = useState<FlowMode>(initialView)
   const [currentStep, setCurrentStep] = useState(0)
   const [stepError, setStepError] = useState('')
@@ -1204,6 +1206,19 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const previousOpenRef = useRef(open)
   const previousInitialViewRef = useRef(initialView)
   const antiBotEnabled = Boolean(TURNSTILE_SITE_KEY)
+
+  useCleanUiTextTree(rootRef, [
+    open,
+    view,
+    currentStep,
+    stepError,
+    isMinorLoadingCities,
+    isAdultLoadingCities,
+    isInstitutionLoadingCities,
+    Boolean(minorSubmission),
+    Boolean(adultSubmission),
+    Boolean(institutionSubmission),
+  ])
 
   const earliestBirthDate = '1900-01-01'
   const todayInBrazilDateInput = getCurrentBrazilDateInputValue()
@@ -1902,7 +1917,17 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
-    if (currentStep === 3) {
+    if (
+      currentStep === 4 &&
+      (!minorForm.careerInterest || minorForm.whoPays.length === 0 || !minorForm.searchesContent)
+    ) {
+      setStepError(
+        'Informe interesse em carreira, quem banca os custos e se pesquisa conteúdos sobre dança.'
+      )
+      return false
+    }
+
+    if (currentStep === 4) {
       const currencyError = validateCurrencyFields([
         { label: 'a mensalidade', value: minorForm.monthlyFee },
         { label: 'o gasto com escola ou academia', value: minorForm.schoolFee },
@@ -1917,16 +1942,6 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         setStepError(currencyError)
         return false
       }
-    }
-
-    if (
-      currentStep === 4 &&
-      (!minorForm.careerInterest || minorForm.whoPays.length === 0 || !minorForm.searchesContent)
-    ) {
-      setStepError(
-        'Informe interesse em carreira, quem banca os custos e se pesquisa conteúdos sobre dança.'
-      )
-      return false
     }
 
     if (currentStep === 5 && !minorForm.consentStats) {
@@ -2226,10 +2241,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       currentStep === 3 &&
       (!institutionForm.hasOwnHeadquarters ||
         !institutionForm.rentedHeadquarters ||
-        !institutionForm.usesPublicSpace ||
-        !institutionForm.averageAudienceCapacity)
+        !institutionForm.usesPublicSpace)
     ) {
-      setStepError('Preencha uso da sede e capacidade média de público.')
+      setStepError('Preencha o uso da sede da instituição.')
       return false
     }
 
@@ -2237,7 +2251,6 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       const integerError = validateIntegerFields([
         { label: 'o número de salas', value: institutionForm.numberOfRooms, maxValue: 999, required: true },
         { label: 'as aulas por semana', value: institutionForm.classesPerWeek, maxValue: 999, required: true },
-        { label: 'a capacidade média de público', value: institutionForm.averageAudienceCapacity, maxValue: 999999, required: true },
       ])
 
       if (integerError) {
@@ -2251,6 +2264,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       (!institutionForm.averageStudents ||
         !institutionForm.numberOfTeachers ||
         !institutionForm.monthlyFee ||
+        !institutionForm.averageAudienceCapacity ||
         !institutionForm.hasScholarShip ||
         !institutionForm.activeStudents ||
         !institutionForm.servesVulnerablePopulation ||
@@ -2281,6 +2295,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         { label: 'o número de professores', value: institutionForm.numberOfTeachers, maxValue: 9999, required: true },
         { label: 'a média de alunos ativos', value: institutionForm.averageStudents, maxValue: 999999, required: true },
         { label: 'os alunos ativos no momento', value: institutionForm.activeStudents, maxValue: 999999, required: true },
+        { label: 'a capacidade média de público', value: institutionForm.averageAudienceCapacity, maxValue: 999999, required: true },
         { label: 'a quantidade de bolsistas', value: institutionForm.scholarshipCount, maxValue: 999999, required: institutionForm.hasScholarShip === 'sim' },
       ])
 
@@ -3005,8 +3020,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
             {minorForm.searchesContent === 'sim' ? (
               <div className="access-field access-field-full">
-                <span>Quais conteudos costuma consumir?</span>
-                <small>Selecione todas as opcoes que se aplicam</small>
+                <span>Quais conteúdos costuma consumir?</span>
+                <small>Selecione todas as opções que se aplicam</small>
                 <div className="access-checkbox-grid access-checkbox-grid-compact">
                   {minorContents.map((item) => (
                     <label key={item.id} className="access-check-card">
@@ -3339,8 +3354,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <div className="access-field access-field-full">
-              <span>Conteudos que costuma consumir</span>
-              <small>Selecione todas as opcoes que se aplicam</small>
+              <span>Conteúdos que costuma consumir</span>
+              <small>Selecione todas as opções que se aplicam</small>
               <div className="access-checkbox-grid access-checkbox-grid-compact">
                 {minorContents.map((item) => (
                   <label key={item.id} className="access-check-card">
@@ -3356,13 +3371,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <label className="access-field">
-              <span>Formacao academica *</span>
+              <span>Formação acadêmica *</span>
               <select value={adultForm.academicEducation} onChange={(e) => updateAdultField('academicEducation', e.target.value)}>
                 <option value="">Selecione</option>
                 <option value="Ensino fundamental incompleto">Ensino fundamental incompleto</option>
                 <option value="Ensino fundamental completo">Ensino fundamental completo</option>
-                <option value="Ensino medio incompleto">Ensino medio incompleto</option>
-                <option value="Ensino medio completo">Ensino medio completo</option>
+                <option value="Ensino médio incompleto">Ensino médio incompleto</option>
+                <option value="Ensino médio completo">Ensino médio completo</option>
                 <option value="Ensino superior incompleto">Ensino superior incompleto</option>
                 <option value="Ensino superior completo">Ensino superior completo</option>
                 <option value="Pos-graduacao">Pos-graduacao</option>
@@ -3403,7 +3418,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <div className="access-field access-field-full">
-              <span>Ja participou de editais publicos? *</span>
+              <span>Já participou de editais públicos? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.participatedPublicCalls, (value) => updateAdultField('participatedPublicCalls', value))}
                 {renderChoiceCard('nao', adultForm.participatedPublicCalls, (value) => updateAdultField('participatedPublicCalls', value))}
@@ -3581,6 +3596,20 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 {renderSelectOptions(institutionLocationTypeOptions)}
               </select>
             </label>
+            <div className="access-field">
+              <span>Atua em periferias? *</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.actsInPeriphery, (value) => updateInstitutionField('actsInPeriphery', value))}
+                {renderChoiceCard('nao', institutionForm.actsInPeriphery, (value) => updateInstitutionField('actsInPeriphery', value))}
+              </div>
+            </div>
+            <div className="access-field">
+              <span>Atua em área rural? *</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.actsInRuralArea, (value) => updateInstitutionField('actsInRuralArea', value))}
+                {renderChoiceCard('nao', institutionForm.actsInRuralArea, (value) => updateInstitutionField('actsInRuralArea', value))}
+              </div>
+            </div>
           </div>
         )
       case 3:
@@ -3625,6 +3654,27 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 ))}
               </div>
             </div>
+            <div className="access-field">
+              <span>Possui sede própria? *</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.hasOwnHeadquarters, (value) => updateInstitutionField('hasOwnHeadquarters', value))}
+                {renderChoiceCard('nao', institutionForm.hasOwnHeadquarters, (value) => updateInstitutionField('hasOwnHeadquarters', value))}
+              </div>
+            </div>
+            <div className="access-field">
+              <span>Atua em sede alugada? *</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.rentedHeadquarters, (value) => updateInstitutionField('rentedHeadquarters', value))}
+                {renderChoiceCard('nao', institutionForm.rentedHeadquarters, (value) => updateInstitutionField('rentedHeadquarters', value))}
+              </div>
+            </div>
+            <div className="access-field">
+              <span>Usa espaço público? *</span>
+              <div className="access-choice-grid">
+                {renderChoiceCard('sim', institutionForm.usesPublicSpace, (value) => updateInstitutionField('usesPublicSpace', value))}
+                {renderChoiceCard('nao', institutionForm.usesPublicSpace, (value) => updateInstitutionField('usesPublicSpace', value))}
+              </div>
+            </div>
           </div>
         )
       case 4:
@@ -3639,7 +3689,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <input type="number" min="0" placeholder="Ex: 120" value={institutionForm.averageStudents} onChange={(e) => updateInstitutionField('averageStudents', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>Alunos ativos no momento</span>
+              <span>Alunos ativos no momento *</span>
               <input type="number" min="0" placeholder="Ex: 98" value={institutionForm.activeStudents} onChange={(e) => updateInstitutionField('activeStudents', e.target.value)} />
             </label>
             <label className="access-field">
@@ -3647,7 +3697,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <input type="text" inputMode="decimal" placeholder="Ex: 250,00" value={institutionForm.monthlyFee} onChange={(e) => updateInstitutionField('monthlyFee', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>Capacidade média de público</span>
+              <span>Capacidade média de público *</span>
               <input type="number" min="0" placeholder="Ex: 80" value={institutionForm.averageAudienceCapacity} onChange={(e) => updateInstitutionField('averageAudienceCapacity', e.target.value)} />
             </label>
             <div className="access-field">
@@ -3888,6 +3938,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     <AnimatePresence>
       {open && (
         <motion.div
+          ref={rootRef}
           className="access-overlay"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

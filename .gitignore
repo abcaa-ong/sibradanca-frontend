@@ -38,7 +38,12 @@ vite.config.js.timestamp-*
 
 # test coverage
 coverage/
+test-results/
 
 # MD
 **/*.md
 !README.md
+
+# playwright/generated config
+playwright.config.js
+playwright.config.d.ts
