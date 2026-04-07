@@ -309,6 +309,12 @@
   grid-column: 1 / -1;
 }
 
+.access-date-grid {
+  display: grid;
+  grid-template-columns: minmax(132px, 1.2fr) minmax(110px, 1fr) minmax(88px, 0.9fr);
+  gap: 12px;
+}
+
 .access-field input,
 .access-field select {
   width: 100%;
@@ -570,6 +576,10 @@
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .access-date-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 720px) {
@@ -608,5 +618,9 @@
 
   .access-action-btn {
     width: 100%;
+  }
+
+  .access-date-grid {
+    grid-template-columns: 1fr;
   }
 }

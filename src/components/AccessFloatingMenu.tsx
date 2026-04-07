@@ -185,6 +185,8 @@ type InstitutionFormData = {
 }
 
 type OptionItem = { value: string; label: string }
+type BirthDatePartKey = 'year' | 'month' | 'day'
+type BirthDateParts = Record<BirthDatePartKey, string>
 
 const TURNSTILE_SITE_KEY = (import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '').trim()
 const MAX_CURRENCY_INTEGER_DIGITS = 9
@@ -608,6 +610,58 @@ const minorPracticeTimeOptions: OptionItem[] = [
   { value: 'MAIS_DE_6_ANOS', label: 'Mais de 6 anos' },
 ]
 
+const birthDateMonthOptions: OptionItem[] = [
+  { value: '01', label: 'Jan' },
+  { value: '02', label: 'Fev' },
+  { value: '03', label: 'Mar' },
+  { value: '04', label: 'Abr' },
+  { value: '05', label: 'Mai' },
+  { value: '06', label: 'Jun' },
+  { value: '07', label: 'Jul' },
+  { value: '08', label: 'Ago' },
+  { value: '09', label: 'Set' },
+  { value: '10', label: 'Out' },
+  { value: '11', label: 'Nov' },
+  { value: '12', label: 'Dez' },
+]
+
+function getBirthDateYearOptions(minDate: string, maxDate: string) {
+  const minYear = Number(minDate.slice(0, 4))
+  const maxYear = Number(maxDate.slice(0, 4))
+
+  return Array.from({ length: maxYear - minYear + 1 }, (_, index) => String(maxYear - index))
+}
+
+function getDaysInMonth(year: string, month: string) {
+  const parsedYear = Number(year)
+  const parsedMonth = Number(month)
+
+  if (!parsedYear || !parsedMonth) {
+    return 31
+  }
+
+  return new Date(parsedYear, parsedMonth, 0).getDate()
+}
+
+function buildBirthDateValue(parts: BirthDateParts) {
+  if (!parts.year || !parts.month || !parts.day) {
+    return ''
+  }
+
+  const maxDays = getDaysInMonth(parts.year, parts.month)
+  const parsedDay = Number(parts.day)
+
+  if (parsedDay < 1 || parsedDay > maxDays) {
+    return ''
+  }
+
+  return `${parts.year}-${parts.month}-${parts.day}`
+}
+
+function createEmptyBirthDateParts(): BirthDateParts {
+  return { year: '', month: '', day: '' }
+}
+
 function parseBooleanChoice(value: string) {
   return value === 'sim'
 }
@@ -920,6 +974,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const [minorForm, setMinorForm] = useState<MinorFormData>(initialMinorForm)
   const [adultForm, setAdultForm] = useState<AdultFormData>(initialAdultForm)
   const [institutionForm, setInstitutionForm] = useState<InstitutionFormData>(initialInstitutionForm)
+  const [minorBirthDateDraft, setMinorBirthDateDraft] = useState<BirthDateParts>(() => createEmptyBirthDateParts())
+  const [adultBirthDateDraft, setAdultBirthDateDraft] = useState<BirthDateParts>(() => createEmptyBirthDateParts())
   const [availableStates, setAvailableStates] = useState<StateResponse[]>([])
   const [minorCityOptions, setMinorCityOptions] = useState<CityResponse[]>([])
   const [adultCityOptions, setAdultCityOptions] = useState<CityResponse[]>([])
@@ -952,6 +1008,28 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const youthBirthDateMax = useMemo(
     () => shiftDateInputValue(todayInBrazilDateInput, { years: -18, days: 1 }),
     [todayInBrazilDateInput],
+  )
+  const minorBirthYearOptions = useMemo(
+    () => getBirthDateYearOptions(earliestBirthDate, youthBirthDateMax),
+    [earliestBirthDate, youthBirthDateMax],
+  )
+  const adultBirthYearOptions = useMemo(
+    () => getBirthDateYearOptions(earliestBirthDate, adultBirthDateMax),
+    [adultBirthDateMax, earliestBirthDate],
+  )
+  const minorBirthDayOptions = useMemo(
+    () =>
+      Array.from({ length: getDaysInMonth(minorBirthDateDraft.year, minorBirthDateDraft.month) }, (_, index) =>
+        String(index + 1).padStart(2, '0'),
+      ),
+    [minorBirthDateDraft.month, minorBirthDateDraft.year],
+  )
+  const adultBirthDayOptions = useMemo(
+    () =>
+      Array.from({ length: getDaysInMonth(adultBirthDateDraft.year, adultBirthDateDraft.month) }, (_, index) =>
+        String(index + 1).padStart(2, '0'),
+      ),
+    [adultBirthDateDraft.month, adultBirthDateDraft.year],
   )
 
   const currentMeta = useMemo(() => {
@@ -1228,6 +1306,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     setMinorForm(initialMinorForm)
     setAdultForm(initialAdultForm)
     setInstitutionForm(initialInstitutionForm)
+    setMinorBirthDateDraft(createEmptyBirthDateParts())
+    setAdultBirthDateDraft(createEmptyBirthDateParts())
     setMinorCityOptions([])
     setAdultCityOptions([])
     setInstitutionCityOptions([])
@@ -1330,6 +1410,60 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         : value
 
     setInstitutionForm((prev) => ({ ...prev, [field]: nextValue as InstitutionFormData[K] }))
+  }
+
+  const updateMinorBirthDatePart = (part: BirthDatePartKey, value: string) => {
+    const nextParts = { ...minorBirthDateDraft, [part]: value }
+
+    if (part === 'year' && !value) {
+      nextParts.month = ''
+      nextParts.day = ''
+    }
+
+    if (part === 'month' && !value) {
+      nextParts.day = ''
+    }
+
+    const maxDays = getDaysInMonth(nextParts.year, nextParts.month)
+
+    if (nextParts.day && Number(nextParts.day) > maxDays) {
+      nextParts.day = ''
+    }
+
+    setMinorBirthDateDraft(nextParts)
+
+    const nextBirthDate = buildBirthDateValue(nextParts)
+    const isBirthDateInRange =
+      Boolean(nextBirthDate) && nextBirthDate >= earliestBirthDate && nextBirthDate <= youthBirthDateMax
+
+    updateMinorField('birthDate', isBirthDateInRange ? nextBirthDate : '')
+  }
+
+  const updateAdultBirthDatePart = (part: BirthDatePartKey, value: string) => {
+    const nextParts = { ...adultBirthDateDraft, [part]: value }
+
+    if (part === 'year' && !value) {
+      nextParts.month = ''
+      nextParts.day = ''
+    }
+
+    if (part === 'month' && !value) {
+      nextParts.day = ''
+    }
+
+    const maxDays = getDaysInMonth(nextParts.year, nextParts.month)
+
+    if (nextParts.day && Number(nextParts.day) > maxDays) {
+      nextParts.day = ''
+    }
+
+    setAdultBirthDateDraft(nextParts)
+
+    const nextBirthDate = buildBirthDateValue(nextParts)
+    const isBirthDateInRange =
+      Boolean(nextBirthDate) && nextBirthDate >= earliestBirthDate && nextBirthDate <= adultBirthDateMax
+
+    updateAdultField('birthDate', isBirthDateInRange ? nextBirthDate : '')
   }
 
   const toggleMinorArrayValue = (
@@ -2492,26 +2626,64 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       case 2:
         return (
           <div className="access-form-grid">
-            <label className="access-field">
+            <div className="access-field access-field-full">
               <span>Data de nascimento *</span>
-              <input
-                type="date"
-                value={minorForm.birthDate}
-                min={earliestBirthDate}
-                max={youthBirthDateMax}
-                onChange={(e) => updateMinorField('birthDate', e.target.value)}
-              />
-            </label>
+              <small>Selecione ano, mês e dia.</small>
+              <div className="access-date-grid">
+                <label className="access-field">
+                  <span>Ano</span>
+                  <select
+                    value={minorBirthDateDraft.year}
+                    onChange={(e) => updateMinorBirthDatePart('year', e.target.value)}
+                  >
+                    <option value="">Selecione</option>
+                    {minorBirthYearOptions.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="access-field">
+                  <span>Mês</span>
+                  <select
+                    value={minorBirthDateDraft.month}
+                    onChange={(e) => updateMinorBirthDatePart('month', e.target.value)}
+                    disabled={!minorBirthDateDraft.year}
+                  >
+                    <option value="">Selecione</option>
+                    {renderSelectOptions(birthDateMonthOptions)}
+                  </select>
+                </label>
+
+                <label className="access-field">
+                  <span>Dia</span>
+                  <select
+                    value={minorBirthDateDraft.day}
+                    onChange={(e) => updateMinorBirthDatePart('day', e.target.value)}
+                    disabled={!minorBirthDateDraft.year || !minorBirthDateDraft.month}
+                  >
+                    <option value="">Selecione</option>
+                    {minorBirthDayOptions.map((day) => (
+                      <option key={day} value={day}>
+                        {day}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            </div>
 
             <label className="access-field">
               <span>Idade *</span>
               <input
-                type="number"
-                min="0"
-                max="17"
+                type="text"
                 value={minorForm.age}
-                onChange={(e) => updateMinorField('age', e.target.value)}
+                readOnly
+                placeholder="Calculada automaticamente"
               />
+              <small>Preenchida automaticamente a partir da data de nascimento.</small>
             </label>
 
             <label className="access-field">
@@ -2761,19 +2933,63 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       case 2:
         return (
           <div className="access-form-grid">
-            <label className="access-field">
+            <div className="access-field access-field-full">
               <span>Data de nascimento *</span>
-              <input
-                type="date"
-                value={adultForm.birthDate}
-                min={earliestBirthDate}
-                max={adultBirthDateMax}
-                onChange={(e) => updateAdultField('birthDate', e.target.value)}
-              />
-            </label>
+              <small>Selecione ano, mês e dia.</small>
+              <div className="access-date-grid">
+                <label className="access-field">
+                  <span>Ano</span>
+                  <select
+                    value={adultBirthDateDraft.year}
+                    onChange={(e) => updateAdultBirthDatePart('year', e.target.value)}
+                  >
+                    <option value="">Selecione</option>
+                    {adultBirthYearOptions.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="access-field">
+                  <span>Mês</span>
+                  <select
+                    value={adultBirthDateDraft.month}
+                    onChange={(e) => updateAdultBirthDatePart('month', e.target.value)}
+                    disabled={!adultBirthDateDraft.year}
+                  >
+                    <option value="">Selecione</option>
+                    {renderSelectOptions(birthDateMonthOptions)}
+                  </select>
+                </label>
+
+                <label className="access-field">
+                  <span>Dia</span>
+                  <select
+                    value={adultBirthDateDraft.day}
+                    onChange={(e) => updateAdultBirthDatePart('day', e.target.value)}
+                    disabled={!adultBirthDateDraft.year || !adultBirthDateDraft.month}
+                  >
+                    <option value="">Selecione</option>
+                    {adultBirthDayOptions.map((day) => (
+                      <option key={day} value={day}>
+                        {day}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            </div>
             <label className="access-field">
               <span>Idade *</span>
-              <input type="number" min="18" max="99" value={adultForm.age} onChange={(e) => updateAdultField('age', e.target.value)} />
+              <input
+                type="text"
+                value={adultForm.age}
+                readOnly
+                placeholder="Calculada automaticamente"
+              />
+              <small>Preenchida automaticamente a partir da data de nascimento.</small>
             </label>
             <label className="access-field">
               <span>Identidade de gênero (opcional)</span>
