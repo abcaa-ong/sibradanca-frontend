@@ -11,6 +11,7 @@ import type {
   YouthFormDetailResponse,
 } from '../types/admin'
 import { formatBackendDate, formatBackendDateTime } from '../utils/backend-date'
+import { calculateAgeFromBirthDate } from '../utils/brazilian-validation'
 import { cleanUiText as t } from '../utils/ui-text'
 
 type FieldKind = 'text' | 'enum' | 'boolean' | 'date' | 'datetime' | 'currency' | 'list' | 'number'
@@ -285,19 +286,7 @@ function parseBirthDateFromSection(value: string) {
   }
 
   const [, day, month, year] = match
-  return new Date(Number(year), Number(month) - 1, Number(day))
-}
-
-function calculateAge(birthDate: Date) {
-  const today = new Date()
-  let age = today.getFullYear() - birthDate.getFullYear()
-  const monthDifference = today.getMonth() - birthDate.getMonth()
-
-  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-    age -= 1
-  }
-
-  return age
+  return `${year}-${month}-${day}`
 }
 
 function resolveAgeRangeForSector(sector: string, age: number) {
@@ -345,7 +334,16 @@ function humanizeEnum(value: string | null) {
   if (value === 'YOUTH') return 'Jovens'
   if (value === 'PROFESSIONAL') return 'Profissionais'
   if (value === 'INSTITUTION') return 'Instituições'
-  if (value === 'Mulher cis' || value === 'Mulher trans' || value === 'Homem cis' || value === 'Homem trans') {
+  if (
+    value === 'Mulher' ||
+    value === 'Homem' ||
+    value === 'Mulher cis' ||
+    value === 'Mulher cisgênero' ||
+    value === 'Mulher trans' ||
+    value === 'Homem cis' ||
+    value === 'Homem cisgênero' ||
+    value === 'Homem trans'
+  ) {
     return value
   }
   if (value === 'Travesti') return value
@@ -418,7 +416,7 @@ function normalizeStructuredSections(sections: AdminDetailSectionResponse[], sec
   return sections.map((section) => {
     const birthDateField = section.fields.find((field) => field.key === 'birthDate')
     const parsedBirthDate = birthDateField ? parseBirthDateFromSection(birthDateField.value) : null
-    const calculatedAge = parsedBirthDate ? calculateAge(parsedBirthDate) : null
+    const calculatedAge = parsedBirthDate ? calculateAgeFromBirthDate(parsedBirthDate) : null
 
     return {
       ...section,

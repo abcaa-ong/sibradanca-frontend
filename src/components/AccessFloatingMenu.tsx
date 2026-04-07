@@ -325,9 +325,9 @@ const youthWhoPaysOptions = ['Família', 'Escola', 'Patrocínios', 'Outros']
 const adultWhoPaysOptions = ['Você', 'Família', 'Escola', 'Edital', 'Outros']
 
 const genderIdentityOptions: OptionItem[] = [
-  { value: 'Mulher cis', label: 'Mulher cis' },
+  { value: 'Mulher cisgênero', label: 'Mulher cisgênero' },
   { value: 'Mulher trans', label: 'Mulher trans' },
-  { value: 'Homem cis', label: 'Homem cis' },
+  { value: 'Homem cisgênero', label: 'Homem cisgênero' },
   { value: 'Homem trans', label: 'Homem trans' },
   { value: 'Travesti', label: 'Travesti' },
   { value: 'Pessoa não binária', label: 'Pessoa não binária' },
@@ -800,9 +800,15 @@ function mapFlowValidationError(
     flow === 'adult-flow'
       ? [
           {
+            step: 0,
+            fields: ['cpf', 'cpfValid', 'whatsapp', 'whatsappValid', 'email'],
+            message: 'Revise nome, e-mail, CPF e WhatsApp antes de continuar.',
+          },
+          {
             step: 2,
-            fields: ['age'],
-            message: 'Revise a idade informada. O cadastro profissional é para maiores de 18 anos.',
+            fields: ['age', 'birthDate', 'ageCompatibleWithBirthDate', 'genderValid'],
+            message:
+              'Revise data de nascimento, idade e identidade de gênero. O cadastro profissional é para maiores de 18 anos.',
           },
           {
             step: 4,
@@ -831,6 +837,22 @@ function mapFlowValidationError(
       : flow === 'institution-flow'
         ? [
           {
+            step: 0,
+            fields: ['phone', 'phoneValid', 'email'],
+            message: 'Revise nome do responsável, e-mail institucional e telefone com DDD.',
+          },
+          {
+            step: 1,
+            fields: [
+              'cnpj',
+              'cnpjValidWhenProvided',
+              'cnpjProvidedWhenInstitutionHasCnpj',
+              'foundationYear',
+              'foundationYearWithinCurrentBrazilYear',
+            ],
+            message: 'Revise CNPJ e ano de fundação. O ano não pode estar no futuro.',
+          },
+          {
             step: 4,
             fields: ['monthlyFee'],
             message: 'Revise a mensalidade média. Use um valor válido e dentro do limite permitido.',
@@ -844,9 +866,15 @@ function mapFlowValidationError(
           ]
         : [
             {
+              step: 0,
+              fields: ['cpf', 'cpfValid', 'whatsapp', 'whatsappValid', 'email'],
+              message: 'Revise nome, e-mail, CPF e WhatsApp antes de continuar.',
+            },
+            {
               step: 2,
-              fields: ['age'],
-              message: 'Revise a idade informada. O cadastro de jovens aceita idades até 17 anos.',
+              fields: ['age', 'birthDate', 'ageCompatibleWithBirthDate', 'genderValid'],
+              message:
+                'Revise data de nascimento, idade e identidade de gênero. O cadastro de jovens aceita idades até 17 anos.',
             },
             {
               step: 3,
@@ -1003,6 +1031,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
   const earliestBirthDate = '1900-01-01'
   const todayInBrazilDateInput = useMemo(() => getCurrentBrazilDateInputValue(), [])
+  const currentBrazilYear = useMemo(() => Number(todayInBrazilDateInput.slice(0, 4)), [todayInBrazilDateInput])
   const adultBirthDateMax = useMemo(() => shiftDateInputValue(todayInBrazilDateInput, { years: -18 }), [todayInBrazilDateInput])
   const youthBirthDateMax = useMemo(
     () => shiftDateInputValue(todayInBrazilDateInput, { years: -18, days: 1 }),
@@ -1990,15 +2019,18 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     if (
       currentStep === 1 &&
       institutionForm.foundationYearExact &&
-      (Number(institutionForm.foundationYearExact) < 1900 || Number(institutionForm.foundationYearExact) > 2100)
+      (
+        Number(institutionForm.foundationYearExact) < 1900 ||
+        Number(institutionForm.foundationYearExact) > currentBrazilYear
+      )
     ) {
-      setStepError('Informe um ano de fundação válido entre 1900 e 2100.')
+      setStepError(`Informe um ano de fundação válido entre 1900 e ${currentBrazilYear}.`)
       return false
     }
 
     if (currentStep === 1) {
       const integerError = validateIntegerFields([
-        { label: 'o ano de fundação', value: institutionForm.foundationYearExact, maxValue: 2100, required: true },
+        { label: 'o ano de fundação', value: institutionForm.foundationYearExact, maxValue: currentBrazilYear, required: true },
       ])
 
       if (integerError) {
@@ -3308,7 +3340,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
             <label className="access-field">
               <span>Ano de fundação *</span>
-              <input type="number" min="1900" max="2100" placeholder="Ex: 2014" value={institutionForm.foundationYearExact} onChange={(e) => updateInstitutionField('foundationYearExact', e.target.value)} />
+              <input type="number" min="1900" max={String(currentBrazilYear)} placeholder="Ex: 2014" value={institutionForm.foundationYearExact} onChange={(e) => updateInstitutionField('foundationYearExact', e.target.value)} />
             </label>
             <div className="access-field">
               <span>Possui CNPJ? *</span>
