@@ -1,4 +1,4 @@
-import { RefObject, useEffect } from 'react'
+import { DependencyList, RefObject, useEffect } from 'react'
 import { cleanUiText } from '../utils/ui-text'
 
 function cleanElementAttributes(root: HTMLElement) {
@@ -40,7 +40,7 @@ function cleanTextNodes(root: HTMLElement) {
   })
 }
 
-export function useCleanUiTextTree(rootRef: RefObject<HTMLElement | null>) {
+export function useCleanUiTextTree(rootRef: RefObject<HTMLElement | null>, deps: DependencyList = []) {
   useEffect(() => {
     const root = rootRef.current
 
@@ -48,7 +48,13 @@ export function useCleanUiTextTree(rootRef: RefObject<HTMLElement | null>) {
       return
     }
 
-    cleanElementAttributes(root)
-    cleanTextNodes(root)
-  })
+    const frameId = window.requestAnimationFrame(() => {
+      cleanElementAttributes(root)
+      cleanTextNodes(root)
+    })
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+    }
+  }, [rootRef, ...deps])
 }

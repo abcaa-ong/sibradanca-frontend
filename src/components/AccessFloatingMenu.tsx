@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import { Badge } from './Badge'
@@ -991,7 +991,6 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const [adultSubmission, setAdultSubmission] = useState<ProfessionalFormResponse | null>(null)
   const [isInstitutionSubmitting, setIsInstitutionSubmitting] = useState(false)
   const [institutionSubmission, setInstitutionSubmission] = useState<InstitutionFormResponse | null>(null)
-  const [isStepTransitionPending, startStepTransition] = useTransition()
   const [formStartedAt, setFormStartedAt] = useState(() => new Date().toISOString())
   const [honeypotValue, setHoneypotValue] = useState('')
   const [captchaToken, setCaptchaToken] = useState('')
@@ -1000,7 +999,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const previousInitialViewRef = useRef(initialView)
   const antiBotEnabled = Boolean(TURNSTILE_SITE_KEY)
 
-  useCleanUiTextTree(panelRef)
+  useCleanUiTextTree(panelRef, [open, view, currentStep, stepError, minorSubmission, adultSubmission, institutionSubmission])
 
   const earliestBirthDate = '1900-01-01'
   const todayInBrazilDateInput = useMemo(() => getCurrentBrazilDateInputValue(), [])
@@ -1548,9 +1547,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return
     }
 
-    startStepTransition(() => {
-      setCurrentStep((prev) => prev - 1)
-    })
+    setCurrentStep((prev) => prev - 1)
   }
 
   const handleTopBack = handlePrevious
@@ -2487,9 +2484,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     if (!validateCurrentStep()) return
 
     if (currentStep < totalSteps - 1) {
-      startStepTransition(() => {
-        setCurrentStep((prev) => prev + 1)
-      })
+      setCurrentStep((prev) => prev + 1)
       return
     }
 
@@ -3793,14 +3788,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                           isInstitutionSubmitting ||
                           ((view === 'minor-flow' || view === 'adult-flow' || view === 'institution-flow') &&
                             isMinorLoadingReferences) ||
-                          (currentStep === totalSteps - 1 && antiBotEnabled && !captchaToken) ||
-                          isStepTransitionPending
+                          (currentStep === totalSteps - 1 && antiBotEnabled && !captchaToken)
                         }
                       >
                         {isMinorSubmitting || isAdultSubmitting || isInstitutionSubmitting
                           ? 'Enviando...'
-                          : isStepTransitionPending
-                            ? 'Abrindo...'
                           : currentStep === totalSteps - 1
                             ? 'Finalizar Cadastro'
                             : 'Próximo'}

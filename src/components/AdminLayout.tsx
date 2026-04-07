@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { BarChart3, Download, FileSpreadsheet, Home, LogOut, ShieldCheck } from 'lucide-react'
-import { NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Button } from './Button'
 import { Seo } from './Seo'
 import { clearAdminCredentials, hasAdminSession } from '../services/admin-auth.service'
@@ -42,9 +42,10 @@ const navSections = [
 
 export default function AdminLayout() {
   const navigate = useNavigate()
+  const location = useLocation()
   const rootRef = useRef<HTMLDivElement | null>(null)
 
-  useCleanUiTextTree(rootRef)
+  useCleanUiTextTree(rootRef, [location.pathname])
 
   if (!hasAdminSession()) {
     return <Navigate to="/painel-interno/acesso" replace />

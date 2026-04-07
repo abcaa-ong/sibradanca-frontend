@@ -21,7 +21,7 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  useCleanUiTextTree(rootRef)
+  useCleanUiTextTree(rootRef, [])
 
   useEffect(() => {
     if (hasAdminSession()) {
