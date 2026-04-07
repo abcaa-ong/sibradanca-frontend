@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   ArrowRight,
@@ -190,8 +190,8 @@ export default function HomePage() {
   return (
     <div className="page-shell">
       <Seo
-        title="SIBRADAN\u00c7A \u2014 Banco Nacional de Dados da Dan\u00e7a do Brasil"
-        description="Conhe\u00e7a a plataforma p\u00fablica do SIBRADAN\u00c7A, acesse os formul\u00e1rios de jovens, profissionais e institui\u00e7\u00f5es e acompanhe a apresenta\u00e7\u00e3o nacional do projeto."
+        title="SIBRADANÇA — Banco Nacional de Dados da Dança do Brasil"
+        description="Conheça a plataforma pública do SIBRADANÇA, acesse os formulários de jovens, profissionais e instituições e acompanhe a apresentação nacional do projeto."
         path="/"
       />
       <FloatingShapes />

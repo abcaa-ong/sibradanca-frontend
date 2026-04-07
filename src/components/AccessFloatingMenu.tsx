@@ -22,12 +22,14 @@ import {
   formatBrazilianPhoneInput,
   formatCnpjInput,
   formatCpfInput,
+  getCurrentBrazilDateInputValue,
   isAgeCompatibleWithBirthDate,
   isValidBrazilianPhone,
   isValidCnpj,
   isValidCpf,
   isValidEmail,
   normalizeDigits,
+  shiftDateInputValue,
 } from '../utils/brazilian-validation'
 import { cleanUiText as t } from '../utils/ui-text'
 
@@ -237,25 +239,6 @@ const institutionIntegerFieldDigits: Partial<Record<keyof InstitutionFormData, n
   pjContracts: 5,
   numberOfStaff: 5,
   monthlyAudience: 6,
-}
-
-function formatDateInputValue(date: Date) {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
-
-function shiftYears(date: Date, years: number) {
-  const nextDate = new Date(date)
-  nextDate.setFullYear(nextDate.getFullYear() + years)
-  return nextDate
-}
-
-function shiftDays(date: Date, days: number) {
-  const nextDate = new Date(date)
-  nextDate.setDate(nextDate.getDate() + days)
-  return nextDate
 }
 
 const accessOptions = [
@@ -964,10 +947,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   useCleanUiTextTree(panelRef)
 
   const earliestBirthDate = '1900-01-01'
-  const adultBirthDateMax = useMemo(() => formatDateInputValue(shiftYears(new Date(), -18)), [])
+  const todayInBrazilDateInput = useMemo(() => getCurrentBrazilDateInputValue(), [])
+  const adultBirthDateMax = useMemo(() => shiftDateInputValue(todayInBrazilDateInput, { years: -18 }), [todayInBrazilDateInput])
   const youthBirthDateMax = useMemo(
-    () => formatDateInputValue(shiftDays(shiftYears(new Date(), -18), 1)),
-    [],
+    () => shiftDateInputValue(todayInBrazilDateInput, { years: -18, days: 1 }),
+    [todayInBrazilDateInput],
   )
 
   const currentMeta = useMemo(() => {
@@ -2531,7 +2515,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             </label>
 
             <label className="access-field">
-              <span>Gênero (opcional)</span>
+              <span>Identidade de gênero (opcional)</span>
               <select value={minorForm.gender} onChange={(e) => updateMinorField('gender', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(genderIdentityOptions)}
@@ -2792,7 +2776,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <input type="number" min="18" max="99" value={adultForm.age} onChange={(e) => updateAdultField('age', e.target.value)} />
             </label>
             <label className="access-field">
-              <span>Gênero (opcional)</span>
+              <span>Identidade de gênero (opcional)</span>
               <select value={adultForm.gender} onChange={(e) => updateAdultField('gender', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(genderIdentityOptions)}

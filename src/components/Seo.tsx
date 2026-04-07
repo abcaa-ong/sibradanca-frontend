@@ -9,7 +9,7 @@ type SeoProps = {
   type?: 'website' | 'article'
 }
 
-const SITE_NAME = 'SIBRADAN\u00c7A'
+const SITE_NAME = 'SIBRADANÇA'
 
 function upsertMeta(attribute: 'name' | 'property', key: string, content: string) {
   let element = document.head.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`)

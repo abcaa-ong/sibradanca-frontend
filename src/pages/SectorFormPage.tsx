@@ -23,13 +23,13 @@ export default function SectorFormPage() {
   const pageTitle = useMemo(() => {
     switch (sector) {
       case 'jovens':
-        return 'Formul\u00e1rio para jovens da dan\u00e7a'
+        return 'Formulário para jovens da dança'
       case 'profissionais':
-        return 'Formul\u00e1rio para profissionais da dan\u00e7a'
+        return 'Formulário para profissionais da dança'
       case 'instituicoes':
-        return 'Formul\u00e1rio para institui\u00e7\u00f5es da dan\u00e7a'
+        return 'Formulário para instituições da dança'
       default:
-        return 'Formul\u00e1rios do SIBRADAN\u00c7A'
+        return 'Formulários do SIBRADANÇA'
     }
   }, [sector])
 
@@ -41,7 +41,7 @@ export default function SectorFormPage() {
     <>
       <Seo
         title={pageTitle}
-        description="\u00c1rea de preenchimento dos formul\u00e1rios p\u00fablicos do SIBRADAN\u00c7A para o Banco Nacional de Dados da Dan\u00e7a do Brasil."
+        description="Área de preenchimento dos formulários públicos do SIBRADANÇA para o Banco Nacional de Dados da Dança do Brasil."
         robots="noindex,nofollow"
       />
       <AccessFloatingMenu

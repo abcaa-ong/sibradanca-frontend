@@ -1,5 +1,77 @@
+const BRAZIL_TIMEZONE = 'America/Sao_Paulo'
+
 function digitsOnly(value: string) {
   return value.replace(/\D/g, '')
+}
+
+function getBrazilDateParts(reference = new Date()) {
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: BRAZIL_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  })
+
+  const parts = formatter.formatToParts(reference)
+  const year = parts.find((part) => part.type === 'year')?.value
+  const month = parts.find((part) => part.type === 'month')?.value
+  const day = parts.find((part) => part.type === 'day')?.value
+
+  if (!year || !month || !day) {
+    return null
+  }
+
+  return { year: Number(year), month: Number(month), day: Number(day) }
+}
+
+function parseDateInput(value: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value.trim())
+
+  if (!match) {
+    return null
+  }
+
+  const [, year, month, day] = match
+  return { year: Number(year), month: Number(month), day: Number(day) }
+}
+
+function dateInputToUtcDate(value: string) {
+  const parts = parseDateInput(value)
+
+  if (!parts) {
+    return null
+  }
+
+  return new Date(Date.UTC(parts.year, parts.month - 1, parts.day))
+}
+
+function formatDateInputFromUtcDate(value: Date) {
+  const year = value.getUTCFullYear()
+  const month = String(value.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(value.getUTCDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function isRepeatedDigits(value: string) {
+  return /^(\d)\1+$/.test(value)
+}
+
+function calculateVerifierDigit(digits: string, factor: number) {
+  let total = 0
+
+  for (const digit of digits) {
+    total += Number(digit) * factor
+    factor -= 1
+  }
+
+  const remainder = total % 11
+  return remainder < 2 ? 0 : 11 - remainder
+}
+
+function calculateCnpjVerifierDigit(digits: string, factors: number[]) {
+  const total = digits.split('').reduce((sum, digit, index) => sum + Number(digit) * factors[index], 0)
+  const remainder = total % 11
+  return remainder < 2 ? 0 : 11 - remainder
 }
 
 export function normalizeDigits(value: string) {
@@ -43,22 +115,6 @@ export function formatBrazilianPhoneInput(value: string) {
   return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
 }
 
-function isRepeatedDigits(value: string) {
-  return /^(\d)\1+$/.test(value)
-}
-
-function calculateVerifierDigit(digits: string, factor: number) {
-  let total = 0
-
-  for (const digit of digits) {
-    total += Number(digit) * factor
-    factor -= 1
-  }
-
-  const remainder = total % 11
-  return remainder < 2 ? 0 : 11 - remainder
-}
-
 export function isValidCpf(value: string) {
   const digits = digitsOnly(value)
 
@@ -70,12 +126,6 @@ export function isValidCpf(value: string) {
   const secondDigit = calculateVerifierDigit(digits.slice(0, 10), 11)
 
   return digits === `${digits.slice(0, 9)}${firstDigit}${secondDigit}`
-}
-
-function calculateCnpjVerifierDigit(digits: string, factors: number[]) {
-  const total = digits.split('').reduce((sum, digit, index) => sum + Number(digit) * factors[index], 0)
-  const remainder = total % 11
-  return remainder < 2 ? 0 : 11 - remainder
 }
 
 export function isValidCnpj(value: string) {
@@ -109,22 +159,42 @@ export function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
 }
 
+export function getCurrentBrazilDateInputValue() {
+  const parts = getBrazilDateParts()
+
+  if (!parts) {
+    return formatDateInputFromUtcDate(new Date())
+  }
+
+  const month = String(parts.month).padStart(2, '0')
+  const day = String(parts.day).padStart(2, '0')
+  return `${parts.year}-${month}-${day}`
+}
+
+export function shiftDateInputValue(value: string, { years = 0, days = 0 }: { years?: number; days?: number }) {
+  const date = dateInputToUtcDate(value)
+
+  if (!date) {
+    return value
+  }
+
+  date.setUTCFullYear(date.getUTCFullYear() + years)
+  date.setUTCDate(date.getUTCDate() + days)
+  return formatDateInputFromUtcDate(date)
+}
+
 export function calculateAgeFromBirthDate(value: string) {
-  if (!value) {
+  const birthDate = parseDateInput(value)
+  const today = getBrazilDateParts()
+
+  if (!birthDate || !today) {
     return null
   }
 
-  const birthDate = new Date(`${value}T00:00:00`)
+  let age = today.year - birthDate.year
+  const monthDifference = today.month - birthDate.month
 
-  if (Number.isNaN(birthDate.getTime())) {
-    return null
-  }
-
-  const today = new Date()
-  let age = today.getFullYear() - birthDate.getFullYear()
-  const monthDifference = today.getMonth() - birthDate.getMonth()
-
-  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+  if (monthDifference < 0 || (monthDifference === 0 && today.day < birthDate.day)) {
     age -= 1
   }
 

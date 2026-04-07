@@ -225,9 +225,9 @@ export default function AdminWorkspacePage() {
         detail: 'Faixa etária mais presente na leitura atual da base.',
       },
       {
-        label: 'Gênero em destaque',
+        label: 'Identidade de gênero em destaque',
         value: genderLeader ? `${t(genderLeader.name)} (${formatNumber(genderLeader.value)})` : 'Sem leitura',
-        detail: 'Recorte de gênero mais presente entre os registros disponíveis.',
+        detail: 'Recorte de identidade de gênero mais presente entre os registros disponíveis.',
       },
       {
         label: 'Modalidade em destaque',
@@ -405,12 +405,12 @@ export default function AdminWorkspacePage() {
             />
 
             <ChartPanel
-              title="Gênero"
+              title="Identidade de gênero"
               data={dashboard?.profile.genderDistribution ?? []}
               type="pie"
               eyebrowLabel="Pessoas"
               isLoading={isLoading}
-              emptyMessage="Carregando gênero..."
+              emptyMessage="Carregando identidades de gênero..."
               noDataMessage="Ainda não há cadastros suficientes para exibir este recorte."
             />
           </section>

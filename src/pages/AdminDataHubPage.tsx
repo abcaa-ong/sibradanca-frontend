@@ -210,7 +210,7 @@ export default function AdminDataHubPage() {
             </div>
 
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">{t('Gênero em destaque')}</span>
+              <span className="admin-kpi-label">{t('Identidade de gênero em destaque')}</span>
               <strong>{topGender.label}</strong>
               <span className="admin-kpi-value">{topGender.value}</span>
             </div>
