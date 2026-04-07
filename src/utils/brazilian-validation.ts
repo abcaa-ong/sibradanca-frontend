@@ -1,7 +1,13 @@
 const BRAZIL_TIMEZONE = 'America/Sao_Paulo'
+const CNPJ_BODY_WEIGHTS = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+const CNPJ_FULL_WEIGHTS = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 
 function digitsOnly(value: string) {
   return value.replace(/\D/g, '')
+}
+
+function alphaNumericUpperOnly(value: string) {
+  return value.toUpperCase().replace(/[^0-9A-Z]/g, '')
 }
 
 function getBrazilDateParts(reference = new Date()) {
@@ -69,9 +75,20 @@ function calculateVerifierDigit(digits: string, factor: number) {
 }
 
 function calculateCnpjVerifierDigit(digits: string, factors: number[]) {
-  const total = digits.split('').reduce((sum, digit, index) => sum + Number(digit) * factors[index], 0)
+  const total = digits.split('').reduce((sum, digit, index) => {
+    const normalizedDigit = cnpjCharacterToValue(digit)
+    return sum + normalizedDigit * factors[index]
+  }, 0)
   const remainder = total % 11
   return remainder < 2 ? 0 : 11 - remainder
+}
+
+function cnpjCharacterToValue(character: string) {
+  if (/^\d$/.test(character)) {
+    return Number(character)
+  }
+
+  return character.charCodeAt(0) - 48
 }
 
 export function normalizeDigits(value: string) {
@@ -88,13 +105,41 @@ export function formatCpfInput(value: string) {
 }
 
 export function formatCnpjInput(value: string) {
-  const digits = digitsOnly(value).slice(0, 14)
+  const normalized = alphaNumericUpperOnly(value).slice(0, 14)
 
-  return digits
-    .replace(/^(\d{2})(\d)/, '$1.$2')
-    .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
-    .replace(/\.(\d{3})(\d)/, '.$1/$2')
-    .replace(/(\d{4})(\d)/, '$1-$2')
+  if (!normalized) {
+    return ''
+  }
+
+  const part1 = normalized.slice(0, 2)
+  const part2 = normalized.slice(2, 5)
+  const part3 = normalized.slice(5, 8)
+  const part4 = normalized.slice(8, 12)
+  const part5 = normalized.slice(12, 14)
+
+  let formatted = part1
+
+  if (part2) {
+    formatted += `.${part2}`
+  }
+
+  if (part3) {
+    formatted += `.${part3}`
+  }
+
+  if (part4) {
+    formatted += `/${part4}`
+  }
+
+  if (part5) {
+    formatted += `-${part5}`
+  }
+
+  return formatted
+}
+
+export function normalizeCnpjValue(value: string) {
+  return alphaNumericUpperOnly(value.trim())
 }
 
 export function formatBrazilianPhoneInput(value: string) {
@@ -129,19 +174,26 @@ export function isValidCpf(value: string) {
 }
 
 export function isValidCnpj(value: string) {
-  const digits = digitsOnly(value)
+  const normalized = normalizeCnpjValue(value)
 
-  if (digits.length !== 14 || isRepeatedDigits(digits)) {
+  if (normalized.length !== 14 || !/^[0-9A-Z]{12}\d{2}$/.test(normalized)) {
     return false
   }
 
-  const firstDigit = calculateCnpjVerifierDigit(digits.slice(0, 12), [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2])
+  if (/^\d+$/.test(normalized) && isRepeatedDigits(normalized)) {
+    return false
+  }
+
+  const body = normalized.slice(0, 12)
+  const verifierDigits = normalized.slice(12)
+
+  const firstDigit = calculateCnpjVerifierDigit(body, CNPJ_BODY_WEIGHTS)
   const secondDigit = calculateCnpjVerifierDigit(
-    `${digits.slice(0, 12)}${firstDigit}`,
-    [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2],
+    `${body}${firstDigit}`,
+    CNPJ_FULL_WEIGHTS,
   )
 
-  return digits === `${digits.slice(0, 12)}${firstDigit}${secondDigit}`
+  return verifierDigits === `${firstDigit}${secondDigit}`
 }
 
 export function isValidBrazilianPhone(value: string) {

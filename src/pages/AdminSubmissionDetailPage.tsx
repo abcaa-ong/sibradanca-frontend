@@ -11,7 +11,7 @@ import type {
   YouthFormDetailResponse,
 } from '../types/admin'
 import { formatBackendDate, formatBackendDateTime } from '../utils/backend-date'
-import { calculateAgeFromBirthDate } from '../utils/brazilian-validation'
+import { calculateAgeFromBirthDate, formatCnpjInput } from '../utils/brazilian-validation'
 import { cleanUiText as t } from '../utils/ui-text'
 
 type FieldKind = 'text' | 'enum' | 'boolean' | 'date' | 'datetime' | 'currency' | 'list' | 'number'
@@ -391,6 +391,14 @@ function formatValue(value: unknown, kind: FieldKind = 'text') {
   return t(String(value))
 }
 
+function formatFieldValue(fieldKey: string, value: unknown, kind: FieldKind = 'text') {
+  if (fieldKey === 'cnpj' && typeof value === 'string' && value.trim()) {
+    return formatCnpjInput(value)
+  }
+
+  return formatValue(value, kind)
+}
+
 function renderSections<T extends object>(sections: Array<SectionConfig<T>>, values: T) {
   return sections.map((section) => (
     <Card key={section.title} className="admin-panel-card">
@@ -404,7 +412,7 @@ function renderSections<T extends object>(sections: Array<SectionConfig<T>>, val
         {section.fields.map((field) => (
           <div key={String(field.key)} className="admin-detail-item">
             <span className="admin-detail-label">{t(field.label)}</span>
-            <strong className="admin-detail-value">{formatValue(values[field.key], field.kind)}</strong>
+            <strong className="admin-detail-value">{formatFieldValue(String(field.key), values[field.key], field.kind)}</strong>
           </div>
         ))}
       </div>
@@ -453,7 +461,7 @@ function renderStructuredSections(sections: AdminDetailSectionResponse[]) {
         {section.fields.map((field) => (
           <div key={`${section.title}-${field.key}`} className="admin-detail-item">
             <span className="admin-detail-label">{t(field.label)}</span>
-            <strong className="admin-detail-value">{t(field.value || '-')}</strong>
+            <strong className="admin-detail-value">{formatFieldValue(field.key, t(field.value || '-'))}</strong>
           </div>
         ))}
       </div>

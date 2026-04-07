@@ -27,6 +27,7 @@ import {
   isValidCnpj,
   isValidCpf,
   isValidEmail,
+  normalizeCnpjValue,
   normalizeDigits,
   shiftDateInputValue,
 } from '../utils/brazilian-validation'
@@ -1141,6 +1142,11 @@ function normalizeOptionalTextValue(value: string) {
 
 function normalizeOptionalDigitsValue(value: string) {
   const normalized = normalizeDigits(value)
+  return normalized || null
+}
+
+function normalizeOptionalCnpjValue(value: string) {
+  const normalized = normalizeCnpjValue(value)
   return normalized || null
 }
 
@@ -2581,7 +2587,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         responsibleName: normalizeTextValue(institutionForm.responsibleName),
         legalName: normalizeTextValue(institutionForm.institutionName),
         tradeName: normalizeTextValue(institutionForm.tradeName),
-        cnpj: institutionForm.hasCnpj === 'sim' ? normalizeOptionalDigitsValue(institutionForm.cnpj) : null,
+        cnpj: institutionForm.hasCnpj === 'sim' ? normalizeOptionalCnpjValue(institutionForm.cnpj) : null,
         region: normalizeOptionalTextValue(institutionForm.region),
         cityId: selectedCity.id,
         email: normalizeTextValue(institutionForm.email),
@@ -3519,7 +3525,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             {institutionForm.hasCnpj === 'sim' && (
               <label className="access-field">
                 <span>CNPJ *</span>
-                <input type="text" placeholder="00.000.000/0000-00" value={institutionForm.cnpj} onChange={(e) => updateInstitutionField('cnpj', e.target.value)} />
+                <input type="text" placeholder="AA.AAA.AAA/AAAA-00" value={institutionForm.cnpj} onChange={(e) => updateInstitutionField('cnpj', e.target.value)} />
               </label>
             )}
           </div>
