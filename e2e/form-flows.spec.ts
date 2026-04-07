@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page, type Route } from '@playwright/test'
 
 type SubmissionCapture = {
   youth: unknown[]
@@ -35,6 +35,11 @@ const citiesByState: Record<string, { id: number; name: string; stateCode: strin
 function apiResponse(data: unknown, message = 'ok') {
   return {
     status: 200,
+    headers: {
+      'access-control-allow-origin': '*',
+      'access-control-allow-methods': 'GET,POST,PUT,OPTIONS',
+      'access-control-allow-headers': 'Content-Type,X-Form-Started-At,X-Captcha-Token,X-Form-Honeypot',
+    },
     contentType: 'application/json',
     body: JSON.stringify({
       success: true,
@@ -42,6 +47,27 @@ function apiResponse(data: unknown, message = 'ok') {
       data,
     }),
   }
+}
+
+function corsPreflightResponse() {
+  return {
+    status: 204,
+    headers: {
+      'access-control-allow-origin': '*',
+      'access-control-allow-methods': 'GET,POST,PUT,OPTIONS',
+      'access-control-allow-headers': 'Content-Type,X-Form-Started-At,X-Captcha-Token,X-Form-Honeypot',
+    },
+    body: '',
+  }
+}
+
+async function fulfillJsonRoute(route: Route, data: unknown) {
+  if (route.request().method() === 'OPTIONS') {
+    await route.fulfill(corsPreflightResponse())
+    return
+  }
+
+  await route.fulfill(apiResponse(data))
 }
 
 async function setupPublicFormMocks(
@@ -54,28 +80,31 @@ async function setupPublicFormMocks(
   const cityDelayMs = options?.cityDelayMs ?? 0
 
   await page.route('**/api/reference/modalities', async (route) => {
-    await route.fulfill(apiResponse(modalities))
+    await fulfillJsonRoute(route, modalities)
   })
 
   await page.route('**/api/reference/contents', async (route) => {
-    await route.fulfill(apiResponse(contents))
+    await fulfillJsonRoute(route, contents)
   })
 
   await page.route('**/api/reference/consent-term', async (route) => {
-    await route.fulfill(
-      apiResponse({
-        id: 1,
-        code: 'LGPD-2026',
-        title: 'Termo vigente de consentimento do SIBRADANÇA',
-      }),
-    )
+    await fulfillJsonRoute(route, {
+      id: 1,
+      code: 'LGPD-2026',
+      title: 'Termo vigente de consentimento do SIBRADANÇA',
+    })
   })
 
   await page.route('**/api/geo/states', async (route) => {
-    await route.fulfill(apiResponse(states))
+    await fulfillJsonRoute(route, states)
   })
 
   await page.route('**/api/geo/cities?*', async (route) => {
+    if (route.request().method() === 'OPTIONS') {
+      await route.fulfill(corsPreflightResponse())
+      return
+    }
+
     const url = new URL(route.request().url())
     const stateCode = (url.searchParams.get('stateCode') ?? '').toUpperCase()
 
@@ -87,6 +116,11 @@ async function setupPublicFormMocks(
   })
 
   await page.route('**/api/forms/youth', async (route) => {
+    if (route.request().method() === 'OPTIONS') {
+      await route.fulfill(corsPreflightResponse())
+      return
+    }
+
     captures.youth.push(route.request().postDataJSON())
     await route.fulfill(
       apiResponse({
@@ -96,6 +130,11 @@ async function setupPublicFormMocks(
   })
 
   await page.route('**/api/forms/professional', async (route) => {
+    if (route.request().method() === 'OPTIONS') {
+      await route.fulfill(corsPreflightResponse())
+      return
+    }
+
     captures.professional.push(route.request().postDataJSON())
     await route.fulfill(
       apiResponse({
@@ -105,6 +144,11 @@ async function setupPublicFormMocks(
   })
 
   await page.route('**/api/forms/institution', async (route) => {
+    if (route.request().method() === 'OPTIONS') {
+      await route.fulfill(corsPreflightResponse())
+      return
+    }
+
     captures.institution.push(route.request().postDataJSON())
     await route.fulfill(
       apiResponse({
@@ -153,6 +197,10 @@ async function fillTextField(page: Page, label: string, value: string) {
   await getFieldByExactLabel(page, label).locator('input, textarea').fill(value)
 }
 
+async function acceptStatisticalConsent(page: Page) {
+  await page.locator('.access-consent-card input[type="checkbox"]').first().check({ force: true })
+}
+
 test.describe('cadastros públicos', () => {
   test('conclui o cadastro de jovens com dados válidos', async ({ page }) => {
     const captures: SubmissionCapture = { youth: [], professional: [], institution: [] }
@@ -182,10 +230,11 @@ test.describe('cadastros públicos', () => {
 
     await clickChoice(page, 'Tem interesse em seguir carreira na dança?', 'Sim')
     await clickChoice(page, 'Pesquisa conteúdos sobre dança na internet?', 'Sim')
+    await toggleFirstCheckbox(page, 'Quais conteúdos costuma consumir?')
     await toggleFirstCheckbox(page, 'Quem banca os custos da dança?')
     await clickPrimaryAction(page)
 
-    await page.locator('.access-consent-card').first().click()
+    await acceptStatisticalConsent(page)
     await clickPrimaryAction(page)
 
     await expect(page.getByText('Cadastro enviado com sucesso')).toBeVisible()
@@ -245,9 +294,11 @@ test.describe('cadastros públicos', () => {
     await fillTextField(page, 'Outros', '60')
     await toggleFirstCheckbox(page, 'Quem banca os custos da dança?')
     await clickChoice(page, 'Você pesquisa conteúdos sobre dança na internet?', 'Sim')
+    await toggleFirstCheckbox(page, 'Conteúdos que costuma consumir')
     await clickPrimaryAction(page)
 
     await page.getByLabel(/Formação acadêmica/i).selectOption({ index: 1 })
+    await page.getByLabel(/Já estudou ou estuda dança formalmente/i).selectOption({ index: 1 })
     await clickChoice(page, 'Estuda dança atualmente?', 'Sim')
     await clickChoice(page, 'Pretende estudar dança formalmente?', 'Sim')
     await page.getByLabel(/Cursos presenciais por ano/i).fill('2')
@@ -259,7 +310,7 @@ test.describe('cadastros públicos', () => {
     await clickChoice(page, 'Se inscreveu e não foi contemplado(a)?', 'Sim')
     await clickPrimaryAction(page)
 
-    await page.locator('.access-consent-card').first().click()
+    await acceptStatisticalConsent(page)
     await clickPrimaryAction(page)
 
     await expect(page.getByText('Cadastro enviado com sucesso')).toBeVisible()
@@ -349,7 +400,7 @@ test.describe('cadastros públicos', () => {
     await page.getByLabel(/Principal desafio da instituição/i).fill('Sustentabilidade financeira e ampliação de público.')
     await clickPrimaryAction(page)
 
-    await page.locator('.access-consent-card').first().click()
+    await acceptStatisticalConsent(page)
     await clickPrimaryAction(page)
 
     await expect(page.getByText('Cadastro enviado com sucesso')).toBeVisible()

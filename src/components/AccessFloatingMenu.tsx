@@ -1927,6 +1927,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
+    if (currentStep === 4 && minorForm.searchesContent === 'sim' && minorForm.consumedContents.length === 0) {
+      setStepError('Selecione ao menos um tipo de conteúdo pesquisado na internet.')
+      return false
+    }
+
     if (currentStep === 4) {
       const currencyError = validateCurrencyFields([
         { label: 'a mensalidade', value: minorForm.monthlyFee },
@@ -2073,6 +2078,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
+    if (currentStep === 5 && adultForm.searchesContent === 'sim' && adultForm.consumedContents.length === 0) {
+      setStepError('Selecione ao menos um tipo de conteúdo pesquisado na internet.')
+      return false
+    }
+
     if (currentStep === 5) {
       const currencyError = validateCurrencyFields([
         { label: 'a mensalidade de escola ou grupo', value: adultForm.schoolFee, required: true },
@@ -2092,12 +2102,15 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     if (
       currentStep === 6 &&
       (!adultForm.academicEducation ||
+        !adultForm.danceEducationLevel ||
         !adultForm.studiesDanceNow ||
         !adultForm.wantsFormalDanceStudy ||
         !adultForm.presentialCoursesPerYear ||
         !adultForm.onlineCoursesPerYear)
     ) {
-      setStepError('Preencha formação acadêmica, estudos em dança e a quantidade de cursos presenciais e online por ano.')
+      setStepError(
+        'Preencha formação acadêmica, formação em dança, estudos atuais e a quantidade de cursos presenciais e online por ano.',
+      )
       return false
     }
 
@@ -2115,6 +2128,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
     if (currentStep === 6 && !adultForm.academicEducation) {
       setStepError('Selecione a formação acadêmica.')
+      return false
+    }
+
+    if (currentStep === 6 && !adultForm.danceEducationLevel) {
+      setStepError('Selecione o tipo de formação em dança.')
       return false
     }
 
@@ -3380,13 +3398,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                 <option value="Ensino médio completo">Ensino médio completo</option>
                 <option value="Ensino superior incompleto">Ensino superior incompleto</option>
                 <option value="Ensino superior completo">Ensino superior completo</option>
-                <option value="Pos-graduacao">Pos-graduacao</option>
+                <option value="Pos-graduação">Pos-graduação</option>
                 <option value="Mestrado">Mestrado</option>
                 <option value="Doutorado">Doutorado</option>
               </select>
             </label>
             <label className="access-field">
-              <span>Já estudou ou estuda dança formalmente?</span>
+              <span>Já estudou ou estuda dança formalmente? *</span>
               <select value={adultForm.danceEducationLevel} onChange={(e) => updateAdultField('danceEducationLevel', e.target.value)}>
                 <option value="">Selecione</option>
                 <option value="Curso livre">Curso livre</option>
@@ -3397,21 +3415,21 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </select>
             </label>
             <div className="access-field">
-              <span>Estuda dança atualmente?</span>
+              <span>Estuda dança atualmente? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.studiesDanceNow, (value) => updateAdultField('studiesDanceNow', value))}
                 {renderChoiceCard('nao', adultForm.studiesDanceNow, (value) => updateAdultField('studiesDanceNow', value))}
               </div>
             </div>
             <div className="access-field">
-              <span>Pretende estudar dança formalmente?</span>
+              <span>Pretende estudar dança formalmente? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', adultForm.wantsFormalDanceStudy, (value) => updateAdultField('wantsFormalDanceStudy', value))}
                 {renderChoiceCard('nao', adultForm.wantsFormalDanceStudy, (value) => updateAdultField('wantsFormalDanceStudy', value))}
               </div>
             </div>
-            <label className="access-field"><span>Cursos presenciais por ano</span><input type="number" min="0" value={adultForm.presentialCoursesPerYear} onChange={(e) => updateAdultField('presentialCoursesPerYear', e.target.value)} /></label>
-            <label className="access-field"><span>Cursos online por ano</span><input type="number" min="0" value={adultForm.onlineCoursesPerYear} onChange={(e) => updateAdultField('onlineCoursesPerYear', e.target.value)} /></label>
+            <label className="access-field"><span>Cursos presenciais por ano *</span><input type="number" min="0" value={adultForm.presentialCoursesPerYear} onChange={(e) => updateAdultField('presentialCoursesPerYear', e.target.value)} /></label>
+            <label className="access-field"><span>Cursos online por ano *</span><input type="number" min="0" value={adultForm.onlineCoursesPerYear} onChange={(e) => updateAdultField('onlineCoursesPerYear', e.target.value)} /></label>
           </div>
         )
       case 7:
@@ -3795,14 +3813,14 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <label className="access-field">
-              <span>Quem arca com os custos dos eventos?</span>
+              <span>Quem arca com os custos dos eventos? *</span>
               <select value={institutionForm.eventCostResponsibility} onChange={(e) => updateInstitutionField('eventCostResponsibility', e.target.value)}>
                 <option value="">Selecione</option>
                 {renderSelectOptions(institutionEventCostOptions)}
               </select>
             </label>
             <div className="access-field access-field-full">
-              <span>Profissionais da estrutura</span>
+              <span>Profissionais da estrutura *</span>
               <small>Selecione todos que fazem parte da instituição.</small>
               <div className="access-checkbox-grid access-checkbox-grid-compact">
                 {institutionStaffRoleOptions.map((item) => (
@@ -3814,49 +3832,49 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <div className="access-field">
-              <span>Já se cadastrou em editais públicos?</span>
+              <span>Já se cadastrou em editais públicos? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.registeredInPublicCalls, (value) => updateInstitutionField('registeredInPublicCalls', value))}
                 {renderChoiceCard('nao', institutionForm.registeredInPublicCalls, (value) => updateInstitutionField('registeredInPublicCalls', value))}
               </div>
             </div>
             <div className="access-field">
-              <span>Já foi contemplada em edital?</span>
+              <span>Já foi contemplada em edital? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.approvedInPublicCalls, (value) => updateInstitutionField('approvedInPublicCalls', value))}
                 {renderChoiceCard('nao', institutionForm.approvedInPublicCalls, (value) => updateInstitutionField('approvedInPublicCalls', value))}
               </div>
             </div>
             <div className="access-field">
-              <span>Conhece os mecanismos de acesso a políticas públicas?</span>
+              <span>Conhece os mecanismos de acesso a políticas públicas? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.knowsPublicPolicyAccessMechanisms, (value) => updateInstitutionField('knowsPublicPolicyAccessMechanisms', value))}
                 {renderChoiceCard('nao', institutionForm.knowsPublicPolicyAccessMechanisms, (value) => updateInstitutionField('knowsPublicPolicyAccessMechanisms', value))}
               </div>
             </div>
             <div className="access-field">
-              <span>Usaria plataforma gratuita para divulgar aulas e eventos?</span>
+              <span>Usaria plataforma gratuita para divulgar aulas e eventos? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.wouldUseFreePromotionPlatform, (value) => updateInstitutionField('wouldUseFreePromotionPlatform', value))}
                 {renderChoiceCard('nao', institutionForm.wouldUseFreePromotionPlatform, (value) => updateInstitutionField('wouldUseFreePromotionPlatform', value))}
               </div>
             </div>
             <div className="access-field">
-              <span>Conhece o plano municipal de cultura?</span>
+              <span>Conhece o plano municipal de cultura? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.knowsMunicipalCulturePlan, (value) => updateInstitutionField('knowsMunicipalCulturePlan', value))}
                 {renderChoiceCard('nao', institutionForm.knowsMunicipalCulturePlan, (value) => updateInstitutionField('knowsMunicipalCulturePlan', value))}
               </div>
             </div>
             <div className="access-field">
-              <span>Participa de conselho de cultura?</span>
+              <span>Participa de conselho de cultura? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.participatesInCultureCouncil, (value) => updateInstitutionField('participatesInCultureCouncil', value))}
                 {renderChoiceCard('nao', institutionForm.participatesInCultureCouncil, (value) => updateInstitutionField('participatesInCultureCouncil', value))}
               </div>
             </div>
             <div className="access-field">
-              <span>Tem interesse em parcerias públicas?</span>
+              <span>Tem interesse em parcerias públicas? *</span>
               <div className="access-choice-grid">
                 {renderChoiceCard('sim', institutionForm.interestedInPublicPartnerships, (value) => updateInstitutionField('interestedInPublicPartnerships', value))}
                 {renderChoiceCard('nao', institutionForm.interestedInPublicPartnerships, (value) => updateInstitutionField('interestedInPublicPartnerships', value))}
@@ -3875,7 +3893,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               </div>
             </div>
             <div className="access-field access-field-full">
-              <span>Canais de divulgação</span>
+              <span>Canais de divulgação *</span>
               <small>Selecione os canais utilizados pela instituição.</small>
               <div className="access-checkbox-grid access-checkbox-grid-compact">
                 {institutionPromotionChannelOptions.map((item) => (
