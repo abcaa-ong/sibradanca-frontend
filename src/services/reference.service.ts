@@ -1,9 +1,14 @@
 import { apiGet } from './api'
-import type { ActiveConsentTermResponse, ReferenceItemResponse } from '../types/reference'
+import type {
+  ActiveConsentTermResponse,
+  PublicFormRuntimeConfigResponse,
+  ReferenceItemResponse,
+} from '../types/reference'
 
 let modalitiesPromise: Promise<ReferenceItemResponse[]> | null = null
 let contentsPromise: Promise<ReferenceItemResponse[]> | null = null
 let activeConsentTermPromise: Promise<ActiveConsentTermResponse> | null = null
+let publicFormRuntimeConfigPromise: Promise<PublicFormRuntimeConfigResponse> | null = null
 
 export function listModalities() {
   if (!modalitiesPromise) {
@@ -36,4 +41,17 @@ export function getActiveConsentTerm() {
   }
 
   return activeConsentTermPromise
+}
+
+export function getPublicFormRuntimeConfig() {
+  if (!publicFormRuntimeConfigPromise) {
+    publicFormRuntimeConfigPromise = apiGet<PublicFormRuntimeConfigResponse>(
+      '/api/reference/public-form-config',
+    ).catch((error) => {
+      publicFormRuntimeConfigPromise = null
+      throw error
+    })
+  }
+
+  return publicFormRuntimeConfigPromise
 }

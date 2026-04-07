@@ -20,7 +20,10 @@ declare global {
 type TurnstileWidgetProps = {
   siteKey: string
   onTokenChange: (token: string) => void
+  onStatusChange?: (status: TurnstileWidgetStatus) => void
 }
+
+export type TurnstileWidgetStatus = 'idle' | 'loading' | 'ready' | 'error'
 
 let turnstileScriptPromise: Promise<void> | null = null
 
@@ -65,7 +68,7 @@ function loadTurnstileScript() {
   return turnstileScriptPromise
 }
 
-export function TurnstileWidget({ siteKey, onTokenChange }: TurnstileWidgetProps) {
+export function TurnstileWidget({ siteKey, onTokenChange, onStatusChange }: TurnstileWidgetProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const widgetIdRef = useRef<string | null>(null)
 
@@ -73,6 +76,14 @@ export function TurnstileWidget({ siteKey, onTokenChange }: TurnstileWidgetProps
     let disposed = false
 
     onTokenChange('')
+    onStatusChange?.('loading')
+
+    if (!siteKey) {
+      onStatusChange?.('error')
+      return () => {
+        onStatusChange?.('idle')
+      }
+    }
 
     void loadTurnstileScript()
       .then(() => {
@@ -82,13 +93,24 @@ export function TurnstileWidget({ siteKey, onTokenChange }: TurnstileWidgetProps
 
         widgetIdRef.current = window.turnstile.render(containerRef.current, {
           sitekey: siteKey,
-          callback: (token) => onTokenChange(token),
-          'expired-callback': () => onTokenChange(''),
-          'error-callback': () => onTokenChange(''),
+          callback: (token) => {
+            onTokenChange(token)
+            onStatusChange?.('ready')
+          },
+          'expired-callback': () => {
+            onTokenChange('')
+            onStatusChange?.('ready')
+          },
+          'error-callback': () => {
+            onTokenChange('')
+            onStatusChange?.('error')
+          },
         })
+        onStatusChange?.('ready')
       })
       .catch(() => {
         onTokenChange('')
+        onStatusChange?.('error')
       })
 
     return () => {
@@ -99,8 +121,9 @@ export function TurnstileWidget({ siteKey, onTokenChange }: TurnstileWidgetProps
       }
 
       widgetIdRef.current = null
+      onStatusChange?.('idle')
     }
-  }, [onTokenChange, siteKey])
+  }, [onStatusChange, onTokenChange, siteKey])
 
   return <div ref={containerRef} className="access-turnstile-widget" />
 }

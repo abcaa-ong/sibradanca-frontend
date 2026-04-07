@@ -15,6 +15,7 @@ type PublicFormGuardMetadata = {
   captchaToken?: string
   formStartedAt?: string
   honeypot?: string
+  tokenHeaderName?: string
 }
 
 let publicFormGuardMetadata: PublicFormGuardMetadata | null = null
@@ -78,7 +79,8 @@ function buildGuardHeaders(path: string) {
   }
 
   if (publicFormGuardMetadata.captchaToken) {
-    headers['X-Captcha-Token'] = publicFormGuardMetadata.captchaToken
+    const tokenHeaderName = publicFormGuardMetadata.tokenHeaderName?.trim() || 'X-Captcha-Token'
+    headers[tokenHeaderName] = publicFormGuardMetadata.captchaToken
   }
 
   if (publicFormGuardMetadata.honeypot?.trim()) {

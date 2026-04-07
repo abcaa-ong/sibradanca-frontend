@@ -85,6 +85,7 @@ describe('api service', () => {
       captchaToken: 'token-123',
       formStartedAt: '2026-04-03T23:00:00.000Z',
       honeypot: '',
+      tokenHeaderName: 'X-Turnstile-Token',
     })
 
     await apiPost<{ protocolCode: string }, { sector: string }>('/api/forms/youth', {
@@ -96,7 +97,7 @@ describe('api service', () => {
       headers: {
         'Content-Type': 'application/json',
         'X-Form-Started-At': '2026-04-03T23:00:00.000Z',
-        'X-Captcha-Token': 'token-123',
+        'X-Turnstile-Token': 'token-123',
       },
       body: JSON.stringify({ sector: 'YOUTH' }),
     })

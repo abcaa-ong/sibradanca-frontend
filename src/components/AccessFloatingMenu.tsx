@@ -3,15 +3,25 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import { Badge } from './Badge'
 import { TurnstileWidget } from './TurnstileWidget'
+import type { TurnstileWidgetStatus } from './TurnstileWidget'
 import { useCleanUiTextTree } from '../hooks/useCleanUiTextTree'
 import { ApiRequestError } from '../services/api'
 import { listCities, listStates } from '../services/geo.services'
 import { submitInstitutionForm, submitProfessionalForm, submitYouthForm } from '../services/forms.service'
-import { getActiveConsentTerm, listContents, listModalities } from '../services/reference.service'
+import {
+  getActiveConsentTerm,
+  getPublicFormRuntimeConfig,
+  listContents,
+  listModalities,
+} from '../services/reference.service'
 import { setPublicFormGuardMetadata } from '../services/api'
 import type { CityResponse, StateResponse } from '../types/geo'
 import type { ApiFieldError } from '../types/api'
-import type { ActiveConsentTermResponse, ReferenceItemResponse } from '../types/reference'
+import type {
+  ActiveConsentTermResponse,
+  PublicFormRuntimeConfigResponse,
+  ReferenceItemResponse,
+} from '../types/reference'
 import type {
   InstitutionFormResponse,
   ProfessionalFormResponse,
@@ -1203,9 +1213,14 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const [honeypotValue, setHoneypotValue] = useState('')
   const [captchaToken, setCaptchaToken] = useState('')
   const [captchaRenderKey, setCaptchaRenderKey] = useState(0)
+  const [captchaWidgetStatus, setCaptchaWidgetStatus] = useState<TurnstileWidgetStatus>('idle')
+  const [publicFormRuntimeConfig, setPublicFormRuntimeConfig] =
+    useState<PublicFormRuntimeConfigResponse | null>(null)
   const previousOpenRef = useRef(open)
   const previousInitialViewRef = useRef(initialView)
-  const antiBotEnabled = Boolean(TURNSTILE_SITE_KEY)
+  const hasTurnstileSiteKey = Boolean(TURNSTILE_SITE_KEY)
+  const antiBotEnabled = publicFormRuntimeConfig?.antiBotEnabled ?? hasTurnstileSiteKey
+  const captchaTokenHeaderName = publicFormRuntimeConfig?.tokenHeaderName?.trim() || 'X-Captcha-Token'
 
   useCleanUiTextTree(rootRef, [
     open,
@@ -1218,6 +1233,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     Boolean(minorSubmission),
     Boolean(adultSubmission),
     Boolean(institutionSubmission),
+    antiBotEnabled,
+    captchaWidgetStatus,
   ])
 
   const earliestBirthDate = '1900-01-01'
@@ -1306,12 +1323,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       captchaToken,
       formStartedAt,
       honeypot: honeypotValue,
+      tokenHeaderName: captchaTokenHeaderName,
     })
 
     return () => {
       setPublicFormGuardMetadata(null)
     }
-  }, [captchaToken, formStartedAt, honeypotValue, open, view])
+  }, [captchaToken, captchaTokenHeaderName, formStartedAt, honeypotValue, open, view])
 
   useEffect(() => {
     if (hasLoadedReferences) {
@@ -1323,11 +1341,12 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     async function loadReferenceData() {
       try {
         setIsMinorLoadingReferences(true)
-        const [states, modalities, contents, consentTerm] = await Promise.all([
+        const [states, modalities, contents, consentTerm, runtimeConfig] = await Promise.all([
           listStates().catch(() => [] as StateResponse[]),
           listModalities(),
           listContents(),
           getActiveConsentTerm(),
+          getPublicFormRuntimeConfig().catch(() => null),
         ])
 
         if (!isMounted) {
@@ -1338,6 +1357,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         setMinorModalities(modalities)
         setMinorContents(contents)
         setActiveConsentTerm(consentTerm)
+        setPublicFormRuntimeConfig(runtimeConfig)
         setHasLoadedReferences(true)
       } catch (error) {
         if (!isMounted) {
@@ -1548,11 +1568,78 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     return ((currentStep + 1) / totalSteps) * 100
   }, [currentStep, totalSteps])
 
+  const isCaptchaStep = currentStep === totalSteps - 1 && antiBotEnabled
+  const isCaptchaLoading = isCaptchaStep && hasTurnstileSiteKey && captchaWidgetStatus === 'loading'
+  const isCaptchaUnavailable = isCaptchaStep && (!hasTurnstileSiteKey || captchaWidgetStatus === 'error')
+
+  const getCaptchaValidationMessage = () => {
+    if (!isCaptchaStep) {
+      return ''
+    }
+
+    if (!hasTurnstileSiteKey) {
+      return 'A verificacao de seguranca nao esta disponivel agora. Atualize a pagina ou tente novamente em instantes.'
+    }
+
+    if (captchaWidgetStatus === 'loading') {
+      return 'A verificacao de seguranca ainda esta carregando. Aguarde alguns segundos.'
+    }
+
+    if (captchaWidgetStatus === 'error') {
+      return 'Nao foi possivel carregar a verificacao de seguranca. Reabra o formulario ou tente novamente em instantes.'
+    }
+
+    if (!captchaToken) {
+      return 'Conclua a verificacao de seguranca antes de enviar o cadastro.'
+    }
+
+    return ''
+  }
+
+  const getCaptchaHelperMessage = () => {
+    if (!isCaptchaStep) {
+      return ''
+    }
+
+    if (!hasTurnstileSiteKey) {
+      return 'A verificacao de seguranca nao carregou neste ambiente. Reabra o formulario ou tente novamente em instantes.'
+    }
+
+    if (captchaWidgetStatus === 'loading') {
+      return 'Estamos carregando a verificacao de seguranca para liberar o envio.'
+    }
+
+    if (captchaWidgetStatus === 'error') {
+      return 'Nao foi possivel abrir a verificacao de seguranca. Tente atualizar a pagina ou abrir o formulario novamente.'
+    }
+
+    if (captchaToken) {
+      return 'Verificacao concluida. Voce ja pode finalizar o cadastro.'
+    }
+
+    return 'Conclua a verificacao para liberar o envio do cadastro.'
+  }
+
+  useEffect(() => {
+    if (!stepError || !isCaptchaStep) {
+      return
+    }
+
+    if (!stepError.toLowerCase().includes('seguranca')) {
+      return
+    }
+
+    if (!getCaptchaValidationMessage()) {
+      setStepError('')
+    }
+  }, [captchaToken, captchaWidgetStatus, isCaptchaStep, stepError])
+
   const resetAntiBotState = () => {
     setFormStartedAt(new Date().toISOString())
     setHoneypotValue('')
     setCaptchaToken('')
     setCaptchaRenderKey((prev) => prev + 1)
+    setCaptchaWidgetStatus('idle')
   }
 
   const getAntiBotHeaders = () => {
@@ -1565,7 +1652,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     }
 
     if (captchaToken) {
-      headers['X-Captcha-Token'] = captchaToken
+      headers[captchaTokenHeaderName] = captchaToken
     }
 
     return headers
@@ -2410,8 +2497,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
-    if (currentStep === totalSteps - 1 && antiBotEnabled && !captchaToken) {
-      setStepError('Conclua a verificação de segurança antes de enviar o cadastro.')
+    const captchaValidationMessage = getCaptchaValidationMessage()
+    if (captchaValidationMessage) {
+      setStepError(captchaValidationMessage)
       return false
     }
 
@@ -2562,6 +2650,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         consentCode: activeConsentTerm.code,
         consentAccepted: adultForm.consentStats,
         consentContact: adultForm.consentContact,
+      }, {
+        headers: getAntiBotHeaders(),
       })
 
       setAdultSubmission(response)
@@ -2686,6 +2776,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         consentCode: activeConsentTerm.code,
         consentAccepted: institutionForm.consentStats,
         consentContact: institutionForm.consentContact,
+      }, {
+        headers: getAntiBotHeaders(),
       })
 
       setInstitutionSubmission(response)
@@ -4047,15 +4139,20 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                         onChange={(event) => setHoneypotValue(event.target.value)}
                       />
                     </label>
-                    {currentStep === totalSteps - 1 && antiBotEnabled ? (
+                    {isCaptchaStep ? (
                       <div className="access-security-card">
-                        <span className="access-security-label">Confirmação de segurança</span>
-                        <TurnstileWidget
-                          key={captchaRenderKey}
-                          siteKey={TURNSTILE_SITE_KEY}
-                          onTokenChange={setCaptchaToken}
-                        />
-                        <small>Conclua a verificação para liberar o envio do cadastro.</small>
+                        <span className="access-security-label">Confirmacao de seguranca</span>
+                        {hasTurnstileSiteKey ? (
+                          <TurnstileWidget
+                            key={captchaRenderKey}
+                            siteKey={TURNSTILE_SITE_KEY}
+                            onTokenChange={setCaptchaToken}
+                            onStatusChange={setCaptchaWidgetStatus}
+                          />
+                        ) : null}
+                        <small className={`access-security-message ${isCaptchaUnavailable ? 'is-error' : ''}`}>
+                          {getCaptchaHelperMessage()}
+                        </small>
                       </div>
                     ) : null}
                     {stepError && <p className="access-step-error">{stepError}</p>}
@@ -4073,7 +4170,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                           isInstitutionSubmitting ||
                           isCurrentStepWaitingForReferences ||
                           isCurrentStepWaitingForCities ||
-                          (currentStep === totalSteps - 1 && antiBotEnabled && !captchaToken)
+                          isCaptchaLoading
                         }
                       >
                         {isMinorSubmitting || isAdultSubmitting || isInstitutionSubmitting
@@ -4082,6 +4179,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                             ? 'Carregando dados...'
                           : isCurrentStepWaitingForCities
                             ? 'Carregando cidades...'
+                          : isCaptchaLoading
+                            ? 'Carregando seguranca...'
                           : currentStep === totalSteps - 1
                             ? 'Finalizar Cadastro'
                             : 'Próximo'}

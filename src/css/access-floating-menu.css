@@ -501,6 +501,11 @@
   line-height: 1.5;
 }
 
+.access-security-message.is-error {
+  color: #b42318;
+  font-weight: 700;
+}
+
 .access-turnstile-widget {
   min-height: 66px;
 }

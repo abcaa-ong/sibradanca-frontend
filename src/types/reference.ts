@@ -8,3 +8,9 @@ export interface ActiveConsentTermResponse {
   code: string
   title: string
 }
+
+export interface PublicFormRuntimeConfigResponse {
+  antiBotEnabled: boolean
+  minFillSeconds: number
+  tokenHeaderName: string
+}
