@@ -757,7 +757,15 @@ function createEmptyBirthDateParts(): BirthDateParts {
 }
 
 function parseBooleanChoice(value: string) {
-  return value === 'sim'
+  if (value === 'sim') {
+    return true
+  }
+
+  if (value === 'nao') {
+    return false
+  }
+
+  return null
 }
 
 function sanitizeIntegerInput(value: string, maxDigits = MAX_GENERIC_INTEGER_DIGITS) {
@@ -899,14 +907,25 @@ function mapFlowValidationError(
             message: 'Revise nome, e-mail, CPF e WhatsApp antes de continuar.',
           },
           {
+            step: 1,
+            fields: ['region', 'cityId'],
+            message: 'Revise região, estado e cidade antes de continuar.',
+          },
+          {
             step: 2,
-            fields: ['age', 'birthDate', 'ageCompatibleWithBirthDate', 'genderValid'],
+            fields: ['age', 'birthDate', 'ageCompatibleWithBirthDate', 'gender', 'genderValid', 'modalityIds', 'practiceTime'],
             message:
               'Revise data de nascimento, idade e identidade de gênero. O cadastro profissional é para maiores de 18 anos.',
           },
           {
+            step: 3,
+            fields: ['worksWithDance', 'hasDrt', 'currentlyWorks', 'danceMainIncome', 'hasOtherIncome', 'careerInterest', 'rolesPerformed', 'workType'],
+            message:
+              'Revise atuação profissional, vínculo com a dança, funções exercidas e tipo de trabalho.',
+          },
+          {
             step: 4,
-            fields: ['totalIncome', 'danceIncome'],
+            fields: ['householdIncomeRange', 'totalIncome', 'danceIncome'],
             message: 'Revise os valores de renda. Use números válidos, sem letras, e até 9 dígitos.',
           },
           {
@@ -918,14 +937,27 @@ function mapFlowValidationError(
               'monthlyCostTravel',
               'monthlyCostSchool',
               'monthlyCostOthers',
+              'costResponsibility',
+              'searchesContent',
+              'contentIds',
             ],
             message:
               'Revise os valores de gastos mensais com dança. Use números válidos, sem letras, e até 9 dígitos.',
           },
           {
             step: 6,
-            fields: ['coursesPerYear', 'onlineCoursesPerYear'],
+            fields: ['coursesPerYear', 'onlineCoursesPerYear', 'currentlyStudies', 'academicEducation', 'formalStudyType', 'wantsFormalStudy'],
             message: 'Revise a quantidade de cursos por ano. Use números válidos e menores.',
+          },
+          {
+            step: 7,
+            fields: ['participatedInEdital', 'approvedInEdital', 'appliedNotApproved'],
+            message: 'Revise a participação em editais e os resultados informados.',
+          },
+          {
+            step: 8,
+            fields: ['consentCode', 'consentAccepted'],
+            message: 'Revise o consentimento antes de concluir o cadastro.',
           },
         ]
       : flow === 'institution-flow'
@@ -938,6 +970,12 @@ function mapFlowValidationError(
           {
             step: 1,
             fields: [
+              'legalName',
+              'tradeName',
+              'type',
+              'legalNature',
+              'nature',
+              'hasCnpj',
               'cnpj',
               'cnpjValidWhenProvided',
               'cnpjProvidedWhenInstitutionHasCnpj',
@@ -947,16 +985,35 @@ function mapFlowValidationError(
             message: 'Revise CNPJ e ano de fundação. O ano não pode estar no futuro.',
           },
           {
+            step: 2,
+            fields: ['region', 'cityId', 'locationType', 'actsInPeriphery', 'actsInRuralArea'],
+            message: 'Revise território, cidade e perfil de atuação territorial da instituição.',
+          },
+          {
+            step: 3,
+            fields: ['modalityIds', 'spaceType', 'numberOfRooms', 'classesPerWeek', 'hasOwnHeadquarters', 'rentedHeadquarters', 'usesPublicSpace', 'averageAudienceCapacity'],
+            message: 'Revise modalidades, estrutura física, aulas e uso do espaço da instituição.',
+          },
+          {
             step: 4,
-            fields: ['monthlyFee'],
-            message: 'Revise a mensalidade média. Use um valor válido e dentro do limite permitido.',
-            },
-            {
-              step: 5,
-              fields: ['monthlyRevenue'],
-              message:
-                'Revise o faturamento mensal. Use um valor válido, sem letras, e dentro do limite permitido.',
-            },
+            fields: ['averageStudents', 'numberOfTeachers', 'monthlyFee', 'hasScholarShip', 'scholarshipCount', 'studentsPayMonthlyFee', 'activeStudents', 'servesVulnerablePopulation'],
+            message: 'Revise alunos, professores, mensalidade, bolsas e público atendido.',
+          },
+          {
+            step: 5,
+            fields: ['cltEmployees', 'pjContracts', 'monthlyRevenue', 'usesManagementSystem', 'mainIncomeSources', 'receivedPublicFundingLast2Years', 'annualBudgetRange', 'numberOfStaff', 'monthlyAudience'],
+            message: 'Revise equipe, faturamento, gestão, fontes de renda e orçamento da instituição.',
+          },
+          {
+            step: 6,
+            fields: ['mainChallenges', 'eventCostResponsibility', 'staffRoles', 'registeredInPublicCalls', 'approvedInPublicCalls', 'editalDifficulties', 'knowsPublicPolicyAccessMechanisms', 'knowsMunicipalCulturePlan', 'participatesInCultureCouncil', 'interestedInPublicPartnerships', 'promotionChannels', 'wouldUseFreePromotionPlatform'],
+            message: 'Revise desafios, editais, políticas públicas e divulgação institucional.',
+          },
+          {
+            step: 7,
+            fields: ['consentCode', 'consentAccepted'],
+            message: 'Revise o consentimento antes de concluir o cadastro institucional.',
+          },
           ]
         : [
             {
@@ -965,14 +1022,20 @@ function mapFlowValidationError(
               message: 'Revise nome, e-mail, CPF e WhatsApp antes de continuar.',
             },
             {
+              step: 1,
+              fields: ['region', 'cityId'],
+              message: 'Revise região, estado e cidade antes de continuar.',
+            },
+            {
               step: 2,
-              fields: ['age', 'birthDate', 'ageCompatibleWithBirthDate', 'genderValid'],
+              fields: ['age', 'birthDate', 'ageCompatibleWithBirthDate', 'gender', 'genderValid', 'modalityIds', 'practiceTime'],
               message:
                 'Revise data de nascimento, idade e identidade de gênero. O cadastro de jovens aceita idades até 17 anos.',
             },
             {
               step: 3,
               fields: [
+                'familyIncomeRange',
                 'monthlyFee',
                 'monthlyCostSchool',
                 'monthlyCostCourses',
@@ -983,6 +1046,16 @@ function mapFlowValidationError(
               ],
               message:
                 'Revise os valores de gastos com dança. Use números válidos, sem letras, e dentro do limite permitido.',
+            },
+            {
+              step: 4,
+              fields: ['careerInterest', 'whoPaysExpenses', 'searchesContent', 'contentIds'],
+              message: 'Revise interesse em carreira, custos e busca de conteúdos.',
+            },
+            {
+              step: 5,
+              fields: ['consentCode', 'consentAccepted'],
+              message: 'Revise o consentimento antes de concluir o cadastro.',
             },
           ]
 
@@ -1049,9 +1122,12 @@ function formatMinorSubmissionError(message: string) {
   return normalizedMessage
 }
 
-function parseNumericSelection(value: string, fallback = 0) {
-  const parsedValue = parseStrictCurrencyValue(value)
-  return parsedValue ?? fallback
+function parseOptionalCurrencySelection(value: string) {
+  return parseStrictCurrencyValue(value)
+}
+
+function parseOptionalIntegerSelection(value: string, maxValue = Number.MAX_SAFE_INTEGER) {
+  return parseStrictIntegerValue(value, maxValue)
 }
 
 function normalizeTextValue(value: string) {
@@ -1124,7 +1200,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const antiBotEnabled = Boolean(TURNSTILE_SITE_KEY)
 
   const earliestBirthDate = '1900-01-01'
-  const todayInBrazilDateInput = useMemo(() => getCurrentBrazilDateInputValue(), [])
+  const todayInBrazilDateInput = getCurrentBrazilDateInputValue()
   const currentBrazilYear = useMemo(() => Number(todayInBrazilDateInput.slice(0, 4)), [todayInBrazilDateInput])
   const latestBirthDate = todayInBrazilDateInput
   const adultBirthDateMax = useMemo(() => shiftDateInputValue(todayInBrazilDateInput, { years: -18 }), [todayInBrazilDateInput])
@@ -1217,10 +1293,6 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   }, [captchaToken, formStartedAt, honeypotValue, open, view])
 
   useEffect(() => {
-    if (!open) {
-      return
-    }
-
     if (hasLoadedReferences) {
       return
     }
@@ -1251,11 +1323,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
           return
         }
 
-        setStepError(
-          error instanceof Error
-            ? formatMinorSubmissionError(error.message)
-            : 'Não foi possível carregar os dados de apoio do formulário.'
-        )
+        if (open) {
+          setStepError(
+            error instanceof Error
+              ? formatMinorSubmissionError(error.message)
+              : 'Não foi possível carregar os dados de apoio do formulário.'
+          )
+        }
       } finally {
         if (isMounted) {
           setIsMinorLoadingReferences(false)
@@ -1296,6 +1370,10 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         }
 
         setMinorCityOptions(cities)
+
+        if (minorForm.city && !cities.some((item) => item.name === minorForm.city)) {
+          updateMinorField('city', '')
+        }
       } catch (error) {
         if (!isMounted) {
           return
@@ -1347,6 +1425,10 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         }
 
         setAdultCityOptions(cities)
+
+        if (adultForm.city && !cities.some((item) => item.name === adultForm.city)) {
+          updateAdultField('city', '')
+        }
       } catch (error) {
         if (!isMounted) {
           return
@@ -1398,6 +1480,10 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         }
 
         setInstitutionCityOptions(cities)
+
+        if (institutionForm.city && !cities.some((item) => item.name === institutionForm.city)) {
+          updateInstitutionField('city', '')
+        }
       } catch (error) {
         if (!isMounted) {
           return
@@ -1428,6 +1514,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     (view === 'minor-flow' && currentStep === 1 && isMinorLoadingCities) ||
     (view === 'adult-flow' && currentStep === 1 && isAdultLoadingCities) ||
     (view === 'institution-flow' && currentStep === 2 && isInstitutionLoadingCities)
+  const isCurrentStepWaitingForReferences =
+    isMinorLoadingReferences &&
+    (
+      (view === 'minor-flow' && (currentStep === 2 || currentStep === 4 || currentStep === 5)) ||
+      (view === 'adult-flow' && (currentStep === 2 || currentStep === 5 || currentStep === 8)) ||
+      (view === 'institution-flow' && (currentStep === 3 || currentStep === 7))
+    )
 
   const progress = useMemo(() => {
     if (totalSteps === 0) return 0
@@ -1514,6 +1607,10 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     setMinorForm((prev) => {
       const nextForm = { ...prev, [field]: nextValue as MinorFormData[K] }
 
+      if (field === 'state' && prev.state !== nextValue) {
+        nextForm.city = ''
+      }
+
       if (field === 'birthDate' && typeof nextValue === 'string') {
         const calculatedAge = calculateAgeFromBirthDate(nextValue)
         nextForm.age = calculatedAge === null ? '' : String(Math.max(calculatedAge, 0))
@@ -1541,6 +1638,10 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
     setAdultForm((prev) => {
       const nextForm = { ...prev, [field]: nextValue as AdultFormData[K] }
+
+      if (field === 'state' && prev.state !== nextValue) {
+        nextForm.city = ''
+      }
 
       if (field === 'birthDate' && typeof nextValue === 'string') {
         const calculatedAge = calculateAgeFromBirthDate(nextValue)
@@ -1571,7 +1672,15 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
           )
         : value
 
-    setInstitutionForm((prev) => ({ ...prev, [field]: nextValue as InstitutionFormData[K] }))
+    setInstitutionForm((prev) => {
+      const nextForm = { ...prev, [field]: nextValue as InstitutionFormData[K] }
+
+      if (field === 'state' && prev.state !== nextValue) {
+        nextForm.city = ''
+      }
+
+      return nextForm
+    })
   }
 
   const updateMinorBirthDatePart = (part: BirthDatePartKey, value: string) => {
@@ -2010,116 +2119,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     return true
   }
 
-  const validateInstitutionStep = () => {
-    if (
-      currentStep === 0 &&
-      (!institutionForm.responsibleName || !institutionForm.email || !institutionForm.whatsapp)
-    ) {
-      setStepError('Preencha nome completo do responsável, email e WhatsApp.')
-      return false
-    }
-
-    if (
-      currentStep === 1 &&
-      (!institutionForm.institutionName ||
-        !institutionForm.institutionType ||
-        !institutionForm.foundationPeriod ||
-        !institutionForm.hasCnpj)
-    ) {
-      setStepError(
-        'Preencha nome da instituição, tipo, período de fundação e informe se possui CNPJ.'
-      )
-      return false
-    }
-
-    if (currentStep === 1 && institutionForm.hasCnpj === 'sim' && !institutionForm.cnpj) {
-      setStepError('Preencha o CNPJ da instituição.')
-      return false
-    }
-
-    if (
-      currentStep === 2 &&
-      (!institutionForm.region ||
-        !institutionForm.state ||
-        !institutionForm.city ||
-        !institutionForm.actsInPeriphery ||
-        !institutionForm.actsInRuralArea)
-    ) {
-      setStepError(
-        'Preencha região, estado, cidade e informe atuação em periferia e zona rural.'
-      )
-      return false
-    }
-
-    if (
-      currentStep === 3 &&
-      (!institutionForm.hasOwnHeadquarters ||
-        !institutionForm.rentedHeadquarters ||
-        !institutionForm.usesPublicSpace ||
-        !institutionForm.numberOfRooms ||
-        !institutionForm.averageAudienceCapacity)
-    ) {
-      setStepError(
-        'Preencha sede própria, sede alugada, uso de espaço público, número de salas e capacidade média de público.'
-      )
-      return false
-    }
-
-    if (
-      currentStep === 4 &&
-      (!institutionForm.activeStudents ||
-        !institutionForm.numberOfTeachers ||
-        !institutionForm.numberOfStaff ||
-        !institutionForm.monthlyAudience ||
-        !institutionForm.servesVulnerablePopulation)
-    ) {
-      setStepError(
-        'Preencha número de alunos ativos, professores, funcionários, público mensal e vulnerabilidade.'
-      )
-      return false
-    }
-
-    if (
-      currentStep === 5 &&
-      (institutionForm.mainIncomeSources.length === 0 ||
-        !institutionForm.receivedPublicFundingLast2Years ||
-        !institutionForm.annualBudgetRange)
-    ) {
-      setStepError(
-        'Selecione fontes de renda, informe sobre recurso público e a faixa de orçamento anual.'
-      )
-      return false
-    }
-
-    if (
-      currentStep === 6 &&
-      (!institutionForm.knowsMunicipalCulturePlan ||
-        !institutionForm.participatesInCultureCouncil ||
-        !institutionForm.interestedInPublicPartnerships)
-    ) {
-      setStepError(
-        'Preencha plano municipal, conselho de cultura e interesse em parcerias públicas.'
-      )
-      return false
-    }
-
-    if (currentStep === 7 && !institutionForm.consentStats) {
-      setStepError('É necessário autorizar o uso estatístico dos dados.')
-      return false
-    }
-
-    if (currentStep === 7 && !institutionForm.consentContact) {
-      setStepError('É necessário autorizar o contato institucional.')
-      return false
-    }
-
-    setStepError('')
-    return true
-  }
-
   const validateInstitutionRealStep = () => {
-    void validateInstitutionStep
-
     if (
       currentStep === 0 &&
       (!institutionForm.responsibleName || !institutionForm.email || !institutionForm.whatsapp)
@@ -2409,7 +2409,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
           email: normalizeTextValue(minorForm.email),
           whatsapp: normalizeDigits(minorForm.whatsapp),
           region: normalizeOptionalTextValue(minorForm.region),
-          age: Number(minorForm.age || 0) || null,
+          age: parseOptionalIntegerSelection(minorForm.age, 17),
           birthDate: minorForm.birthDate,
           gender: normalizeOptionalTextValue(minorForm.gender),
           cityId: selectedCity.id,
@@ -2480,7 +2480,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         email: normalizeTextValue(adultForm.email),
         whatsapp: normalizeDigits(adultForm.whatsapp),
         region: normalizeOptionalTextValue(adultForm.region),
-        age: Number(adultForm.age || 0) || null,
+        age: parseOptionalIntegerSelection(adultForm.age, 99),
         ageRange: adultForm.age ? `${adultForm.age} anos` : null,
         birthDate: adultForm.birthDate,
         gender: normalizeOptionalTextValue(adultForm.gender),
@@ -2493,24 +2493,24 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         currentlyWorks: parseBooleanChoice(adultForm.currentlyWorks),
         danceMainIncome: parseBooleanChoice(adultForm.danceMainIncomeChoice),
         hasOtherIncome: parseBooleanChoice(adultForm.hasOtherIncomeChoice),
-        totalIncome: parseNumericSelection(adultForm.monthlyIncomeTotal),
-        danceIncome: parseNumericSelection(adultForm.danceIncome),
+        totalIncome: parseOptionalCurrencySelection(adultForm.monthlyIncomeTotal),
+        danceIncome: parseOptionalCurrencySelection(adultForm.danceIncome),
         careerInterest: parseBooleanChoice(adultForm.careerInterest),
         householdIncomeRange: normalizeOptionalTextValue(adultForm.familyIncome),
         rolesPerformed: normalizeTextList(adultForm.danceRoles).join(', ') || null,
         workType: normalizeTextValue(adultForm.workTypeChoice),
-        coursesPerYear: Number(adultForm.presentialCoursesPerYear || 0),
-        onlineCoursesPerYear: Number(adultForm.onlineCoursesPerYear || 0),
+        coursesPerYear: parseOptionalIntegerSelection(adultForm.presentialCoursesPerYear, 9999),
+        onlineCoursesPerYear: parseOptionalIntegerSelection(adultForm.onlineCoursesPerYear, 9999),
         currentlyStudies: parseBooleanChoice(adultForm.studiesDanceNow),
         academicEducation: normalizeOptionalTextValue(adultForm.academicEducation),
         formalStudyType: normalizeOptionalTextValue(adultForm.danceEducationLevel),
         wantsFormalStudy: parseBooleanChoice(adultForm.wantsFormalDanceStudy),
-        monthlyCostCourses: parseNumericSelection(adultForm.courses),
-        monthlyCostCostumes: parseNumericSelection(adultForm.costumes),
-        monthlyCostEvents: parseNumericSelection(adultForm.festivals),
-        monthlyCostTravel: parseNumericSelection(adultForm.travel),
-        monthlyCostSchool: parseNumericSelection(adultForm.schoolFee),
-        monthlyCostOthers: parseNumericSelection(adultForm.otherCosts),
+        monthlyCostCourses: parseOptionalCurrencySelection(adultForm.courses),
+        monthlyCostCostumes: parseOptionalCurrencySelection(adultForm.costumes),
+        monthlyCostEvents: parseOptionalCurrencySelection(adultForm.festivals),
+        monthlyCostTravel: parseOptionalCurrencySelection(adultForm.travel),
+        monthlyCostSchool: parseOptionalCurrencySelection(adultForm.schoolFee),
+        monthlyCostOthers: parseOptionalCurrencySelection(adultForm.otherCosts),
         costResponsibility: normalizeTextList(adultForm.whoPays).join(', '),
         participatedInEdital: parseBooleanChoice(adultForm.participatedPublicCalls),
         approvedInEdital: parseBooleanChoice(adultForm.wasSelected),
@@ -2559,18 +2559,18 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     setStepError('')
 
     try {
-      const numberOfRooms = parseNumericSelection(institutionForm.numberOfRooms)
-      const averageStudents = parseNumericSelection(institutionForm.averageStudents)
-      const numberOfTeachers = parseNumericSelection(institutionForm.numberOfTeachers)
-      const classesPerWeek = parseNumericSelection(institutionForm.classesPerWeek)
-      const monthlyFee = parseNumericSelection(institutionForm.monthlyFee)
-      const cltEmployees = parseNumericSelection(institutionForm.cltEmployees)
-      const pjContracts = parseNumericSelection(institutionForm.pjContracts)
-      const monthlyRevenue = parseNumericSelection(institutionForm.monthlyRevenue)
-      const numberOfStaff = parseNumericSelection(institutionForm.numberOfStaff)
-      const activeStudents = parseNumericSelection(institutionForm.activeStudents)
-      const monthlyAudience = parseNumericSelection(institutionForm.monthlyAudience)
-      const averageAudienceCapacity = parseNumericSelection(institutionForm.averageAudienceCapacity)
+      const numberOfRooms = parseOptionalIntegerSelection(institutionForm.numberOfRooms, 999)
+      const averageStudents = parseOptionalIntegerSelection(institutionForm.averageStudents, 999999)
+      const numberOfTeachers = parseOptionalIntegerSelection(institutionForm.numberOfTeachers, 9999)
+      const classesPerWeek = parseOptionalIntegerSelection(institutionForm.classesPerWeek, 999)
+      const monthlyFee = parseOptionalCurrencySelection(institutionForm.monthlyFee)
+      const cltEmployees = parseOptionalIntegerSelection(institutionForm.cltEmployees, 99999)
+      const pjContracts = parseOptionalIntegerSelection(institutionForm.pjContracts, 99999)
+      const monthlyRevenue = parseOptionalCurrencySelection(institutionForm.monthlyRevenue)
+      const numberOfStaff = parseOptionalIntegerSelection(institutionForm.numberOfStaff, 99999)
+      const activeStudents = parseOptionalIntegerSelection(institutionForm.activeStudents, 999999)
+      const monthlyAudience = parseOptionalIntegerSelection(institutionForm.monthlyAudience, 999999)
+      const averageAudienceCapacity = parseOptionalIntegerSelection(institutionForm.averageAudienceCapacity, 999999)
       const hasOwnHeadquarters = parseBooleanChoice(institutionForm.hasOwnHeadquarters)
       const rentedHeadquarters = parseBooleanChoice(institutionForm.rentedHeadquarters)
       const usesPublicSpace = parseBooleanChoice(institutionForm.usesPublicSpace)
@@ -2591,7 +2591,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         legalNature: normalizeOptionalTextValue(institutionForm.legalNature),
         nature: normalizeTextValue(institutionForm.institutionNature),
         locationType: normalizeTextValue(institutionForm.locationType),
-        foundationYear: Number(institutionForm.foundationYearExact),
+        foundationYear: parseOptionalIntegerSelection(institutionForm.foundationYearExact, currentBrazilYear),
         modalityIds,
         numberOfTeachers,
         averageStudents,
@@ -2604,7 +2604,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         hasScholarShip: parseBooleanChoice(institutionForm.hasScholarShip),
         scholarshipCount:
           institutionForm.hasScholarShip === 'sim'
-            ? parseNumericSelection(institutionForm.scholarshipCount)
+            ? parseOptionalIntegerSelection(institutionForm.scholarshipCount, 999999)
             : null,
         studentsPayMonthlyFee: parseBooleanChoice(institutionForm.studentsPayMonthlyFee),
         cltEmployees,
@@ -3996,14 +3996,15 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
                           isMinorSubmitting ||
                           isAdultSubmitting ||
                           isInstitutionSubmitting ||
-                          ((view === 'minor-flow' || view === 'adult-flow' || view === 'institution-flow') &&
-                            isMinorLoadingReferences) ||
+                          isCurrentStepWaitingForReferences ||
                           isCurrentStepWaitingForCities ||
                           (currentStep === totalSteps - 1 && antiBotEnabled && !captchaToken)
                         }
                       >
                         {isMinorSubmitting || isAdultSubmitting || isInstitutionSubmitting
                           ? 'Enviando...'
+                          : isCurrentStepWaitingForReferences
+                            ? 'Carregando dados...'
                           : isCurrentStepWaitingForCities
                             ? 'Carregando cidades...'
                           : currentStep === totalSteps - 1
