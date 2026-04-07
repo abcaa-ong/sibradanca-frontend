@@ -12,6 +12,7 @@ import type {
   BackendHealthStatusResponse,
 } from '../types/admin'
 import { clearAdminCredentials, getAdminAuthHeader } from './admin-auth.service'
+import { cleanUiText } from '../utils/ui-text'
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080').trim()
 const ADMIN_CACHE_TTL_MS = 30_000
@@ -62,7 +63,7 @@ async function performAdminRequest(input: RequestInfo | URL, init?: RequestInit)
   const authorization = getAdminAuthHeader()
 
   if (!authorization) {
-    throw new Error('Faça login no painel interno para continuar.')
+    throw new Error(cleanUiText('Faça login no painel interno para continuar.'))
   }
 
   try {
@@ -76,16 +77,16 @@ async function performAdminRequest(input: RequestInfo | URL, init?: RequestInit)
 
     if (response.status === 401 || response.status === 403) {
       clearAdminCredentials()
-      throw new Error('Sua sessão interna expirou ou não possui permissão.')
+      throw new Error(cleanUiText('Sua sessão interna expirou ou não possui permissão.'))
     }
 
     return response
   } catch (error) {
     if (error instanceof Error && error.message !== 'Failed to fetch') {
-      throw error
+      throw new Error(cleanUiText(error.message))
     }
 
-    throw new Error('Não foi possível conectar ao painel interno no momento.')
+    throw new Error(cleanUiText('Não foi possível conectar ao painel interno no momento.'))
   }
 }
 
@@ -99,7 +100,7 @@ async function parseAdminResponse<T>(response: Response, fallbackMessage: string
   }
 
   if (!response.ok || !json?.success) {
-    throw new Error(json?.message || fallbackMessage)
+    throw new Error(cleanUiText(json?.message || fallbackMessage))
   }
 
   return (json as ApiResponse<T>).data
@@ -149,7 +150,7 @@ async function adminDownload(path: string) {
   const response = await performAdminRequest(buildUrl(path))
 
   if (!response.ok) {
-    throw new Error('Não foi possível gerar o arquivo solicitado.')
+    throw new Error(cleanUiText('Não foi possível gerar o arquivo solicitado.'))
   }
 
   return {
@@ -276,12 +277,12 @@ export function getBackendHealthStatus() {
       }
 
       if (!payload?.status) {
-        throw new Error('Não foi possível carregar a saúde do ambiente interno.')
+        throw new Error(cleanUiText('Não foi possível carregar a saúde do ambiente interno.'))
       }
 
       return payload
     } catch {
-      throw new Error('Não foi possível consultar o ambiente interno.')
+      throw new Error(cleanUiText('Não foi possível consultar o ambiente interno.'))
     }
   })().catch((error) => {
     adminResponseCache.delete(cacheKey)

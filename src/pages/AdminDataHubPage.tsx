@@ -10,6 +10,7 @@ import type {
   AdminInsightsOverviewResponse,
 } from '../types/admin'
 import { formatBackendDateTime } from '../utils/backend-date'
+import { cleanUiText as t } from '../utils/ui-text'
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat('pt-BR').format(value)
@@ -22,7 +23,7 @@ function getTopItem(items: Array<{ name: string; value: number }> | undefined) {
 
   const [topItem] = [...items].sort((left, right) => right.value - left.value)
   return {
-    label: topItem.name,
+    label: t(topItem.name),
     value: formatNumber(topItem.value),
   }
 }
@@ -95,49 +96,47 @@ export default function AdminDataHubPage() {
     <div className="admin-page-content">
       <header className="admin-page-header">
         <div>
-          <p className="eyebrow">Dados e análises</p>
-          <h2>Leitura da base nacional</h2>
+          <p className="eyebrow">{t('Dados e análises')}</p>
+          <h2>{t('Leitura da base nacional')}</h2>
           <p className="admin-page-subtitle">
-            Totais, setores e recortes principais da base em um só lugar.
+            {t('Totais, setores e recortes principais da base em um só lugar.')}
           </p>
         </div>
       </header>
 
-      {error ? <Card className="admin-alert admin-alert-error">{error}</Card> : null}
+      {error ? <Card className="admin-alert admin-alert-error">{t(error)}</Card> : null}
 
       <section className="admin-grid">
         <Card className="admin-metric-card">
-          <span className="eyebrow">Base total</span>
+          <span className="eyebrow">{t('Base total')}</span>
           <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalResponses) : '-'}</strong>
-          <p className="card-text">Cadastros válidos na base.</p>
+          <p className="card-text">{t('Cadastros válidos na base.')}</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Jovens</span>
+          <span className="eyebrow">{t('Jovens')}</span>
           <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalYouth) : '-'}</strong>
-          <p className="card-text">Registros do setor jovem.</p>
+          <p className="card-text">{t('Registros do setor jovem.')}</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Profissionais</span>
+          <span className="eyebrow">{t('Profissionais')}</span>
           <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalProfessionals) : '-'}</strong>
-          <p className="card-text">Registros profissionais.</p>
+          <p className="card-text">{t('Registros profissionais.')}</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Instituições</span>
+          <span className="eyebrow">{t('Instituições')}</span>
           <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalInstitutions) : '-'}</strong>
-          <p className="card-text">Escolas, grupos e projetos.</p>
+          <p className="card-text">{t('Escolas, grupos e projetos.')}</p>
         </Card>
       </section>
 
-      {isLoading ? (
-        <p className="admin-inline-note">Atualizando a leitura da base...</p>
-      ) : null}
+      {isLoading ? <p className="admin-inline-note">{t('Atualizando a leitura da base...')}</p> : null}
 
       {!isLoading && !error && !hasBaseData ? (
         <p className="admin-inline-note">
-          A área de dados começa a preencher assim que os primeiros cadastros entrarem na base.
+          {t('A área de dados começa a preencher assim que os primeiros cadastros entrarem na base.')}
         </p>
       ) : null}
 
@@ -145,44 +144,46 @@ export default function AdminDataHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Resumo operacional</p>
-              <h2>Estado atual da base</h2>
+              <p className="eyebrow">{t('Resumo operacional')}</p>
+              <h2>{t('Estado atual da base')}</h2>
             </div>
           </div>
 
           <div className="admin-system-list">
             <div className="admin-system-row">
               <div>
-                <span className="admin-system-label">Último envio</span>
-                <p className="admin-system-detail">Cadastro mais recente processado pela base.</p>
+                <span className="admin-system-label">{t('Último envio')}</span>
+                <p className="admin-system-detail">{t('Cadastro mais recente processado pela base.')}</p>
               </div>
               <strong className="admin-system-value">
-                {isLoading ? '...' : latestRecordAt ? formatBackendDateTime(latestRecordAt) : 'Sem registro'}
+                {isLoading ? '...' : latestRecordAt ? formatBackendDateTime(latestRecordAt) : t('Sem registro')}
               </strong>
             </div>
 
             <div className="admin-system-row">
               <div>
-                <span className="admin-system-label">UFs com presença</span>
-                <p className="admin-system-detail">Estados e Distrito Federal com registros.</p>
+                <span className="admin-system-label">{t('UFs com presença')}</span>
+                <p className="admin-system-detail">{t('Estados e Distrito Federal com registros.')}</p>
               </div>
               <strong className="admin-system-value">{isLoading ? '...' : formatNumber(activeStates)}</strong>
             </div>
 
             <div className="admin-system-row">
               <div>
-                <span className="admin-system-label">Setores ativos</span>
-                <p className="admin-system-detail">Frentes com registros efetivos na base.</p>
+                <span className="admin-system-label">{t('Setores ativos')}</span>
+                <p className="admin-system-detail">{t('Frentes com registros efetivos na base.')}</p>
               </div>
               <strong className="admin-system-value">{isLoading ? '...' : `${activeSectors}/3`}</strong>
             </div>
 
             <div className="admin-system-row">
               <div>
-                <span className="admin-system-label">Próxima ação da equipe</span>
-                <p className="admin-system-detail">Abrir cadastros, exportações ou dashboard institucional.</p>
+                <span className="admin-system-label">{t('Próxima ação da equipe')}</span>
+                <p className="admin-system-detail">
+                  {t('Abrir cadastros, exportações ou dashboard institucional.')}
+                </p>
               </div>
-              <strong className="admin-system-value">Operação</strong>
+              <strong className="admin-system-value">{t('Operação')}</strong>
             </div>
           </div>
         </Card>
@@ -190,32 +191,32 @@ export default function AdminDataHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Destaques</p>
-              <h2>Recortes mais fortes da leitura</h2>
+              <p className="eyebrow">{t('Destaques')}</p>
+              <h2>{t('Recortes mais fortes da leitura')}</h2>
             </div>
           </div>
 
           <div className="admin-kpi-grid admin-kpi-grid-wide">
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">Modalidade em destaque</span>
+              <span className="admin-kpi-label">{t('Modalidade em destaque')}</span>
               <strong>{topModality.label}</strong>
               <span className="admin-kpi-value">{topModality.value}</span>
             </div>
 
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">Faixa etária em destaque</span>
+              <span className="admin-kpi-label">{t('Faixa etária em destaque')}</span>
               <strong>{topAgeRange.label}</strong>
               <span className="admin-kpi-value">{topAgeRange.value}</span>
             </div>
 
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">Gênero em destaque</span>
+              <span className="admin-kpi-label">{t('Gênero em destaque')}</span>
               <strong>{topGender.label}</strong>
               <span className="admin-kpi-value">{topGender.value}</span>
             </div>
 
             <div className="admin-kpi-card">
-              <span className="admin-kpi-label">Editais e políticas</span>
+              <span className="admin-kpi-label">{t('Editais e políticas')}</span>
               <strong>{topPublicCall.label}</strong>
               <span className="admin-kpi-value">{topPublicCall.value}</span>
             </div>
@@ -224,93 +225,91 @@ export default function AdminDataHubPage() {
       </section>
 
       {!isLoading && hasBaseData ? (
-        <>
-          <section className="admin-section-grid">
-            <Card className="admin-panel-card">
-              <div className="admin-panel-header">
-                <div>
-                  <p className="eyebrow">Setores</p>
-                  <h2>Distribuição por frente</h2>
-                </div>
+        <section className="admin-section-grid">
+          <Card className="admin-panel-card">
+            <div className="admin-panel-header">
+              <div>
+                <p className="eyebrow">{t('Setores')}</p>
+                <h2>{t('Distribuição por frente')}</h2>
               </div>
+            </div>
 
-              <div className="admin-table-wrap">
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Setor</th>
-                      <th>Total</th>
-                      <th>UFs</th>
-                      <th>Último registro</th>
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>{t('Setor')}</th>
+                    <th>{t('Total')}</th>
+                    <th>{t('UFs')}</th>
+                    <th>{t('Último registro')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sectorSummary.map((item) => (
+                    <tr key={item.sector}>
+                      <td>{t(item.sectorLabel)}</td>
+                      <td>{formatNumber(item.totalSubmissions)}</td>
+                      <td>{formatNumber(item.totalStates)}</td>
+                      <td>{formatBackendDateTime(item.lastSubmissionAt)}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {sectorSummary.map((item) => (
-                      <tr key={item.sector}>
-                        <td>{item.sectorLabel}</td>
-                        <td>{formatNumber(item.totalSubmissions)}</td>
-                        <td>{formatNumber(item.totalStates)}</td>
-                        <td>{formatBackendDateTime(item.lastSubmissionAt)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </Card>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
 
-            <Card className="admin-panel-card">
-              <div className="admin-panel-header">
-                <div>
-                  <p className="eyebrow">Território</p>
-                  <h2>Estados com maior presença</h2>
-                </div>
+          <Card className="admin-panel-card">
+            <div className="admin-panel-header">
+              <div>
+                <p className="eyebrow">{t('Território')}</p>
+                <h2>{t('Estados com maior presença')}</h2>
               </div>
+            </div>
 
-              <div className="admin-table-wrap">
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th>UF</th>
-                      <th>Total</th>
-                      <th>Jovens</th>
-                      <th>Profissionais</th>
-                      <th>Instituições</th>
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>{t('UF')}</th>
+                    <th>{t('Total')}</th>
+                    <th>{t('Jovens')}</th>
+                    <th>{t('Profissionais')}</th>
+                    <th>{t('Instituições')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stateTopList.map((item) => (
+                    <tr key={item.stateCode}>
+                      <td>{item.stateCode}</td>
+                      <td>{formatNumber(item.totalSubmissions)}</td>
+                      <td>{formatNumber(item.totalYouth)}</td>
+                      <td>{formatNumber(item.totalProfessionals)}</td>
+                      <td>{formatNumber(item.totalInstitutions)}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {stateTopList.map((item) => (
-                      <tr key={item.stateCode}>
-                        <td>{item.stateCode}</td>
-                        <td>{formatNumber(item.totalSubmissions)}</td>
-                        <td>{formatNumber(item.totalYouth)}</td>
-                        <td>{formatNumber(item.totalProfessionals)}</td>
-                        <td>{formatNumber(item.totalInstitutions)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </Card>
-          </section>
-        </>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </section>
       ) : null}
 
       <section className="admin-section-grid">
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Acesso rápido</p>
-              <h2>Próximos módulos da equipe</h2>
+              <p className="eyebrow">{t('Acesso rápido')}</p>
+              <h2>{t('Próximos módulos da equipe')}</h2>
             </div>
           </div>
 
           <div className="admin-quick-actions admin-quick-actions-inline">
-            <Button onClick={() => navigate('/painel-interno/dashboard')}>Abrir dashboard</Button>
+            <Button onClick={() => navigate('/painel-interno/dashboard')}>{t('Abrir dashboard')}</Button>
             <Button variant="outline" onClick={() => navigate('/painel-interno/cadastros')}>
-              Abrir cadastros
+              {t('Abrir cadastros')}
             </Button>
             <Button variant="outline" onClick={() => navigate('/painel-interno/exportacoes')}>
-              Abrir exportações
+              {t('Abrir exportações')}
             </Button>
           </div>
         </Card>

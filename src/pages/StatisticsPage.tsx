@@ -78,10 +78,13 @@ const ageDistribution: ChartItem[] = [
 ]
 
 const genderDistribution: ChartItem[] = [
-  { name: 'Mulheres', value: 2810 },
-  { name: 'Homens', value: 1710 },
-  { name: 'N\u00e3o bin\u00e1rio', value: 290 },
-  { name: 'Outro ou n\u00e3o informado', value: 430 },
+  { name: 'Mulher', value: 2330 },
+  { name: 'Homem', value: 1480 },
+  { name: 'Mulher trans', value: 140 },
+  { name: 'Homem trans', value: 85 },
+  { name: 'Travesti', value: 55 },
+  { name: 'Pessoa n\u00e3o bin\u00e1ria', value: 150 },
+  { name: 'Outra identidade ou n\u00e3o informado', value: 100 },
 ]
 
 const modalityDistribution: ChartItem[] = [
@@ -306,11 +309,11 @@ export default function StatisticsPage() {
                 summaryItems={5}
               />
               <ChartPanel
-                title={'G\u00eanero'}
+                title={'Identidade de g\u00eanero'}
                 data={genderDistribution}
                 type="pie"
                 eyebrowLabel="Perfis"
-                summaryItems={4}
+                summaryItems={7}
               />
               <ChartPanel
                 title={'Modalidades mais presentes'}

@@ -12,6 +12,7 @@ import type {
 } from '../types/admin'
 import type { ChartItem } from '../types/statistics'
 import { formatBackendDateTime } from '../utils/backend-date'
+import { cleanUiText as t } from '../utils/ui-text'
 
 const workAreas = [
   {
@@ -73,7 +74,7 @@ function formatPercent(numerator: number, denominator: number) {
 }
 
 function findChartValue(items: ChartItem[] | undefined, label: string) {
-  return items?.find((item) => item.name === label)?.value ?? 0
+  return items?.find((item) => t(item.name) === t(label))?.value ?? 0
 }
 
 function sumChartValues(items: ChartItem[] | undefined) {
@@ -220,22 +221,22 @@ export default function AdminWorkspacePage() {
     return [
       {
         label: 'Faixa etária em destaque',
-        value: ageLeader ? `${ageLeader.name} (${formatNumber(ageLeader.value)})` : 'Sem leitura',
+        value: ageLeader ? `${t(ageLeader.name)} (${formatNumber(ageLeader.value)})` : 'Sem leitura',
         detail: 'Faixa etária mais presente na leitura atual da base.',
       },
       {
         label: 'Gênero em destaque',
-        value: genderLeader ? `${genderLeader.name} (${formatNumber(genderLeader.value)})` : 'Sem leitura',
+        value: genderLeader ? `${t(genderLeader.name)} (${formatNumber(genderLeader.value)})` : 'Sem leitura',
         detail: 'Recorte de gênero mais presente entre os registros disponíveis.',
       },
       {
         label: 'Modalidade em destaque',
-        value: modalityLeader ? `${modalityLeader.name} (${formatNumber(modalityLeader.value)})` : 'Sem leitura',
+        value: modalityLeader ? `${t(modalityLeader.name)} (${formatNumber(modalityLeader.value)})` : 'Sem leitura',
         detail: 'Modalidade mais recorrente entre os formulários.',
       },
       {
         label: 'Editais e apoio público',
-        value: callLeader ? `${callLeader.name} (${formatNumber(callLeader.value)})` : 'Sem leitura',
+        value: callLeader ? `${t(callLeader.name)} (${formatNumber(callLeader.value)})` : 'Sem leitura',
         detail: 'Leitura mais presente nos recortes ligados a editais e políticas públicas.',
       },
     ]
@@ -247,108 +248,102 @@ export default function AdminWorkspacePage() {
     <div className="admin-page-content">
       <header className="admin-page-header admin-page-header-compact">
         <div>
-          <p className="eyebrow">Painel da ONG</p>
-          <h2>Banco Nacional de Dados da Dança do Brasil</h2>
+          <p className="eyebrow">{t('Painel da ONG')}</p>
+          <h2>{t('Banco Nacional de Dados da Dança do Brasil')}</h2>
           <p className="admin-page-subtitle">
-            Cadastros, leituras e arquivos de trabalho da equipe em um só ambiente.
+            {t('Cadastros, leituras e arquivos de trabalho da equipe em um só ambiente.')}
           </p>
         </div>
       </header>
 
-      {error ? <Card className="admin-alert admin-alert-error">{error}</Card> : null}
+      {error ? <Card className="admin-alert admin-alert-error">{t(error)}</Card> : null}
 
       <section className="admin-grid">
         <Card className="admin-metric-card">
-          <span className="eyebrow">Base total</span>
+          <span className="eyebrow">{t('Base total')}</span>
           <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalResponses) : '-'}</strong>
-          <p className="card-text">Cadastros disponíveis na base.</p>
+          <p className="card-text">{t('Cadastros disponíveis na base.')}</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Jovens</span>
+          <span className="eyebrow">{t('Jovens')}</span>
           <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalYouth) : '-'}</strong>
-          <p className="card-text">Frente jovem da dança.</p>
+          <p className="card-text">{t('Frente jovem da dança.')}</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Profissionais</span>
+          <span className="eyebrow">{t('Profissionais')}</span>
           <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalProfessionals) : '-'}</strong>
-          <p className="card-text">Frente profissional da dança.</p>
+          <p className="card-text">{t('Frente profissional da dança.')}</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Instituições</span>
+          <span className="eyebrow">{t('Instituições')}</span>
           <strong>{isLoading ? '...' : overview ? formatNumber(overview.totalInstitutions) : '-'}</strong>
-          <p className="card-text">Escolas, grupos, projetos e espaços.</p>
+          <p className="card-text">{t('Escolas, grupos, projetos e espaços.')}</p>
         </Card>
       </section>
 
-      {isLoading ? (
-        <p className="admin-inline-note">Atualizando os números da base...</p>
-      ) : null}
+      {isLoading ? <p className="admin-inline-note">{t('Atualizando os números da base...')}</p> : null}
 
       {!isLoading && !error && !hasBaseData ? (
         <p className="admin-inline-note">
-          Base nova. Os primeiros cadastros vão aparecer aqui assim que os formulários forem enviados.
+          {t('Base nova. Os primeiros cadastros vão aparecer aqui assim que os formulários forem enviados.')}
         </p>
       ) : null}
 
-      {!isLoading ? (
-        !error && !hasBaseData ? (
-          null
-        ) : (
-          <section className="admin-section-grid">
-            <Card className="admin-panel-card">
-              <div className="admin-panel-header">
-                <div>
-                  <p className="eyebrow">Base em operação</p>
-                  <h2>Como a base está hoje</h2>
-                </div>
+      {!isLoading && !error && hasBaseData ? (
+        <section className="admin-section-grid">
+          <Card className="admin-panel-card">
+            <div className="admin-panel-header">
+              <div>
+                <p className="eyebrow">{t('Base em operação')}</p>
+                <h2>{t('Como a base está hoje')}</h2>
               </div>
+            </div>
 
-              <div className="admin-system-list">
-                {operationalRows.map((item) => (
-                  <div key={item.label} className="admin-system-row">
-                    <div>
-                      <span className="admin-system-label">{item.label}</span>
-                      <p className="admin-system-detail">{item.detail}</p>
-                    </div>
-                    <strong className="admin-system-value">{item.value}</strong>
+            <div className="admin-system-list">
+              {operationalRows.map((item) => (
+                <div key={item.label} className="admin-system-row">
+                  <div>
+                    <span className="admin-system-label">{t(item.label)}</span>
+                    <p className="admin-system-detail">{t(item.detail)}</p>
                   </div>
-                ))}
-              </div>
-            </Card>
-
-            <Card className="admin-panel-card">
-              <div className="admin-panel-header">
-                <div>
-                  <p className="eyebrow">Leitura nacional</p>
-                  <h2>O que mais aparece na base</h2>
+                  <strong className="admin-system-value">{t(item.value)}</strong>
                 </div>
-              </div>
+              ))}
+            </div>
+          </Card>
 
-              <div className="admin-system-list">
-                {executiveRows.map((item) => (
-                  <div key={item.label} className="admin-system-row">
-                    <div>
-                      <span className="admin-system-label">{item.label}</span>
-                      <p className="admin-system-detail">{item.detail}</p>
-                    </div>
-                    <strong className="admin-system-value">{item.value}</strong>
-                  </div>
-                ))}
+          <Card className="admin-panel-card">
+            <div className="admin-panel-header">
+              <div>
+                <p className="eyebrow">{t('Leitura nacional')}</p>
+                <h2>{t('O que mais aparece na base')}</h2>
               </div>
-            </Card>
-          </section>
-        )
+            </div>
+
+            <div className="admin-system-list">
+              {executiveRows.map((item) => (
+                <div key={item.label} className="admin-system-row">
+                  <div>
+                    <span className="admin-system-label">{t(item.label)}</span>
+                    <p className="admin-system-detail">{t(item.detail)}</p>
+                  </div>
+                  <strong className="admin-system-value">{t(item.value)}</strong>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </section>
       ) : null}
 
       <section className="admin-section-grid">
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Módulos do sistema</p>
-              <h2>Onde a equipe trabalha a base</h2>
+              <p className="eyebrow">{t('Módulos do sistema')}</p>
+              <h2>{t('Onde a equipe trabalha a base')}</h2>
             </div>
           </div>
 
@@ -356,20 +351,20 @@ export default function AdminWorkspacePage() {
             {workAreas.map((area) => (
               <div key={area.title} className="admin-module-card admin-module-card-system">
                 <div className="admin-module-head">
-                  <p className="admin-module-audience">{area.audience}</p>
-                  <span className="admin-status-chip">Ativo</span>
+                  <p className="admin-module-audience">{t(area.audience)}</p>
+                  <span className="admin-status-chip">{t('Ativo')}</span>
                 </div>
-                <h3>{area.title}</h3>
-                <p>{area.description}</p>
+                <h3>{t(area.title)}</h3>
+                <p>{t(area.description)}</p>
                 <div className="admin-pill-list">
                   {area.outputs.map((item) => (
                     <span key={`${area.title}-${item}`} className="admin-pill">
-                      {item}
+                      {t(item)}
                     </span>
                   ))}
                 </div>
                 <div className="admin-card-action">
-                  <Button onClick={() => navigate(area.route)}>{area.actionLabel}</Button>
+                  <Button onClick={() => navigate(area.route)}>{t(area.actionLabel)}</Button>
                 </div>
               </div>
             ))}
@@ -447,8 +442,8 @@ export default function AdminWorkspacePage() {
           <Card className="admin-panel-card admin-panel-card-full">
             <div className="admin-panel-header">
               <div>
-                <p className="eyebrow">Indicadores rápidos</p>
-                <h2>Destaques da leitura nacional</h2>
+                <p className="eyebrow">{t('Indicadores rápidos')}</p>
+                <h2>{t('Destaques da leitura nacional')}</h2>
               </div>
             </div>
 
@@ -471,21 +466,21 @@ export default function AdminWorkspacePage() {
         <Card className="admin-panel-card admin-panel-card-full">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Acesso rápido</p>
-              <h2>Entradas principais da equipe</h2>
+              <p className="eyebrow">{t('Acesso rápido')}</p>
+              <h2>{t('Entradas principais da equipe')}</h2>
             </div>
           </div>
 
           <div className="admin-quick-actions admin-quick-actions-inline">
-            <Button onClick={() => navigate('/painel-interno/cadastros')}>Abrir cadastros</Button>
+            <Button onClick={() => navigate('/painel-interno/cadastros')}>{t('Abrir cadastros')}</Button>
             <Button variant="outline" onClick={() => navigate('/painel-interno/dados')}>
-              Abrir dados e análises
+              {t('Abrir dados e análises')}
             </Button>
             <Button variant="outline" onClick={() => navigate('/painel-interno/exportacoes')}>
-              Abrir exportações
+              {t('Abrir exportações')}
             </Button>
             <Button variant="outline" onClick={() => navigate('/painel-interno/acessos')}>
-              Abrir segurança e LGPD
+              {t('Abrir segurança e LGPD')}
             </Button>
           </div>
         </Card>

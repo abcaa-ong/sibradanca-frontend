@@ -12,6 +12,7 @@ import {
   downloadAdminSubmissionsDetailedXlsx,
   downloadAdminSubmissionsXlsx,
 } from '../services/admin.service'
+import { cleanUiText as t } from '../utils/ui-text'
 
 type DownloadAction = () => Promise<{ blob: Blob; filename: string | null }>
 
@@ -148,39 +149,39 @@ export default function AdminExportsPage() {
     <div className="admin-page-content">
       <header className="admin-page-header">
         <div>
-          <p className="eyebrow">Exportações</p>
-          <h2>Arquivos da base interna</h2>
+          <p className="eyebrow">{t('Exportações')}</p>
+          <h2>{t('Arquivos da base interna')}</h2>
           <p className="admin-page-subtitle">
-            A equipe da ONG baixa aqui fichas, planilhas, PDFs institucionais e arquivos para BI.
+            {t('A equipe da ONG baixa aqui fichas, planilhas, PDFs institucionais e arquivos para BI.')}
           </p>
         </div>
       </header>
 
-      {downloadError ? <Card className="admin-alert admin-alert-error">{downloadError}</Card> : null}
+      {downloadError ? <Card className="admin-alert admin-alert-error">{t(downloadError)}</Card> : null}
 
       <section className="admin-grid">
         <Card className="admin-metric-card">
-          <span className="eyebrow">Arquivos</span>
+          <span className="eyebrow">{t('Arquivos')}</span>
           <strong>{totalFiles}</strong>
-          <p className="card-text">Saídas disponíveis no painel.</p>
+          <p className="card-text">{t('Saídas disponíveis no painel.')}</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Base detalhada</span>
-          <strong>PDF · XLSX · CSV</strong>
-          <p className="card-text">Consulta completa da equipe.</p>
+          <span className="eyebrow">{t('Base detalhada')}</span>
+          <strong>{t('PDF · XLSX · CSV')}</strong>
+          <p className="card-text">{t('Consulta completa da equipe.')}</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Operação</span>
-          <strong>XLSX · CSV</strong>
-          <p className="card-text">Rotina rápida da equipe.</p>
+          <span className="eyebrow">{t('Operação')}</span>
+          <strong>{t('XLSX · CSV')}</strong>
+          <p className="card-text">{t('Rotina rápida da equipe.')}</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Indicadores</span>
-          <strong>PDF · XLSX · CSV</strong>
-          <p className="card-text">Leitura institucional e BI.</p>
+          <span className="eyebrow">{t('Indicadores')}</span>
+          <strong>{t('PDF · XLSX · CSV')}</strong>
+          <p className="card-text">{t('Leitura institucional e BI.')}</p>
         </Card>
       </section>
 
@@ -189,8 +190,8 @@ export default function AdminExportsPage() {
           <Card key={group.title} className="admin-panel-card">
             <div className="admin-panel-header">
               <div>
-                <p className="eyebrow">{group.title}</p>
-                <h2>{group.description}</h2>
+                <p className="eyebrow">{t(group.title)}</p>
+                <h2>{t(group.description)}</h2>
               </div>
             </div>
 
@@ -198,13 +199,13 @@ export default function AdminExportsPage() {
               {group.items.map((item) => (
                 <div key={`${group.title}-${item.name}-${item.format}`} className="admin-export-card">
                   <div>
-                    <p className="admin-export-audience">{item.format}</p>
-                    <h3>{item.name}</h3>
-                    <p>{item.purpose}</p>
+                    <p className="admin-export-audience">{t(item.format)}</p>
+                    <h3>{t(item.name)}</h3>
+                    <p>{t(item.purpose)}</p>
                   </div>
 
                   <Button onClick={() => void handleDownload(item.action)}>
-                    <Download size={16} /> {item.actionLabel}
+                    <Download size={16} /> {t(item.actionLabel)}
                   </Button>
                 </div>
               ))}
@@ -217,24 +218,24 @@ export default function AdminExportsPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Uso dos arquivos</p>
-              <h2>Qual arquivo usar em cada situação</h2>
+              <p className="eyebrow">{t('Uso dos arquivos')}</p>
+              <h2>{t('Qual arquivo usar em cada situação')}</h2>
             </div>
           </div>
 
           <ul className="admin-purpose-list">
-            <li>PDF por protocolo: leitura integral de um cadastro específico.</li>
-            <li>Excel detalhado: conferência, cruzamento e trabalho interno da equipe.</li>
-            <li>CSV detalhado: BI, dashboards e integração analítica.</li>
-            <li>PDF institucional: apresentações, reuniões e materiais da ONG.</li>
+            <li>{t('PDF por protocolo: leitura integral de um cadastro específico.')}</li>
+            <li>{t('Excel detalhado: conferência, cruzamento e trabalho interno da equipe.')}</li>
+            <li>{t('CSV detalhado: BI, dashboards e integração analítica.')}</li>
+            <li>{t('PDF institucional: apresentações, reuniões e materiais da ONG.')}</li>
           </ul>
         </Card>
 
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Regras de saída</p>
-              <h2>O que fica interno e o que pode sair</h2>
+              <p className="eyebrow">{t('Regras de saída')}</p>
+              <h2>{t('O que fica interno e o que pode sair')}</h2>
             </div>
           </div>
 
@@ -242,15 +243,15 @@ export default function AdminExportsPage() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Material</th>
-                  <th>Diretriz</th>
+                  <th>{t('Material')}</th>
+                  <th>{t('Diretriz')}</th>
                 </tr>
               </thead>
               <tbody>
                 {exportRules.map(([material, rule]) => (
                   <tr key={material}>
-                    <td>{material}</td>
-                    <td>{rule}</td>
+                    <td>{t(material)}</td>
+                    <td>{t(rule)}</td>
                   </tr>
                 ))}
               </tbody>

@@ -4,6 +4,7 @@ import { Card } from '../components/Card'
 import { getAdminAudit, getBackendHealthStatus } from '../services/admin.service'
 import type { AdminAuditLogResponse, BackendHealthStatusResponse } from '../types/admin'
 import { formatBackendDateTime } from '../utils/backend-date'
+import { cleanUiText as t } from '../utils/ui-text'
 
 const roles = [
   ['Coordenação da ONG', 'Visão geral e decisões institucionais'],
@@ -71,54 +72,52 @@ export default function AdminAccessHubPage() {
     <div className="admin-page-content">
       <header className="admin-page-header admin-page-header-compact">
         <div>
-          <p className="eyebrow">Segurança e LGPD</p>
-          <h2>Acesso, proteção da base e compartilhamento</h2>
+          <p className="eyebrow">{t('Segurança e LGPD')}</p>
+          <h2>{t('Acesso, proteção da base e compartilhamento')}</h2>
           <p className="admin-page-subtitle">
-            Esta área mostra quem usa o sistema, o status do ambiente e as regras para manter a
-            base protegida.
+            {t(
+              'Esta área mostra quem usa o sistema, o status do ambiente e as regras para manter a base protegida.',
+            )}
           </p>
         </div>
       </header>
 
-      {error ? <Card className="admin-alert admin-alert-error">{error}</Card> : null}
+      {error ? <Card className="admin-alert admin-alert-error">{t(error)}</Card> : null}
 
       {isLoading ? (
         <section className="admin-section-grid">
           <AdminZeroState
             className="admin-panel-card-full"
             eyebrow="Carregando a área"
-            title="A área de segurança está reunindo acessos e status do ambiente"
-            description="O sistema está consultando o histórico recente e a saúde do backend para abrir esta tela com a leitura mais atual."
-            items={[
-              'Quando o backend sai de repouso, a primeira consulta pode demorar um pouco mais.',
-            ]}
+            title="A área de segurança está organizando os acessos mais recentes"
+            description="Os registros internos e o status do ambiente estão sendo preparados para abrir esta tela."
           />
         </section>
       ) : null}
 
       <section className="admin-grid">
         <Card className="admin-metric-card">
-          <span className="eyebrow">Sistema</span>
-          <strong>{isLoading ? '...' : health?.status ?? '-'}</strong>
-          <p className="card-text">Status do ambiente interno.</p>
+          <span className="eyebrow">{t('Sistema')}</span>
+          <strong>{isLoading ? '...' : t(health?.status ?? '-')}</strong>
+          <p className="card-text">{t('Status do ambiente interno.')}</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Acesso</span>
-          <strong>Exclusivo</strong>
-          <p className="card-text">Uso reservado à equipe da ONG.</p>
+          <span className="eyebrow">{t('Acesso')}</span>
+          <strong>{t('Exclusivo')}</strong>
+          <p className="card-text">{t('Uso reservado à equipe da ONG.')}</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Última movimentação</span>
+          <span className="eyebrow">{t('Última movimentação')}</span>
           <strong>{isLoading ? '...' : formatBackendDateTime(lastAudit)}</strong>
-          <p className="card-text">Evento mais recente do ambiente.</p>
+          <p className="card-text">{t('Evento mais recente do ambiente.')}</p>
         </Card>
 
         <Card className="admin-metric-card">
-          <span className="eyebrow">Compartilhamento</span>
-          <strong>Mediado</strong>
-          <p className="card-text">Recortes sempre preparados pela ONG.</p>
+          <span className="eyebrow">{t('Compartilhamento')}</span>
+          <strong>{t('Mediado')}</strong>
+          <p className="card-text">{t('Recortes sempre preparados pela ONG.')}</p>
         </Card>
       </section>
 
@@ -126,8 +125,8 @@ export default function AdminAccessHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Perfis de acesso</p>
-              <h2>Quem usa o painel</h2>
+              <p className="eyebrow">{t('Perfis de acesso')}</p>
+              <h2>{t('Quem usa o painel')}</h2>
             </div>
           </div>
 
@@ -135,15 +134,15 @@ export default function AdminAccessHubPage() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Perfil</th>
-                  <th>Uso principal</th>
+                  <th>{t('Perfil')}</th>
+                  <th>{t('Uso principal')}</th>
                 </tr>
               </thead>
               <tbody>
                 {roles.map(([role, usage]) => (
                   <tr key={role}>
-                    <td>{role}</td>
-                    <td>{usage}</td>
+                    <td>{t(role)}</td>
+                    <td>{t(usage)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -154,8 +153,8 @@ export default function AdminAccessHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Regras do ambiente</p>
-              <h2>Como a base deve ser tratada</h2>
+              <p className="eyebrow">{t('Regras do ambiente')}</p>
+              <h2>{t('Como a base deve ser tratada')}</h2>
             </div>
           </div>
 
@@ -163,15 +162,15 @@ export default function AdminAccessHubPage() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Tema</th>
-                  <th>Diretriz</th>
+                  <th>{t('Tema')}</th>
+                  <th>{t('Diretriz')}</th>
                 </tr>
               </thead>
               <tbody>
                 {accessRules.map(([label, rule]) => (
                   <tr key={label}>
-                    <td>{label}</td>
-                    <td>{rule}</td>
+                    <td>{t(label)}</td>
+                    <td>{t(rule)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -184,14 +183,14 @@ export default function AdminAccessHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">LGPD</p>
-              <h2>O que fica interno e o que pode sair</h2>
+              <p className="eyebrow">{t('LGPD')}</p>
+              <h2>{t('O que fica interno e o que pode sair')}</h2>
             </div>
           </div>
 
           <ul className="admin-purpose-list">
             {lgpdItems.map((item) => (
-              <li key={item}>{item}</li>
+              <li key={item}>{t(item)}</li>
             ))}
           </ul>
         </Card>
@@ -199,8 +198,8 @@ export default function AdminAccessHubPage() {
         <Card className="admin-panel-card">
           <div className="admin-panel-header">
             <div>
-              <p className="eyebrow">Histórico recente</p>
-              <h2>Movimentações do ambiente</h2>
+              <p className="eyebrow">{t('Histórico recente')}</p>
+              <h2>{t('Movimentações do ambiente')}</h2>
             </div>
           </div>
 
@@ -209,18 +208,18 @@ export default function AdminAccessHubPage() {
               <table className="admin-table">
                 <thead>
                   <tr>
-                    <th>Ação</th>
-                    <th>Responsável</th>
-                    <th>Área</th>
-                    <th>Data</th>
+                    <th>{t('Ação')}</th>
+                    <th>{t('Responsável')}</th>
+                    <th>{t('Área')}</th>
+                    <th>{t('Data')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {recentAudit.map((item, index) => (
                     <tr key={`${item.targetKey}-${index}`}>
-                      <td>{item.action}</td>
-                      <td>{item.actor}</td>
-                      <td>{item.targetKey}</td>
+                      <td>{t(item.action)}</td>
+                      <td>{t(item.actor)}</td>
+                      <td>{t(item.targetKey)}</td>
                       <td>{formatBackendDateTime(item.createdAt)}</td>
                     </tr>
                   ))}

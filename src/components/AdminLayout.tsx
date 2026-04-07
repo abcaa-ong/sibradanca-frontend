@@ -1,8 +1,11 @@
+import { useRef } from 'react'
 import { BarChart3, Download, FileSpreadsheet, Home, LogOut, ShieldCheck } from 'lucide-react'
 import { NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { Button } from './Button'
 import { Seo } from './Seo'
 import { clearAdminCredentials, hasAdminSession } from '../services/admin-auth.service'
+import { useCleanUiTextTree } from '../hooks/useCleanUiTextTree'
+import { cleanUiText as t } from '../utils/ui-text'
 
 const navSections = [
   {
@@ -39,6 +42,9 @@ const navSections = [
 
 export default function AdminLayout() {
   const navigate = useNavigate()
+  const rootRef = useRef<HTMLDivElement | null>(null)
+
+  useCleanUiTextTree(rootRef)
 
   if (!hasAdminSession()) {
     return <Navigate to="/painel-interno/acesso" replace />
@@ -50,25 +56,27 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="admin-app-shell">
+    <div className="admin-app-shell" ref={rootRef}>
       <Seo
-        title="Painel interno da ONG"
-        description="Ambiente interno do Banco Nacional de Dados da Dança do Brasil para consulta da base, análises, exportações e segurança."
+        title={t('Painel interno da ONG')}
+        description={t(
+          'Ambiente interno do Banco Nacional de Dados da Dança do Brasil para consulta da base, análises, exportações e segurança.',
+        )}
         robots="noindex,nofollow"
       />
       <aside className="admin-sidebar">
         <div className="admin-sidebar-brand">
-          <p className="eyebrow">SIBRADANÇA</p>
-          <h1>Painel interno da ONG</h1>
+          <p className="eyebrow">{t('SIBRADANÇA')}</p>
+          <h1>{t('Painel interno da ONG')}</h1>
           <p className="admin-sidebar-text">
-            Base, cadastros, exportações e segurança em um único ambiente de trabalho.
+            {t('Base, cadastros, exportações e segurança em um único ambiente de trabalho.')}
           </p>
         </div>
 
-        <nav className="admin-sidebar-nav" aria-label="Navegação do painel interno">
+        <nav className="admin-sidebar-nav" aria-label={t('Navegação do painel interno')}>
           {navSections.map((section) => (
             <div key={section.title} className="admin-sidebar-group">
-              <p className="admin-sidebar-group-title">{section.title}</p>
+              <p className="admin-sidebar-group-title">{t(section.title)}</p>
 
               {section.items.map((item) => {
                 const Icon = item.icon
@@ -82,7 +90,7 @@ export default function AdminLayout() {
                     }
                   >
                     <Icon size={18} />
-                    <span>{item.label}</span>
+                    <span>{t(item.label)}</span>
                   </NavLink>
                 )
               })}
@@ -91,10 +99,10 @@ export default function AdminLayout() {
         </nav>
 
         <div className="admin-sidebar-footer">
-          <p className="admin-sidebar-footnote">Uso exclusivo da equipe da ONG.</p>
+          <p className="admin-sidebar-footnote">{t('Uso exclusivo da equipe da ONG.')}</p>
 
           <Button variant="outline" onClick={handleLogout}>
-            <LogOut size={16} /> Sair
+            <LogOut size={16} /> {t('Sair')}
           </Button>
         </div>
       </aside>

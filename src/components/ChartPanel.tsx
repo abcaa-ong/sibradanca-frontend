@@ -11,6 +11,7 @@ import {
   YAxis,
 } from 'recharts'
 import type { TooltipProps } from 'recharts'
+import { cleanUiText } from '../utils/ui-text'
 
 type ChartItem = {
   name: string
@@ -71,6 +72,10 @@ export function ChartPanel({
   summaryItems = 0,
 }: ChartPanelProps) {
   const hasData = data.some((item) => item.value > 0)
+  const normalizedTitle = cleanUiText(title)
+  const normalizedEyebrow = cleanUiText(eyebrowLabel)
+  const normalizedEmptyMessage = cleanUiText(emptyMessage)
+  const normalizedNoDataMessage = cleanUiText(noDataMessage)
   const summaryData =
     summaryItems > 0
       ? [...data].sort((left, right) => right.value - left.value).slice(0, summaryItems)
@@ -87,7 +92,7 @@ export function ChartPanel({
 
     return (
       <div className="statistics-tooltip">
-        <strong>{String(resolvedLabel)}</strong>
+        <strong>{cleanUiText(String(resolvedLabel))}</strong>
         <span>{formatNumber(value)} cadastros</span>
       </div>
     )
@@ -97,8 +102,10 @@ export function ChartPanel({
     <div className={`card chart-panel statistics-chart-panel ${className}`.trim()}>
       <div className="panel-top">
         <div>
-          <span className="eyebrow">{eyebrowLabel}</span>
-          <h3 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 800, lineHeight: 1.3 }}>{title}</h3>
+          <span className="eyebrow">{normalizedEyebrow}</span>
+          <h3 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 800, lineHeight: 1.3 }}>
+            {normalizedTitle}
+          </h3>
         </div>
       </div>
 
@@ -116,7 +123,7 @@ export function ChartPanel({
               lineHeight: 1.5,
             }}
           >
-            <p style={{ maxWidth: 320 }}>{emptyMessage}</p>
+            <p style={{ maxWidth: 320 }}>{normalizedEmptyMessage}</p>
           </div>
         ) : !hasData ? (
           <div
@@ -131,7 +138,7 @@ export function ChartPanel({
               lineHeight: 1.5,
             }}
           >
-            <p style={{ maxWidth: 340 }}>{noDataMessage}</p>
+            <p style={{ maxWidth: 340 }}>{normalizedNoDataMessage}</p>
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
@@ -181,7 +188,7 @@ export function ChartPanel({
         <div className="statistics-chart-summary">
           {summaryData.map((item) => (
             <div key={`${title}-${item.name}`} className="statistics-chart-summary-row">
-              <span>{item.name}</span>
+              <span>{cleanUiText(item.name)}</span>
               <strong>{formatNumber(item.value)}</strong>
             </div>
           ))}

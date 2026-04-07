@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { cleanUiText } from '../utils/ui-text'
 
 type SeoProps = {
   title: string
@@ -9,12 +10,6 @@ type SeoProps = {
 }
 
 const SITE_NAME = 'SIBRADAN\u00c7A'
-
-function decodeEscapedUnicode(value: string) {
-  return value
-    .replace(/\\u([\dA-Fa-f]{4})/g, (_, code) => String.fromCharCode(Number.parseInt(code, 16)))
-    .replace(/\\x([\dA-Fa-f]{2})/g, (_, code) => String.fromCharCode(Number.parseInt(code, 16)))
-}
 
 function upsertMeta(attribute: 'name' | 'property', key: string, content: string) {
   let element = document.head.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`)
@@ -44,9 +39,9 @@ export function Seo({ title, description, path, robots = 'index,follow', type = 
   useEffect(() => {
     const origin = window.location.origin
     const canonicalUrl = new URL(path ?? window.location.pathname, origin).toString()
-    const normalizedTitle = decodeEscapedUnicode(title)
-    const normalizedDescription = decodeEscapedUnicode(description)
-    const normalizedSiteName = decodeEscapedUnicode(SITE_NAME)
+    const normalizedTitle = cleanUiText(title)
+    const normalizedDescription = cleanUiText(description)
+    const normalizedSiteName = cleanUiText(SITE_NAME)
     const fullTitle = normalizedTitle.includes(normalizedSiteName)
       ? normalizedTitle
       : `${normalizedTitle} | ${normalizedSiteName}`

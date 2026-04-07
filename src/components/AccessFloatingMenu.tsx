@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import { Badge } from './Badge'
 import { TurnstileWidget } from './TurnstileWidget'
+import { useCleanUiTextTree } from '../hooks/useCleanUiTextTree'
 import { ApiRequestError } from '../services/api'
 import { listCities, listStates } from '../services/geo.services'
 import { submitInstitutionForm, submitProfessionalForm, submitYouthForm } from '../services/forms.service'
@@ -16,6 +17,19 @@ import type {
   ProfessionalFormResponse,
   YouthFormResponse,
 } from '../types/forms'
+import {
+  calculateAgeFromBirthDate,
+  formatBrazilianPhoneInput,
+  formatCnpjInput,
+  formatCpfInput,
+  isAgeCompatibleWithBirthDate,
+  isValidBrazilianPhone,
+  isValidCnpj,
+  isValidCpf,
+  isValidEmail,
+  normalizeDigits,
+} from '../utils/brazilian-validation'
+import { cleanUiText as t } from '../utils/ui-text'
 
 type AccessFloatingMenuProps = {
   open: boolean
@@ -225,6 +239,25 @@ const institutionIntegerFieldDigits: Partial<Record<keyof InstitutionFormData, n
   monthlyAudience: 6,
 }
 
+function formatDateInputValue(date: Date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function shiftYears(date: Date, years: number) {
+  const nextDate = new Date(date)
+  nextDate.setFullYear(nextDate.getFullYear() + years)
+  return nextDate
+}
+
+function shiftDays(date: Date, days: number) {
+  const nextDate = new Date(date)
+  nextDate.setDate(nextDate.getDate() + days)
+  return nextDate
+}
+
 const accessOptions = [
   {
     label: 'Sou menor de 18 anos',
@@ -311,8 +344,10 @@ const genderIdentityOptions: OptionItem[] = [
   { value: 'Mulher trans', label: 'Mulher trans' },
   { value: 'Homem cis', label: 'Homem cis' },
   { value: 'Homem trans', label: 'Homem trans' },
-  { value: 'Não-binário', label: 'Não-binário' },
-  { value: 'Outros', label: 'Outros' },
+  { value: 'Travesti', label: 'Travesti' },
+  { value: 'Pessoa não binária', label: 'Pessoa não binária' },
+  { value: 'Outra identidade de gênero', label: 'Outra identidade de gênero' },
+  { value: 'Prefiro não informar', label: 'Prefiro não informar' },
 ]
 
 const householdIncomeOptions: OptionItem[] = [
@@ -822,36 +857,37 @@ function resolveSubmissionError(flow: ActiveFlow, error: unknown, fallbackStep: 
 }
 
 function formatMinorSubmissionError(message: string) {
+  const normalizedMessage = t(message)
+
   if (
-    message.includes('seguranca') ||
-    message.includes('segurança') ||
-    message.includes('seguranÃ§a') ||
-    message.includes('captcha')
+    normalizedMessage.includes('seguranca') ||
+    normalizedMessage.includes('segurança') ||
+    normalizedMessage.includes('captcha')
   ) {
     return 'Confirme a verificação de segurança e tente novamente.'
   }
 
-  if (message.includes('Aguarde alguns segundos')) {
+  if (normalizedMessage.includes('Aguarde alguns segundos')) {
     return 'Aguarde alguns segundos antes de enviar o formulário.'
   }
 
-  if (message.includes('Cidade')) {
+  if (normalizedMessage.includes('Cidade')) {
     return 'Selecione uma cidade válida na lista.'
   }
 
-  if (message.includes('modalidade')) {
+  if (normalizedMessage.includes('modalidade')) {
     return 'Selecione pelo menos uma modalidade válida.'
   }
 
-  if (message.includes('consentimento')) {
+  if (normalizedMessage.includes('consentimento')) {
     return 'Não foi possível validar o termo de consentimento ativo. Tente novamente.'
   }
 
-  if (message.includes('Tempo de pratica') || message.includes('Tempo de prática')) {
+  if (normalizedMessage.includes('Tempo de pratica') || normalizedMessage.includes('Tempo de prática')) {
     return 'Informe os anos de prática da dança com um número válido.'
   }
 
-  return message
+  return normalizedMessage
 }
 
 function parseNumericSelection(value: string, fallback = 0) {
@@ -868,6 +904,11 @@ function normalizeOptionalTextValue(value: string) {
   return normalized || null
 }
 
+function normalizeOptionalDigitsValue(value: string) {
+  const normalized = normalizeDigits(value)
+  return normalized || null
+}
+
 function normalizeTextList(values: string[]) {
   return values.map((value) => normalizeTextValue(value)).filter(Boolean)
 }
@@ -875,7 +916,7 @@ function normalizeTextList(values: string[]) {
 function renderSelectOptions(options: OptionItem[]) {
   return options.map((item) => (
     <option key={item.value} value={item.value}>
-      {item.label}
+      {t(item.label)}
     </option>
   ))
 }
@@ -883,12 +924,13 @@ function renderSelectOptions(options: OptionItem[]) {
 function renderRegionOptions() {
   return regionOptions.map((item) => (
     <option key={item.value} value={item.value}>
-      {item.label}
+      {t(item.label)}
     </option>
   ))
 }
 
 export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'menu' }: AccessFloatingMenuProps) {
+  const panelRef = useRef<HTMLDivElement | null>(null)
   const [view, setView] = useState<FlowMode>(initialView)
   const [currentStep, setCurrentStep] = useState(0)
   const [stepError, setStepError] = useState('')
@@ -919,6 +961,15 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
   const previousInitialViewRef = useRef(initialView)
   const antiBotEnabled = Boolean(TURNSTILE_SITE_KEY)
 
+  useCleanUiTextTree(panelRef)
+
+  const earliestBirthDate = '1900-01-01'
+  const adultBirthDateMax = useMemo(() => formatDateInputValue(shiftYears(new Date(), -18)), [])
+  const youthBirthDateMax = useMemo(
+    () => formatDateInputValue(shiftDays(shiftYears(new Date(), -18), 1)),
+    [],
+  )
+
   const currentMeta = useMemo(() => {
     if (view === 'menu') return null
     return FLOW_META[view]
@@ -932,7 +983,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
     return statesToRender.map((item) => (
       <option key={item.value} value={item.value}>
-        {item.label}
+        {t(item.label)}
       </option>
     ))
   }
@@ -1222,7 +1273,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     const nextValue =
       typeof value === 'string'
         ? (
-            minorCurrencyFields.has(field)
+            field === 'cpf'
+              ? formatCpfInput(value)
+              : field === 'whatsapp'
+                ? formatBrazilianPhoneInput(value)
+                : minorCurrencyFields.has(field)
               ? sanitizeCurrencyInput(value)
               : minorIntegerFieldDigits[field]
                 ? sanitizeIntegerInput(value, minorIntegerFieldDigits[field])
@@ -1230,14 +1285,27 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
           )
         : value
 
-    setMinorForm((prev) => ({ ...prev, [field]: nextValue as MinorFormData[K] }))
+    setMinorForm((prev) => {
+      const nextForm = { ...prev, [field]: nextValue as MinorFormData[K] }
+
+      if (field === 'birthDate' && typeof nextValue === 'string') {
+        const calculatedAge = calculateAgeFromBirthDate(nextValue)
+        nextForm.age = calculatedAge === null ? '' : String(Math.max(calculatedAge, 0))
+      }
+
+      return nextForm
+    })
   }
 
   const updateAdultField = <K extends keyof AdultFormData>(field: K, value: AdultFormData[K]) => {
     const nextValue =
       typeof value === 'string'
         ? (
-            adultCurrencyFields.has(field)
+            field === 'cpf'
+              ? formatCpfInput(value)
+              : field === 'whatsapp'
+                ? formatBrazilianPhoneInput(value)
+                : adultCurrencyFields.has(field)
               ? sanitizeCurrencyInput(value)
               : adultIntegerFieldDigits[field]
                 ? sanitizeIntegerInput(value, adultIntegerFieldDigits[field])
@@ -1245,7 +1313,17 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
           )
         : value
 
-    setAdultForm((prev) => ({ ...prev, [field]: nextValue as AdultFormData[K] }))
+    setAdultForm((prev) => {
+      const nextForm = { ...prev, [field]: nextValue as AdultFormData[K] }
+
+      if (field === 'birthDate' && typeof nextValue === 'string') {
+        const calculatedAge = calculateAgeFromBirthDate(nextValue)
+        nextForm.age = calculatedAge === null ? '' : String(Math.max(calculatedAge, 0))
+        nextForm.ageRange = calculatedAge === null ? '' : `${Math.max(calculatedAge, 0)} anos`
+      }
+
+      return nextForm
+    })
   }
 
   const updateInstitutionField = <K extends keyof InstitutionFormData>(
@@ -1255,7 +1333,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     const nextValue =
       typeof value === 'string'
         ? (
-            institutionCurrencyFields.has(field)
+            field === 'cnpj'
+              ? formatCnpjInput(value)
+              : field === 'whatsapp'
+                ? formatBrazilianPhoneInput(value)
+                : institutionCurrencyFields.has(field)
               ? sanitizeCurrencyInput(value)
               : institutionIntegerFieldDigits[field]
                 ? sanitizeIntegerInput(value, institutionIntegerFieldDigits[field])
@@ -1361,6 +1443,21 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
+    if (currentStep === 0 && !isValidEmail(minorForm.email)) {
+      setStepError('Informe um e-mail válido para o cadastro.')
+      return false
+    }
+
+    if (currentStep === 0 && !isValidBrazilianPhone(minorForm.whatsapp)) {
+      setStepError('Informe um WhatsApp válido com DDD.')
+      return false
+    }
+
+    if (currentStep === 0 && minorForm.cpf && !isValidCpf(minorForm.cpf)) {
+      setStepError('Confira o CPF informado antes de continuar.')
+      return false
+    }
+
     if (currentStep === 1 && (!minorForm.region || !minorForm.state || !minorForm.city)) {
       setStepError('Preencha região, estado e cidade.')
       return false
@@ -1381,6 +1478,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
     if (currentStep === 2 && Number(minorForm.age) > 17) {
       setStepError('O cadastro de jovens aceita idades até 17 anos.')
+      return false
+    }
+
+    if (currentStep === 2 && !isAgeCompatibleWithBirthDate(minorForm.age, minorForm.birthDate)) {
+      setStepError('A idade precisa corresponder à data de nascimento informada.')
       return false
     }
 
@@ -1442,6 +1544,21 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
+    if (currentStep === 0 && !isValidEmail(adultForm.email)) {
+      setStepError('Informe um e-mail válido para o cadastro.')
+      return false
+    }
+
+    if (currentStep === 0 && !isValidBrazilianPhone(adultForm.whatsapp)) {
+      setStepError('Informe um WhatsApp válido com DDD.')
+      return false
+    }
+
+    if (currentStep === 0 && adultForm.cpf && !isValidCpf(adultForm.cpf)) {
+      setStepError('Confira o CPF informado antes de continuar.')
+      return false
+    }
+
     if (currentStep === 1 && (!adultForm.region || !adultForm.state || !adultForm.city)) {
       setStepError('Preencha região, estado e cidade.')
       return false
@@ -1490,6 +1607,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
     if (currentStep === 2 && Number(adultForm.age) < 18) {
       setStepError('O cadastro profissional é destinado a maiores de 18 anos.')
+      return false
+    }
+
+    if (currentStep === 2 && !isAgeCompatibleWithBirthDate(adultForm.age, adultForm.birthDate)) {
+      setStepError('A idade precisa corresponder à data de nascimento informada.')
       return false
     }
 
@@ -1716,6 +1838,16 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       return false
     }
 
+    if (currentStep === 0 && !isValidEmail(institutionForm.email)) {
+      setStepError('Informe um e-mail institucional válido.')
+      return false
+    }
+
+    if (currentStep === 0 && !isValidBrazilianPhone(institutionForm.whatsapp)) {
+      setStepError('Informe um telefone ou WhatsApp válido com DDD.')
+      return false
+    }
+
     if (
       currentStep === 1 &&
       (!institutionForm.institutionName ||
@@ -1732,6 +1864,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
 
     if (currentStep === 1 && institutionForm.hasCnpj === 'sim' && !institutionForm.cnpj) {
       setStepError('Preencha o CNPJ da instituição.')
+      return false
+    }
+
+    if (currentStep === 1 && institutionForm.hasCnpj === 'sim' && !isValidCnpj(institutionForm.cnpj)) {
+      setStepError('Confira o CNPJ informado antes de continuar.')
       return false
     }
 
@@ -1970,9 +2107,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       const response = await submitYouthForm(
         {
           fullName: normalizeTextValue(minorForm.fullName),
-          cpf: normalizeOptionalTextValue(minorForm.cpf),
+          cpf: normalizeOptionalDigitsValue(minorForm.cpf),
           email: normalizeTextValue(minorForm.email),
-          whatsapp: normalizeTextValue(minorForm.whatsapp),
+          whatsapp: normalizeDigits(minorForm.whatsapp),
           region: normalizeOptionalTextValue(minorForm.region),
           age: Number(minorForm.age || 0) || null,
           birthDate: minorForm.birthDate,
@@ -2041,9 +2178,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       const worksWithDance = parseBooleanChoice(adultForm.worksProfessionally)
       const response = await submitProfessionalForm({
         fullName: normalizeTextValue(adultForm.fullName),
-        cpf: normalizeOptionalTextValue(adultForm.cpf),
+        cpf: normalizeOptionalDigitsValue(adultForm.cpf),
         email: normalizeTextValue(adultForm.email),
-        whatsapp: normalizeTextValue(adultForm.whatsapp),
+        whatsapp: normalizeDigits(adultForm.whatsapp),
         region: normalizeOptionalTextValue(adultForm.region),
         age: Number(adultForm.age || 0) || null,
         ageRange: adultForm.age ? `${adultForm.age} anos` : null,
@@ -2146,11 +2283,11 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         responsibleName: normalizeTextValue(institutionForm.responsibleName),
         legalName: normalizeTextValue(institutionForm.institutionName),
         tradeName: normalizeTextValue(institutionForm.tradeName),
-        cnpj: institutionForm.hasCnpj === 'sim' ? normalizeOptionalTextValue(institutionForm.cnpj) : null,
+        cnpj: institutionForm.hasCnpj === 'sim' ? normalizeOptionalDigitsValue(institutionForm.cnpj) : null,
         region: normalizeOptionalTextValue(institutionForm.region),
         cityId: selectedCity.id,
         email: normalizeTextValue(institutionForm.email),
-        phone: normalizeTextValue(institutionForm.whatsapp),
+        phone: normalizeDigits(institutionForm.whatsapp),
         socialMedia: normalizeOptionalTextValue(institutionForm.socialMedia),
         type: normalizeTextValue(institutionForm.institutionType),
         legalNature: normalizeOptionalTextValue(institutionForm.legalNature),
@@ -2281,7 +2418,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               ? 'Não sei como faz'
               : value === 'nao_sei_o_que_e'
                 ? 'Não sei o que é'
-                : value}
+                : t(value)}
       </button>
     )
   }
@@ -2376,6 +2513,8 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               <input
                 type="date"
                 value={minorForm.birthDate}
+                min={earliestBirthDate}
+                max={youthBirthDateMax}
                 onChange={(e) => updateMinorField('birthDate', e.target.value)}
               />
             </label>
@@ -2640,7 +2779,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
           <div className="access-form-grid">
             <label className="access-field">
               <span>Data de nascimento *</span>
-              <input type="date" value={adultForm.birthDate} onChange={(e) => updateAdultField('birthDate', e.target.value)} />
+              <input
+                type="date"
+                value={adultForm.birthDate}
+                min={earliestBirthDate}
+                max={adultBirthDateMax}
+                onChange={(e) => updateAdultField('birthDate', e.target.value)}
+              />
             </label>
             <label className="access-field">
               <span>Idade *</span>
@@ -3339,6 +3484,7 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         >
           <motion.div
             className={`access-floating-panel ${view !== 'menu' ? 'is-form-mode' : ''}`}
+            ref={panelRef}
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 18, scale: 0.96 }}
@@ -3470,3 +3616,4 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
     </AnimatePresence>
   )
 }
+

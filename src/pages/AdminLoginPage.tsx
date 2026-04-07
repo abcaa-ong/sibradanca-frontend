@@ -1,22 +1,27 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import { LockKeyhole } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Seo } from '../components/Seo'
+import { useCleanUiTextTree } from '../hooks/useCleanUiTextTree'
 import {
   clearAdminCredentials,
   hasAdminSession,
   saveAdminCredentials,
 } from '../services/admin-auth.service'
 import { getAdminBootstrap } from '../services/admin.service'
+import { cleanUiText as t } from '../utils/ui-text'
 
 export default function AdminLoginPage() {
   const navigate = useNavigate()
+  const rootRef = useRef<HTMLDivElement | null>(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useCleanUiTextTree(rootRef)
 
   useEffect(() => {
     if (hasAdminSession()) {
@@ -37,8 +42,8 @@ export default function AdminLoginPage() {
       clearAdminCredentials()
       setError(
         submitError instanceof Error
-          ? submitError.message
-          : 'Não foi possível entrar na central administrativa.',
+          ? t(submitError.message)
+          : t('Não foi possível entrar na central administrativa.'),
       )
     } finally {
       setIsSubmitting(false)
@@ -46,10 +51,10 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="admin-shell">
+    <div className="admin-shell" ref={rootRef}>
       <Seo
-        title="Acesso ao painel interno"
-        description="Login da área interna do SIBRADANÇA para a equipe da ONG."
+        title={t('Acesso ao painel interno')}
+        description={t('Login da área interna do SIBRADANÇA para a equipe da ONG.')}
         robots="noindex,nofollow"
       />
       <div className="admin-container admin-login-container">
@@ -57,26 +62,26 @@ export default function AdminLoginPage() {
           <div className="admin-login-icon">
             <LockKeyhole size={24} />
           </div>
-          <p className="eyebrow">Central administrativa</p>
-          <h1>Área restrita da ONG</h1>
-          <p className="card-text">Entre com as credenciais do painel interno.</p>
+          <p className="eyebrow">{t('Central administrativa')}</p>
+          <h1>{t('Área restrita da ONG')}</h1>
+          <p className="card-text">{t('Entre com as credenciais do painel interno.')}</p>
 
           <form className="admin-login-form" onSubmit={handleSubmit}>
             <label className="admin-field">
-              <span>Usuário</span>
+              <span>{t('Usuário')}</span>
               <input
                 value={username}
-                placeholder="Ex: ong.admin"
+                placeholder={t('Ex: ong.admin')}
                 onChange={(event) => setUsername(event.target.value)}
               />
             </label>
 
             <label className="admin-field">
-              <span>Senha</span>
+              <span>{t('Senha')}</span>
               <input
                 type="password"
                 value={password}
-                placeholder="Digite sua senha"
+                placeholder={t('Digite sua senha')}
                 onChange={(event) => setPassword(event.target.value)}
               />
             </label>
@@ -84,7 +89,7 @@ export default function AdminLoginPage() {
             {error ? <p className="admin-error">{error}</p> : null}
 
             <Button type="submit" large disabled={isSubmitting}>
-              {isSubmitting ? 'Entrando...' : 'Entrar'}
+              {isSubmitting ? t('Entrando...') : t('Entrar')}
             </Button>
           </form>
         </Card>
