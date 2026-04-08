@@ -80,6 +80,9 @@ type MinorFormData = {
   careerInterest: string
   searchesContent: string
   consumedContents: string[]
+  legalGuardianName: string
+  legalGuardianRelationship: string
+  legalGuardianAuthorizationConfirmed: boolean
   consentStats: boolean
   consentContact: boolean
 }
@@ -500,6 +503,9 @@ const initialMinorForm: MinorFormData = {
   careerInterest: '',
   searchesContent: '',
   consumedContents: [],
+  legalGuardianName: '',
+  legalGuardianRelationship: '',
+  legalGuardianAuthorizationConfirmed: false,
   consentStats: false,
   consentContact: false,
 }
@@ -1066,8 +1072,14 @@ function mapFlowValidationError(
             },
             {
               step: 5,
-              fields: ['consentCode', 'consentAccepted'],
-              message: 'Revise o consentimento antes de concluir o cadastro.',
+              fields: [
+                'legalGuardianName',
+                'legalGuardianRelationship',
+                'legalGuardianAuthorizationConfirmed',
+                'consentCode',
+                'consentAccepted',
+              ],
+              message: 'Revise os dados do responsável legal e o consentimento antes de concluir o cadastro.',
             },
           ]
 
@@ -2036,6 +2048,19 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
       }
     }
 
+    if (
+      currentStep === 5 &&
+      (!minorForm.legalGuardianName.trim() || !minorForm.legalGuardianRelationship.trim())
+    ) {
+      setStepError('Informe o nome do responsável legal e o vínculo com o jovem antes de concluir.')
+      return false
+    }
+
+    if (currentStep === 5 && !minorForm.legalGuardianAuthorizationConfirmed) {
+      setStepError('Confirme a autorização do responsável legal para concluir o cadastro.')
+      return false
+    }
+
     if (currentStep === 5 && !minorForm.consentStats) {
       setStepError('É necessário autorizar o uso estatístico dos dados.')
       return false
@@ -2554,6 +2579,9 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
           monthlyCostOthers: normalizeOptionalTextValue(minorForm.otherCosts),
           searchesContent: parseBooleanChoice(minorForm.searchesContent),
           contentIds,
+          legalGuardianName: normalizeTextValue(minorForm.legalGuardianName),
+          legalGuardianRelationship: normalizeTextValue(minorForm.legalGuardianRelationship),
+          legalGuardianAuthorizationConfirmed: minorForm.legalGuardianAuthorizationConfirmed,
           consentCode: activeConsentTerm.code,
           consentAccepted: minorForm.consentStats,
           consentContact: minorForm.consentContact,
@@ -3156,6 +3184,48 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
               {activeConsentTerm ? <small>{activeConsentTerm.title}</small> : null}
             </div>
 
+            <div className="access-field access-field-full access-support-note">
+              <strong>Cadastro de menores</strong>
+              <small>
+                Este formulario deve ser preenchido pelo responsavel legal ou com a sua autorizacao.
+                Leia tambem a <a href="/privacidade">Politica de privacidade</a> antes de concluir.
+              </small>
+            </div>
+
+            <label className="access-field">
+              <span>Nome do responsável legal *</span>
+              <input
+                type="text"
+                placeholder="Nome completo do responsável"
+                value={minorForm.legalGuardianName}
+                onChange={(e) => updateMinorField('legalGuardianName', e.target.value)}
+              />
+            </label>
+
+            <label className="access-field">
+              <span>Vínculo com o jovem *</span>
+              <input
+                type="text"
+                placeholder="Ex: mãe, pai, avó, tutor legal"
+                value={minorForm.legalGuardianRelationship}
+                onChange={(e) => updateMinorField('legalGuardianRelationship', e.target.value)}
+              />
+            </label>
+
+            <label className="access-consent-card">
+              <div className="access-consent-copy">
+                <strong>Declaro que sou o responsável legal ou que estou preenchendo este cadastro com sua autorização.</strong>
+                <small>Obrigatório para validar o cadastro de menores.</small>
+              </div>
+              <input
+                type="checkbox"
+                checked={minorForm.legalGuardianAuthorizationConfirmed}
+                onChange={(e) =>
+                  updateMinorField('legalGuardianAuthorizationConfirmed', e.target.checked)
+                }
+              />
+            </label>
+
             <label className="access-consent-card">
               <div className="access-consent-copy">
                 <strong>
@@ -3563,6 +3633,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
             <div className="access-field access-field-full">
               <span>Consentimento LGPD</span>
               {activeConsentTerm ? <small>{activeConsentTerm.title}</small> : null}
+            </div>
+            <div className="access-field access-field-full access-support-note">
+              <strong>Antes de concluir</strong>
+              <small>
+                Leia a <a href="/privacidade">Politica de privacidade</a> para entender como os
+                dados entram na base, no painel interno e nas leituras publicas.
+              </small>
             </div>
             <label className="access-consent-card">
               <div className="access-consent-copy">
@@ -4006,6 +4083,13 @@ export function AccessFloatingMenu({ open, onClose, onSelect, initialView = 'men
         return (
           <div className="access-form-grid">
             <div className="access-field access-field-full"><span>Consentimento LGPD</span></div>
+            <div className="access-field access-field-full access-support-note">
+              <strong>Antes de concluir</strong>
+              <small>
+                Leia a <a href="/privacidade">Politica de privacidade</a> para revisar o uso
+                interno da base, as exportacoes e os limites de compartilhamento.
+              </small>
+            </div>
             <label className="access-consent-card">
               <div className="access-consent-copy">
                 <strong>Autorizo o uso estatístico e anonimizado dos dados institucionais fornecidos.</strong>

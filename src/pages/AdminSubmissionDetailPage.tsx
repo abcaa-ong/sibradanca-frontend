@@ -65,6 +65,13 @@ const youthSections: Array<SectionConfig<YouthFormDetailResponse>> = [
     fields: [
       { key: 'whoPaysExpenses', label: 'Quem financia os custos', kind: 'enum' },
       { key: 'familyIncomeRange', label: 'Faixa de renda familiar', kind: 'enum' },
+      { key: 'legalGuardianName', label: 'Responsável legal' },
+      { key: 'legalGuardianRelationship', label: 'Vínculo com o jovem' },
+      {
+        key: 'legalGuardianAuthorizationConfirmed',
+        label: 'Autorização do responsável legal',
+        kind: 'boolean',
+      },
       { key: 'consentAccepted', label: 'Consentimento aceito', kind: 'boolean' },
       { key: 'consentCode', label: 'Código do consentimento' },
     ],

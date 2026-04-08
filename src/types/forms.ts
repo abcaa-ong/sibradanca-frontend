@@ -30,6 +30,9 @@ export interface YouthFormRequest {
   monthlyCostOthers?: string | null
   searchesContent: boolean | null
   contentIds: number[]
+  legalGuardianName: string
+  legalGuardianRelationship: string
+  legalGuardianAuthorizationConfirmed: boolean
   consentCode: string
   consentAccepted: boolean
   consentContact?: boolean | null
@@ -52,6 +55,9 @@ export interface YouthFormResponse {
   familyIncomeRange: string
   searchesContent: boolean
   consumedContent: string[]
+  legalGuardianName: string
+  legalGuardianRelationship: string
+  legalGuardianAuthorizationConfirmed: boolean
   consentAccepted: boolean
   consentCode: string | null
   submittedAt: string

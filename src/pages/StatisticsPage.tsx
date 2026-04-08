@@ -373,7 +373,7 @@ export default function StatisticsPage() {
 
           <div className="footer-links">
             <Link to="/">{'Formulários'}</Link>
-            <a href="#">{'Política de privacidade'}</a>
+            <Link to="/privacidade">{'Política de privacidade'}</Link>
           </div>
         </div>
 

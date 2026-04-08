@@ -8,6 +8,7 @@ import AdminSubmissionDetailPage from '../pages/AdminSubmissionDetailPage'
 import AdminSubmissionsPage from '../pages/AdminSubmissionsPage'
 import AdminWorkspacePage from '../pages/AdminWorkspacePage'
 import HomePage from '../pages/HomePage'
+import PrivacyPage from '../pages/PrivacyPage'
 import SectorFormPage from '../pages/SectorFormPage'
 import StatisticsPage from '../pages/StatisticsPage'
 
@@ -15,6 +16,7 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/privacidade" element={<PrivacyPage />} />
       <Route path="/estatisticas" element={<StatisticsPage />} />
       <Route path="/estatisticas-nacionais" element={<StatisticsPage />} />
       <Route path="/formulario/:sector" element={<SectorFormPage />} />

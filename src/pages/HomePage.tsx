@@ -448,7 +448,7 @@ export default function HomePage() {
 
           <div className="footer-links">
             <a href="#formularios">Formulários</a>
-            <a href="#">Política de privacidade</a>
+            <Link to="/privacidade">Política de privacidade</Link>
           </div>
         </div>
 

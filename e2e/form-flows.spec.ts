@@ -198,7 +198,12 @@ async function fillTextField(page: Page, label: string, value: string) {
 }
 
 async function acceptStatisticalConsent(page: Page) {
-  await page.locator('.access-consent-card input[type="checkbox"]').first().check({ force: true })
+  await page
+    .locator('.access-consent-card', {
+      hasText: /uso estatístico e anonimizado/i,
+    })
+    .locator('input[type="checkbox"]')
+    .check({ force: true })
 }
 
 test.describe('cadastros públicos', () => {
@@ -234,6 +239,9 @@ test.describe('cadastros públicos', () => {
     await toggleFirstCheckbox(page, 'Quem banca os custos da dança?')
     await clickPrimaryAction(page)
 
+    await page.getByLabel(/Nome do responsável legal/i).fill('Maria Jovem')
+    await page.getByLabel(/Vínculo com o jovem/i).fill('Mãe')
+    await page.locator('.access-consent-card input[type="checkbox"]').first().check({ force: true })
     await acceptStatisticalConsent(page)
     await clickPrimaryAction(page)
 
@@ -244,6 +252,9 @@ test.describe('cadastros públicos', () => {
       cityId: 101,
       birthDate: '2010-04-07',
       age: 16,
+      legalGuardianName: 'Maria Jovem',
+      legalGuardianRelationship: 'Mãe',
+      legalGuardianAuthorizationConfirmed: true,
       consentAccepted: true,
     })
   })

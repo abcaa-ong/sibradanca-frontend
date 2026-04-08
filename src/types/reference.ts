@@ -14,3 +14,8 @@ export interface PublicFormRuntimeConfigResponse {
   minFillSeconds: number
   tokenHeaderName: string
 }
+
+export interface PublicPrivacyConfigResponse {
+  controllerName: string
+  contactEmail: string
+}

@@ -40,6 +40,9 @@ export interface YouthFormDetailResponse {
   familyIncomeRange: string | null
   searchesContent: boolean | null
   consumedContent: string[]
+  legalGuardianName: string | null
+  legalGuardianRelationship: string | null
+  legalGuardianAuthorizationConfirmed: boolean | null
   consentAccepted: boolean | null
   consentCode: string | null
   submittedAt: string | null

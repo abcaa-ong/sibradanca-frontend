@@ -1,6 +1,7 @@
 import { apiGet } from './api'
 import type {
   ActiveConsentTermResponse,
+  PublicPrivacyConfigResponse,
   PublicFormRuntimeConfigResponse,
   ReferenceItemResponse,
 } from '../types/reference'
@@ -9,6 +10,7 @@ let modalitiesPromise: Promise<ReferenceItemResponse[]> | null = null
 let contentsPromise: Promise<ReferenceItemResponse[]> | null = null
 let activeConsentTermPromise: Promise<ActiveConsentTermResponse> | null = null
 let publicFormRuntimeConfigPromise: Promise<PublicFormRuntimeConfigResponse> | null = null
+let publicPrivacyConfigPromise: Promise<PublicPrivacyConfigResponse> | null = null
 
 export function listModalities() {
   if (!modalitiesPromise) {
@@ -54,4 +56,17 @@ export function getPublicFormRuntimeConfig() {
   }
 
   return publicFormRuntimeConfigPromise
+}
+
+export function getPublicPrivacyConfig() {
+  if (!publicPrivacyConfigPromise) {
+    publicPrivacyConfigPromise = apiGet<PublicPrivacyConfigResponse>(
+      '/api/reference/privacy-config',
+    ).catch((error) => {
+      publicPrivacyConfigPromise = null
+      throw error
+    })
+  }
+
+  return publicPrivacyConfigPromise
 }

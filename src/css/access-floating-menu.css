@@ -466,6 +466,30 @@
   flex-shrink: 0;
 }
 
+.access-support-note {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(26, 111, 179, 0.16);
+  background: rgba(240, 247, 255, 0.9);
+}
+
+.access-support-note strong {
+  font-size: 0.95rem;
+}
+
+.access-support-note small {
+  color: rgba(28, 38, 60, 0.8);
+  line-height: 1.6;
+}
+
+.access-support-note a {
+  color: var(--blue);
+  font-weight: 600;
+}
+
 .access-step-error {
   margin: 18px 0 0;
   padding: 14px 16px;

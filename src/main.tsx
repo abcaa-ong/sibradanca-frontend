@@ -8,6 +8,7 @@ import './css/admin-page.css'
 import './css/home-page.css'
 import './css/statistics-page.css'
 import './css/protocol-page.css'
+import './css/privacy-page.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

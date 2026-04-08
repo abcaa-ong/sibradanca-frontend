@@ -25,6 +25,8 @@ const lgpdItems = [
   'Parceiros não acessam o painel administrativo.',
   'A ONG define o recorte antes de qualquer compartilhamento.',
   'Materiais externos usam números gerais, sem identificação pessoal.',
+  'Solicitações de titulares devem ter canal oficial e resposta registrada.',
+  'Incidentes com risco relevante precisam de avaliação e comunicação conforme a LGPD.',
 ] as const
 
 export default function AdminAccessHubPage() {
