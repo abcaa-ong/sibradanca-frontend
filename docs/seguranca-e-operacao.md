@@ -45,20 +45,17 @@ VITE_TURNSTILE_SITE_KEY=SUA_CHAVE_PUBLICA_TURNSTILE
 
 ## Anti-bot
 
-Estado atual recomendado para handoff:
-
-- `APP_ANTI_BOT_ENABLED=false` no backend
-- `VITE_TURNSTILE_SITE_KEY` vazio na Vercel
-
-Quando a equipe quiser ativar:
+Configuracao recomendada para producao:
 
 1. criar o widget do provedor anti-bot
 2. configurar a chave publica na Vercel
 3. configurar a chave secreta no Render
-4. habilitar `APP_ANTI_BOT_ENABLED=true`
+4. habilitar `APP_ANTI_BOT_ENABLED=true` no backend
 5. validar os tres formularios publicos antes do deploy final
 
 O captcha aparece no ultimo passo de cada formulario publico, antes do envio.
+
+Se o backend estiver com o anti-bot ligado e o frontend sem `VITE_TURNSTILE_SITE_KEY`, o envio do formulario deve falhar. Por isso os dois lados precisam ser configurados juntos.
 
 ## URLs e dominios
 
@@ -107,9 +104,10 @@ O CI oficial roda para:
 
 1. confirmar que o backend novo esta respondendo `200` em `/actuator/health`
 2. revisar `VITE_API_BASE_URL`
-3. manter `VITE_TURNSTILE_SITE_KEY` vazio se o anti-bot estiver desligado
+3. configurar `VITE_TURNSTILE_SITE_KEY` se o anti-bot estiver ativo no backend
 4. fazer redeploy na Vercel
 5. validar home, formularios, estatisticas e painel
+6. validar captcha no ultimo passo dos tres formularios
 
 ## O que nao fazer
 
