@@ -2,6 +2,36 @@
 
 Frontend oficial do SIBRADANCA, responsavel pela experiencia publica da plataforma e pela interface do painel interno da ONG.
 
+## Leitura obrigatoria
+
+Antes de configurar ou publicar, ler nesta ordem:
+
+1. `README.md`
+2. `CONTRIBUTING.md`
+3. `docs/seguranca-e-operacao.md`
+
+## Resumo rapido de configuracao em producao
+
+1. manter o projeto atual da Vercel
+2. publicar o backend novo no Render
+3. confirmar que o backend responde em `/actuator/health`
+4. configurar na Vercel apenas:
+
+```env
+VITE_API_BASE_URL=https://SEU_BACKEND_PUBLICO.onrender.com
+VITE_TURNSTILE_SITE_KEY=
+```
+
+5. redeployar a Vercel
+6. validar home, formularios, estatisticas e painel
+
+Regra principal:
+
+- o frontend nao recebe URL do Supabase
+- o frontend nao recebe senha
+- o frontend nao recebe segredo
+- o frontend so conhece a URL publica do backend e, se ativado, a chave publica do captcha
+
 ## Papel do frontend
 
 O frontend existe para:
