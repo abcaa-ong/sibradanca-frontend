@@ -37,11 +37,20 @@ VITE_API_BASE_URL=https://SEU_BACKEND_PUBLICO.onrender.com
 
 ### Opcional
 
-Use somente quando o anti-bot estiver ativo no backend:
+Em producao, use quando o backend estiver com anti-bot ativo:
 
 ```env
 VITE_TURNSTILE_SITE_KEY=SUA_CHAVE_PUBLICA_TURNSTILE
 ```
+
+## O que ja nasce preparado no frontend
+
+O frontend ja esta preparado para:
+
+- ler a configuracao publica do formulario em `/api/reference/public-form-config`
+- mostrar o captcha no ultimo passo dos tres formularios
+- enviar o token no cabecalho configurado pelo backend
+- bloquear o envio quando o backend exigir captcha e a configuracao estiver incompleta
 
 ## Anti-bot
 
@@ -56,6 +65,15 @@ Configuracao recomendada para producao:
 O captcha aparece no ultimo passo de cada formulario publico, antes do envio.
 
 Se o backend estiver com o anti-bot ligado e o frontend sem `VITE_TURNSTILE_SITE_KEY`, o envio do formulario deve falhar. Por isso os dois lados precisam ser configurados juntos.
+
+Fluxo pratico:
+
+1. criar o widget no provedor anti-bot
+2. cadastrar o dominio publico da Vercel
+3. colocar a chave publica na Vercel
+4. colocar a chave secreta no Render
+5. redeployar backend e frontend
+6. validar os tres formularios
 
 ## URLs e dominios
 
@@ -73,6 +91,15 @@ Regras:
 3. revisar captcha somente se o backend tambem estiver configurado
 4. publicar na Vercel
 5. validar home, formularios, painel publico e painel interno
+
+## O que ainda depende do ambiente
+
+Mesmo com o frontend pronto, estas partes so fecham quando o ambiente estiver configurado:
+
+- URL publica correta do backend no Render
+- chave publica real do captcha na Vercel
+- backend respondendo `/actuator/health`
+- backend expondo `antiBotEnabled=true` quando a protecao estiver ativa
 
 ## Dados e privacidade
 

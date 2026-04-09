@@ -19,7 +19,7 @@ Antes de configurar ou publicar, ler nesta ordem:
 
 ```env
 VITE_API_BASE_URL=https://SEU_BACKEND_PUBLICO.onrender.com
-VITE_TURNSTILE_SITE_KEY=
+VITE_TURNSTILE_SITE_KEY=SUA_CHAVE_PUBLICA_TURNSTILE
 ```
 
 5. redeployar a Vercel
@@ -204,6 +204,7 @@ Importante:
 ## Seguranca e operacao
 
 - anti-bot no frontend depende da configuracao real do backend
+- em producao, o frontend deve ser publicado junto com a chave publica do anti-bot quando o backend estiver com a validacao ligada
 - a Vercel deve receber apenas `VITE_API_BASE_URL` e, quando necessario, `VITE_TURNSTILE_SITE_KEY`
 - a URL do banco e qualquer segredo ficam fora do frontend
 - guia operacional: `docs/seguranca-e-operacao.md`
