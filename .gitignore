@@ -43,6 +43,7 @@ test-results/
 # MD
 **/*.md
 !README.md
+!CONTRIBUTING.md
 
 # playwright/generated config
 playwright.config.js

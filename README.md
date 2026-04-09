@@ -35,6 +35,26 @@ O frontend nao decide a regra de negocio principal. A fonte de verdade continua 
 - Vitest
 - Playwright
 
+## Fluxo de branches
+
+- `develop`: integracao do time
+- `main`: versao estavel do frontend
+
+Fluxo recomendado:
+
+1. atualizar a `develop`
+2. criar a branch de trabalho a partir da `develop`
+3. abrir Pull Request para `develop`
+4. promover a `develop` para `main` quando a integracao estiver validada
+
+Branches de trabalho devem seguir o padrao:
+
+- `feat/nome-da-feature`
+- `fix/nome-do-ajuste`
+- `docs/nome-do-documento`
+- `refactor/nome-da-melhoria`
+- `test/nome-do-teste`
+
 ## Rotas principais
 
 | Rota | Descricao |
@@ -138,9 +158,23 @@ Configuracao recomendada na Vercel:
 VITE_API_BASE_URL=https://SEU_BACKEND_PUBLICO.onrender.com
 ```
 
+Fluxo recomendado:
+
+1. manter o projeto atual da Vercel
+2. subir o backend novo no Render
+3. atualizar `VITE_API_BASE_URL`
+4. redeployar a Vercel
+
+Importante:
+
+- nao colocar URL de banco, senha, token privado ou segredo em `VITE_*`
+- o frontend deve conhecer apenas a URL publica do backend
+- credenciais reais ficam fora do repositorio e fora do frontend
+
 ## Regras importantes
 
 - o frontend deve continuar consumindo o backend como fonte unica de verdade
 - dados pessoais nao devem aparecer nas estatisticas publicas
 - captchas e protecoes publicas devem depender da configuracao real do backend
 - qualquer ajuste de contrato deve ser feito em conjunto com backend e banco
+- nenhum segredo real deve ser salvo no frontend ou no repositorio
