@@ -171,6 +171,13 @@ Importante:
 - o frontend deve conhecer apenas a URL publica do backend
 - credenciais reais ficam fora do repositorio e fora do frontend
 
+## Seguranca e operacao
+
+- anti-bot no frontend depende da configuracao real do backend
+- a Vercel deve receber apenas `VITE_API_BASE_URL` e, quando necessario, `VITE_TURNSTILE_SITE_KEY`
+- a URL do banco e qualquer segredo ficam fora do frontend
+- guia operacional: `docs/seguranca-e-operacao.md`
+
 ## Regras importantes
 
 - o frontend deve continuar consumindo o backend como fonte unica de verdade

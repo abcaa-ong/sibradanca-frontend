@@ -26,3 +26,4 @@
 - validar `npm test -- --run`
 - validar `npm run build`
 - validar `npm run e2e` quando o fluxo afetar cadastro ou painel
+- revisar `docs/seguranca-e-operacao.md` quando a alteracao tocar ambiente, captcha ou publicacao
