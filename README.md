@@ -1,23 +1,28 @@
-# SIBRADANÇA Web App
+# SIBRADANCA Frontend
 
-Frontend oficial do SIBRADANÇA, responsável pela experiência pública da plataforma.
-
-O projeto foi estruturado para:
-
-- apresentar o sistema de forma institucional
-- direcionar cada perfil para o formulário correto
-- exibir o painel público de estatísticas
-- exportar indicadores em CSV e PDF a partir dos arquivos oficiais gerados pelo backend
+Frontend oficial do SIBRADANCA, responsavel pela experiencia publica da plataforma e pela interface do painel interno da ONG.
 
 ## Papel do frontend
 
-No MVP atual, o frontend:
+O frontend existe para:
 
-- não calcula estatísticas por conta própria
-- não consulta o IBGE em tempo real
-- não persiste dados críticos fora do backend
+- apresentar o sistema de forma institucional
+- direcionar cada perfil para o formulario correto
+- guiar o cadastro com navegacao rapida e validacao clara
+- exibir o painel publico de estatisticas
+- permitir acesso ao painel interno da ONG
+- acionar downloads oficiais gerados pelo backend
 
-O frontend consome a API oficial e atua como camada de navegação, cadastro e visualização.
+O frontend nao decide a regra de negocio principal. A fonte de verdade continua sendo o backend.
+
+## Escopo funcional atual
+
+- pagina inicial institucional
+- formularios de jovens, profissionais e instituicoes
+- painel publico de estatisticas nacionais
+- pagina publica de privacidade
+- painel interno da ONG
+- exportacoes iniciadas pela interface
 
 ## Tecnologias
 
@@ -25,148 +30,117 @@ O frontend consome a API oficial e atua como camada de navegação, cadastro e v
 - TypeScript
 - Vite
 - React Router DOM
-- Lucide React
-- jsPDF
-- jspdf-autotable
+- Framer Motion
+- Recharts
+- Vitest
+- Playwright
 
 ## Rotas principais
 
-| Rota | Descrição |
+| Rota | Descricao |
 |------|-----------|
-| `/` | Página inicial |
-| `/estatisticas-nacionais` | Painel estatístico público |
-| `/formulario/jovens` | Formulário de jovens da dança |
-| `/formulario/profissionais` | Formulário de profissionais da dança |
-| `/formulario/instituicoes` | Formulário de instituições da dança |
+| `/` | Pagina inicial |
+| `/estatisticas-nacionais` | Painel estatistico publico |
+| `/formulario/jovens` | Cadastro para jovens da danca |
+| `/formulario/profissionais` | Cadastro para profissionais da danca |
+| `/formulario/instituicoes` | Cadastro para escolas, grupos, companhias e projetos |
+| `/privacidade` | Politica e orientacoes de privacidade |
+| `/painel-interno/acesso` | Entrada do painel da ONG |
 
-## Integração com o backend
+## Integracao com o backend
 
-Serviços principais consumidos pelo frontend:
+Servicos principais consumidos pelo frontend:
 
 - `GET /api/geo/states`
 - `GET /api/geo/cities?stateCode=UF`
 - `GET /api/reference/modalities`
 - `GET /api/reference/contents`
 - `GET /api/reference/consent-term`
-- `GET /api/forms`
+- `GET /api/reference/public-form-config`
+- `GET /api/reference/privacy-config`
 - `POST /api/forms/youth`
 - `POST /api/forms/professional`
 - `POST /api/forms/institution`
 - `GET /api/statistics/dashboard`
 - `GET /api/statistics/export.csv`
 - `GET /api/statistics/export.pdf`
-
-## Exportação de dados
-
-O painel estatístico permite exportação em:
-
-- CSV
-- PDF
-
-Observações importantes:
-
-- os arquivos são gerados pelo backend
-- o frontend apenas aciona o download dos relatórios oficiais
-- o CSV sai com compatibilidade para Excel/Windows usando UTF-8 BOM, `;` e quebra de linha `CRLF`
+- `GET /api/admin/insights/bootstrap`
 
 ## Estrutura principal
 
 ```txt
 src/
-  assets/
   components/
-    AccessFloatingMenu.tsx
-    Badge.tsx
-    Button.tsx
-    Card.tsx
-    ChartPanel.tsx
-    MetricCard.tsx
-    SectionTitle.tsx
+  css/
+  hooks/
   pages/
-    HomePage.tsx
-    SectorFormPage.tsx
-    StatisticsPage.tsx
   routes/
-    AppRoutes.tsx
   services/
-    api.ts
-    forms.service.ts
-    geo.services.ts
-    statistics.service.ts
   types/
-    api.ts
-    forms.ts
-    geo.ts
-    statistics.ts
+  utils/
+e2e/
 ```
 
 ## Como rodar localmente
 
-### Pré-requisitos
+### Pre-requisitos
 
 - Node.js 20+
 - npm
 
-### Variável de ambiente
+### Variaveis de ambiente
 
-Use o arquivo `.env.local` e ajuste a URL conforme a porta do backend local:
+Use `.env.local` para desenvolvimento local:
 
 ```env
 VITE_API_BASE_URL=http://localhost:8080
+VITE_TURNSTILE_SITE_KEY=
 ```
 
-Para produção, use o `.env.example` apenas como referência com placeholder público:
-
-```env
-VITE_API_BASE_URL=https://SEU_BACKEND_PUBLICO.exemplo.com
-```
+Use `.env.example` apenas como referencia para publicacao.
 
 Importante:
 
-- não publicar `.env.local` no repositório
-- não versionar URLs privadas ou segredos
-- o frontend deve apontar sempre para a URL pública oficial do backend
+- nao versionar `.env.local`
+- nao colocar segredos no frontend
+- `VITE_*` deve conter apenas valores publicos
 
-### Instalação e execução
+### Instalacao e execucao
 
 ```bash
 npm install
 npm run dev
 ```
 
-### Build de produção
+### Build
 
 ```bash
 npm run build
 ```
 
-### Publicação na Vercel
-
-Configuração recomendada:
-
-- Framework: `Vite`
-- Build Command: `npm run build`
-- Output Directory: `dist`
-- Variável obrigatória: `VITE_API_BASE_URL=https://SEU_BACKEND_PUBLICO.exemplo.com`
-
 ### Testes
 
 ```bash
 npm test -- --run
+npm run e2e
 ```
 
-## Status atual
+## Publicacao
 
-- interface preservada conforme o frontend atualizado
-- integração principal com backend validada
-- painel estatístico funcionando com dados reais da API
-- exportação CSV/PDF validada
-- protocolo removido da interface pública
-- exportação oficial ligada ao backend
+Configuracao recomendada na Vercel:
 
-## Observações importantes
+- Framework: `Vite`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Variavel obrigatoria:
 
-- o frontend deve continuar usando o backend como fonte única de verdade
-- dados pessoais não devem ser expostos no painel público
-- qualquer ajuste de contrato deve ser feito em conjunto com o backend
-- arquivos locais gerados pelo TypeScript (`*.tsbuildinfo`) não devem ser commitados
+```env
+VITE_API_BASE_URL=https://SEU_BACKEND_PUBLICO.onrender.com
+```
+
+## Regras importantes
+
+- o frontend deve continuar consumindo o backend como fonte unica de verdade
+- dados pessoais nao devem aparecer nas estatisticas publicas
+- captchas e protecoes publicas devem depender da configuracao real do backend
+- qualquer ajuste de contrato deve ser feito em conjunto com backend e banco
