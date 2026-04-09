@@ -45,6 +45,22 @@ O frontend existe para:
 
 O frontend nao decide a regra de negocio principal. A fonte de verdade continua sendo o backend.
 
+## Estado atual do produto
+
+O escopo atual do SIBRADANCA ja esta implementado nesta linha do frontend.
+
+Hoje o produto ja possui:
+
+- home institucional
+- formularios de jovens, profissionais e instituicoes
+- validacao de fluxo para cadastro
+- painel publico de estatisticas
+- pagina publica de privacidade
+- painel interno da ONG
+- fluxos de exportacao iniciados pela interface
+
+Quando a documentacao menciona mudancas futuras, evolucao ou novas funcionalidades, isso significa manutencao e crescimento posterior do sistema, e nao ausencia de parte essencial do escopo atual.
+
 ## Escopo funcional atual
 
 - pagina inicial institucional
@@ -108,9 +124,19 @@ Servicos principais consumidos pelo frontend:
 - `GET /api/reference/consent-term`
 - `GET /api/reference/public-form-config`
 - `GET /api/reference/privacy-config`
+- `POST /api/protocol-recovery`
 - `POST /api/forms/youth`
+- `GET /api/forms/youth/{protocol}`
+- `PUT /api/forms/youth/{protocol}`
 - `POST /api/forms/professional`
+- `GET /api/forms/professional/{protocol}`
+- `PUT /api/forms/professional/{protocol}`
 - `POST /api/forms/institution`
+- `GET /api/forms/institution/{protocol}`
+- `PUT /api/forms/institution/{protocol}`
+- `GET /api/statistics/overview`
+- `GET /api/statistics/profile`
+- `GET /api/statistics/details`
 - `GET /api/statistics/dashboard`
 - `GET /api/statistics/export.csv`
 - `GET /api/statistics/export.pdf`
