@@ -4,6 +4,14 @@
 
 Este documento explica como publicar o frontend do SIBRADANCA com seguranca, sem expor dados do banco, senhas, tokens privados ou configuracoes sensiveis.
 
+## Leitura recomendada
+
+Antes de publicar, usar este documento junto com:
+
+- `README.md`
+- `CONTRIBUTING.md`
+- documentacao de producao do backend
+
 ## O que o frontend pode conhecer
 
 O frontend deve conhecer apenas:
@@ -61,6 +69,14 @@ Regras:
 - a Vercel nunca aponta para URL privada de banco
 - a Vercel nunca recebe segredo do Supabase ou do Render
 
+## Fluxo de publicacao
+
+1. confirmar que o backend novo esta no ar
+2. revisar `VITE_API_BASE_URL`
+3. revisar captcha somente se o backend tambem estiver configurado
+4. publicar na Vercel
+5. validar home, formularios, painel publico e painel interno
+
 ## Dados e privacidade
 
 O frontend deve:
@@ -82,6 +98,11 @@ npm run build
 npm run e2e
 ```
 
+O CI oficial roda para:
+
+- `develop`
+- `main`
+
 ## Checklist de publicacao
 
 1. confirmar que o backend novo esta respondendo `200` em `/actuator/health`
@@ -96,3 +117,4 @@ npm run e2e
 - nao subir senha em `VITE_*`
 - nao versionar `.env.local`
 - nao ativar captcha no frontend sem ativar a validacao correspondente no backend
+- nao publicar mudanca de formulario sem validar fluxo completo
